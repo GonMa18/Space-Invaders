@@ -5,6 +5,6 @@ git clone git@github.com:GonMa18/Space-Invaders.git
 git pull
 
 # COMO SUBIR LAS VERSIONES 
-git add .
-git commit -m "Nombre del commit"
-git push
+git add .<br>
+git commit -m "Nombre del commit"<br>
+git push<br>
