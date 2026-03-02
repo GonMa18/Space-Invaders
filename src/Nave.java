@@ -1,4 +1,5 @@
-public abstract class Naves {
+ 
+public abstract class Nave {
 	
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private int velocidad;
@@ -7,7 +8,7 @@ public abstract class Naves {
 	private int y;
 	
 	// Contructora
-	public Naves(int y, int x, int velocidad) {
+	public Nave(int y, int x, int velocidad) {
 		this.x = x;
 		this.y = y;
 		this.velocidad = velocidad;

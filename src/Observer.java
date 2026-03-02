@@ -1,5 +1,5 @@
 
 // Es una interfaz
-public interface Observador {
+public interface Observer {
 	void actualizar();
 }
