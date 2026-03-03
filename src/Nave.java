@@ -4,8 +4,8 @@ public abstract class Nave {
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private int velocidad;
 	private boolean sigueJugando;
-	private int x;
-	private int y;
+	protected int x;	//Protected para que las que heredan puedan accedder
+	protected int y;
 	
 	// Contructora
 	public Nave(int y, int x, int velocidad) {

@@ -1,4 +1,40 @@
 
 public class Disparo {
-
+	
+	private int x;
+	private int y;
+	private boolean shoot;
+	
+	public Disparo(int x, int y) {
+		this.x = x;
+		this.y = y;
+		this.shoot = false;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
+	public boolean isShooting() {
+		return shoot;
+	}
+	
+	public void setShoot(boolean b) {
+		this.shoot = b;
+	}
+	
+	public void subir() { //Metodo para que el disparo vaya subiendo 
+		if (shoot) {	
+			y--;		//Cuando se dispare 
+			
+			if (y<0) {	//Cuando desaparezca del frame
+				shoot = false;
+			}
+		}
+	}
 }
+	
