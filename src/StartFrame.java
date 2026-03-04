@@ -47,9 +47,17 @@ public class StartFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        // Panel central con fondo negro
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(Color.BLACK);
+        // FONDO //
+        ImageIcon bgIcon = new ImageIcon("Resources/Fondo.png");
+        Image bgImage = bgIcon.getImage();
+
+        JPanel panel = new JPanel(new GridBagLayout()) {	//Panel del fondo
+            @Override
+            protected void paintComponent(java.awt.Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         panel.setPreferredSize(new Dimension(400, 300));
 
         GridBagConstraints gbc = new GridBagConstraints();
