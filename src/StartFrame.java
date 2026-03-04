@@ -44,8 +44,9 @@ public class StartFrame extends JFrame {
     public StartFrame() {
         setTitle("Space Invaders");
         setTitle("by RetroDevs");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	// Cierra la aplicación al cerrar el frame
         setResizable(false);
+        
 
         // FONDO //
         ImageIcon bgIcon = new ImageIcon("Resources/Fondo.png");
