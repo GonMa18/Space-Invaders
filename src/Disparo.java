@@ -30,6 +30,7 @@ public class Disparo {
 	public void subir() { //Metodo para que el disparo vaya subiendo 
 		if (shoot) {	
 			y--;		//Cuando se dispare 
+						//Arriba y=0, abajo y=99
 			
 			if (y<0) {	//Cuando desaparezca del frame
 				shoot = false;

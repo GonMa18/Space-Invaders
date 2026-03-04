@@ -18,13 +18,11 @@ public class Espacio extends Observable {
     }
     
     private void notificarVista() {
-        notificarObservadores();		//REVISAR
+        notificarObservadores();
     }
 
-    private void notificarObservadores() {
-		// TODO							  //REVISAR
-		
-	}
+    // notificarObservadores() ya está heredado de Observable
+    // notificarVista() puede llamar directamente al método del padre
 
 	public int getAnchura() { 
     	return ancho; 
@@ -46,16 +44,27 @@ public class Espacio extends Observable {
         naves.add(new Enemigo(pos_x, pos_y));
     }
     
-    public List<Naves> getNaves() {
+    public List<Nave> getNaves() {
         return naves;
     }
 
     public Jugador getJugador() {
-        //TODO
+        for (Nave n : naves) {
+            if (n instanceof Jugador) { // Si la nave es un jugador, lo devuelvo
+                return (Jugador) n;
+            }
+        }
+        return null;
     }
 
     public List<Enemigo> getEnemigos() {
-        //TODO
+        List<Enemigo> enemigos = new ArrayList<>(); // Creo una lista de enemigos
+        for (Nave n : naves) {
+            if (n instanceof Enemigo) { // Si la nave es un enemigo, lo añado a la lista de enemigos
+                enemigos.add((Enemigo) n);  // Cast a Enemigo para añadirlo a la lista de enemigos
+            }
+        }
+        return enemigos;
     }
 
     public void moverJugador(int x, int y) { //Mover Jugador
@@ -76,13 +85,19 @@ public class Espacio extends Observable {
 
     // Metodo para movel el disparo un pixel arriba --> CONTADOR
     public void actualizarDisparo() {
-        //TODO
-    	notificarVista();
-      
+        Jugador j = getJugador();   //Reviso que el jugador siga vivo y tenga un disparo activo 
+        if (j != null) {
+            Disparo d = j.getDisparo(); 
+            if (d != null && d.isShooting()) {  // Si el disparo sigue activo
+                d.subir(); // Mueve el disparo un pixel hacia arriba
+                comprobarMuertes(d); // Comprueba si ha dado a algun enemigo
+            }
+        }
+        notificarVista();
     }
 
-    // Metodo para movel los enemigos un pixel abajo --> CONTADOR
-    public void actualizarEnemigos() {
+    // Metodo para movel los enemigos un pixel abajo --> CONTADOR 200ms
+    public void actualizarEnemigos() {  
         for (Enemigo e : getEnemigos()) {	//Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
                 e.mover();
@@ -92,7 +107,13 @@ public class Espacio extends Observable {
     }
 
     private void comprobarMuertes(Disparo d) { //Si el disparo le ha dado a algo
-        //TODO
+        for (Enemigo e : getEnemigos()) { //Reviso todos los enemigos que siguen vivos
+            if (e.sigueVivo() && e.getX() == d.getX() && e.getY() == d.getY()) {    //Si el disparo ha dado a un enemigo
+                e.setSigueJugando(false); // El enemigo muere
+                d.setShoot(false);        // El disparo desaparece
+                return; // Un disparo solo mata a un enemigo
+            }
+        }
     }
 
   
@@ -107,7 +128,12 @@ public class Espacio extends Observable {
     }
 
     public boolean isVictory() {
-        //TODO
+        for (Enemigo e : getEnemigos()) {   //Reviso que no quede ningun enemigo vivo
+            if (e.sigueVivo()) {
+                return false; // Todavia queda algun enemigo vivo
+            }
+        }
+        return true; // Todos los enemigos han muerto --> victoria
     }
 
     

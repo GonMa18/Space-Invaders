@@ -15,6 +15,6 @@ public class Observable {
     protected void notificarObservadores() {	//Actualizar
         for (Observer o : listaObservadores) {
             o.actualizar();
-        }
+        }   // Recorre la lista de observadores y llama a su metodo actualizar
     }
 }
