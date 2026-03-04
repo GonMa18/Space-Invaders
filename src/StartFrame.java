@@ -62,40 +62,50 @@ public class StartFrame extends JFrame {
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
         JLabel titulo = new JLabel(scaledIcon);
-        gbc.gridy = 0;
-        panel.add(titulo, gbc);
-
-        JLabel subtitulo = new JLabel("by RetroDevs for Sprint 1");
-        subtitulo.setForeground(Color.ORANGE);
-        subtitulo.setFont(new Font("Serif", Font.ITALIC, 15));
-        gbc.gridy = 1;
-        panel.add(subtitulo, gbc);
-        
+        GridBagConstraints gbcTitulo = new GridBagConstraints();
+        gbcTitulo.gridx = 0;
+        gbcTitulo.gridy = 0;
+        gbcTitulo.insets = new Insets(10, 0, 10, 0);
+        gbcTitulo.anchor = GridBagConstraints.CENTER;
+        panel.add(titulo, gbcTitulo);
 
         // INSTRUCCIONES //
         ImageIcon pressSpaceIcon = new ImageIcon("Resources/Press Space.png");
-        Image pressSpaceScaled = pressSpaceIcon.getImage().getScaledInstance(250, 50, Image.SCALE_SMOOTH);
+        Image pressSpaceScaled = pressSpaceIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         JLabel subtitulo1 = new JLabel(new ImageIcon(pressSpaceScaled));
         subtitulo1.setHorizontalAlignment(JLabel.CENTER);
-        gbc.gridy = 1;
-        panel.add(subtitulo1, gbc);
-        
-       // JLabel subtitulo = new JLabel("by RetroDevs for Sprint 1");
-        //subtitulo.setForeground(Color.ORANGE);
-        //subtitulo.setFont(new Font("Serif", Font.ITALIC, 15));
-        //gbc.gridy = 1;
-        //panel.add(subtitulo, gbc);
+        GridBagConstraints gbcPress = new GridBagConstraints();
+        gbcPress.gridx = 0;
+        gbcPress.gridy = 1;
+        gbcPress.insets = new Insets(10, 0, 10, 0);
+        gbcPress.anchor = GridBagConstraints.CENTER;
+        panel.add(subtitulo1, gbcPress);
 
+        // CONTROLES //
         JLabel controles = new JLabel("Flechas para moverte y espacio para disparar");
         controles.setForeground(Color.DARK_GRAY);
         controles.setFont(new Font("Serif", Font.PLAIN, 10));
-        gbc.gridy = 3;
-        panel.add(controles, gbc);
+        GridBagConstraints gbcControles = new GridBagConstraints();
+        gbcControles.gridx = 0;
+        gbcControles.gridy = 2;
+        gbcControles.insets = new Insets(10, 0, 10, 0);
+        gbcControles.anchor = GridBagConstraints.CENTER;
+        panel.add(controles, gbcControles);
 
-        add(panel);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        getContentPane().add(panel);	
+        
+        // DESARROLLADORES //
+        JLabel developers = new JLabel("by RetroDevs for Sprint 1");
+        developers.setForeground(new Color(255, 128, 0));
+        developers.setFont(new Font("SansSerif", Font.ITALIC, 10));
+        GridBagConstraints gbc_developers = new GridBagConstraints();
+        gbc_developers.gridx = 0;
+        gbc_developers.gridy = 3;
+        panel.add(developers, gbc_developers);
+        
+        pack(); 	// Ajusta el tamaño del frame al contenido
+        setLocationRelativeTo(null); // Centra el frame en la pantalla
+        setVisible(true); 
 
         // TECLADO //
         setFocusable(true);	// Para que el frame pueda recibir eventos de teclado
