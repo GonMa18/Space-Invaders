@@ -32,6 +32,6 @@ public abstract class Nave {
 		this.sigueJugando = b;
 	}
 	
-	public abstract void mover(); 	// Metodo que todas las naves que hereden "Nave" tienen que implementar
+	public abstract void mover(int x, int y); 	// Metodo que todas las naves que hereden "Nave" tienen que implementar
 									// No pongo codigo porque enemigos y jugador se mueven distinto
 }
