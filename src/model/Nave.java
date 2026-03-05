@@ -9,7 +9,7 @@ public abstract class Nave {
 	protected int y;
 	
 	// Contructora
-	public Nave(int y, int x, int velocidad) {
+	public Nave(int x, int y, int velocidad) {
 		this.x = x;
 		this.y = y;
 		this.velocidad = velocidad;
