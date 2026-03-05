@@ -99,14 +99,20 @@ public class Espacio extends Observable {
         }
     }
 
-    // Metodo para movel el disparo un pixel arriba --> CONTADOR
+    // Metodo para mover todos los disparos un pixel arriba --> CONTADOR
     public void actualizarDisparo() {
-        Jugador j = getJugador();   //Reviso que el jugador siga vivo y tenga un disparo activo 
+        Jugador j = getJugador();
         if (j != null) {
-            Disparo d = j.getDisparo(); 
-            if (d != null && d.isShooting()) {  // Si el disparo sigue activo
-                d.subir(); // Mueve el disparo un pixel hacia arriba
-                comprobarMuertes(d); // Comprueba si ha dado a algun enemigo
+            List<Disparo> disparos = j.getDisparos();
+            for (int i = disparos.size() - 1; i >= 0; i--) { // Recorro al reves para poder eliminar
+                Disparo d = disparos.get(i);
+                if (d.isShooting()) {
+                    d.subir(); // Mueve el disparo un pixel hacia arriba
+                    comprobarMuertes(d); // Comprueba si ha dado a algun enemigo
+                }
+                if (!d.isShooting()) { // Si se ha desactivado (salio de pantalla o impacto)
+                    disparos.remove(i); // Lo elimino de la lista
+                }
             }
         }
         notificarVista();

@@ -134,13 +134,17 @@ public class MainFrame extends JFrame implements Observer {
 			g.fillRect(px, py, TAM_CELDA, TAM_CELDA); // Pintar celda
 		}
 
-		// Pintar disparo si esta activo
+		// Pintar todos los disparos activos
 		Jugador j = espacio.getJugador();
-		if (j != null && j.getDisparo() != null && j.getDisparo().isShooting()) {
-			g.setColor(Color.YELLOW); // Disparo en amarillo
-			int dx = j.getDisparo().getX() * TAM_CELDA;
-			int dy = j.getDisparo().getY() * TAM_CELDA;
-			g.fillRect(dx, dy, TAM_CELDA, TAM_CELDA);
+		if (j != null) {
+			g.setColor(Color.YELLOW); // Disparos en amarillo
+			for (model.Disparo d : j.getDisparos()) {
+				if (d.isShooting()) {
+					int dx = d.getX() * TAM_CELDA;
+					int dy = d.getY() * TAM_CELDA;
+					g.fillRect(dx, dy, TAM_CELDA, TAM_CELDA);
+				}
+			}
 		}
 	}
 

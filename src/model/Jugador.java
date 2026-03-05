@@ -1,23 +1,22 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Jugador extends Nave { //Hereda de NAVE
 	
-	// El jugador solo necesita un atributo propio: el disparo.
+	// El jugador necesita una lista de disparos activos
 	// Las coordenadas (x, y), la velocidad y el estado (sigueJugando)
 	// ya los hereda de Nave.
 	
-	private Disparo disparo;
+	private List<Disparo> disparos;
 	
 	
 	// Constructora: crea el jugador en la posicion inicial (y=50, x=55)
-	// y le asigna un disparo inactivo en su misma posicion
 	public Jugador() {
 		super(50, 55, 1); //Posicion inicial (y=50, x=55, velocidad=1)
-		this.disparo = new Disparo(x, y);
+		this.disparos = new ArrayList<>();
 	}
-	
-	// mover() sin parametros: obligatorio por ser abstracto en Nave.
-	// El jugador no se mueve solo, asi que se deja vacio.
 	
 	@Override
 	// Se llama desde Espacio.moverJugador() cuando el usuario pulsa una tecla
@@ -26,16 +25,15 @@ public class Jugador extends Nave { //Hereda de NAVE
 		this.y = y;
 	}
 	
-	// Solo dispara si no hay ya un disparo activo en pantalla
+	// Crea un nuevo disparo cada vez que se pulsa espacio
 	public void disparar() {
-		if (!disparo.isShooting()) {
-			disparo = new Disparo(x, y - 2); //Dos pixeles por encima del jugador
-			disparo.setShoot(true);
-		}
+		Disparo d = new Disparo(x, y - 2); //Dos pixeles por encima del jugador
+		d.setShoot(true);
+		disparos.add(d);
 	}
 	
-	public Disparo getDisparo() {
-		return disparo;
+	public List<Disparo> getDisparos() {
+		return disparos;
 	}
 	
 }
