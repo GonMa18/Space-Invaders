@@ -116,9 +116,9 @@ public class Espacio extends Observable {
     public void actualizarEnemigos() {  
         for (Enemigo e : getEnemigos()) {	//Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
-                e.mover();
+                e.bajar(); // Baja un pixel
             }
-        } //REVISAR
+        }
         notificarVista();
     }
 

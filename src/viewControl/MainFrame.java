@@ -99,6 +99,12 @@ public class MainFrame extends JFrame implements Observer {
 			Espacio.getInstance().actualizarDisparo();
 		});
 		timerDisparo.start();
+
+		// TIMER - Mover los enemigos hacia abajo cada 200ms //
+		Timer timerEnemigos = new Timer(200, ev -> {
+			Espacio.getInstance().actualizarEnemigos();
+		});
+		timerEnemigos.start();
 	}
 
 	@Override

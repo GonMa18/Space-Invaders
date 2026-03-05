@@ -29,7 +29,7 @@ public class Jugador extends Nave { //Hereda de NAVE
 	// Solo dispara si no hay ya un disparo activo en pantalla
 	public void disparar() {
 		if (!disparo.isShooting()) {
-			disparo = new Disparo(x, y - 1); //Justo un pixel por encima
+			disparo = new Disparo(x, y - 2); //Dos pixeles por encima del jugador
 			disparo.setShoot(true);
 		}
 	}
