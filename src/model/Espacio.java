@@ -2,6 +2,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Random;
 
 public class Espacio extends Observable {
 	private static Espacio miEspacio; // Singleton
@@ -43,20 +44,11 @@ public class Espacio extends Observable {
         // Crear jugador
         naves.add(new Jugador());
 
-        // Crear formacion de enemigos (5 filas x 10 columnas)
-        int filas = 5;
-        int columnas = 11;
-        int inicioX = 20;  // Columna donde empieza la formacion
-        int inicioY = 2;   // Fila donde empieza la formacion
-        int espacioX = 6;  // Separacion horizontal entre enemigos
-        int espacioY = 3;  // Separacion vertical entre enemigos
-
-        for (int fila = 0; fila < filas; fila++) {
-            for (int col = 0; col < columnas; col++) {
-                int x = inicioX + col * espacioX;
-                int y = inicioY + fila * espacioY;
-                naves.add(new Enemigo(x, y));
-            }
+        // Crear 4 enemigos en y=5 con x aleatoria
+        Random rn = new Random();
+        for (int i = 0; i < 4; i++) {
+            int x = rn.nextInt(ancho); // x aleatorio entre 0 y 99
+            naves.add(new Enemigo(x, 5));
         }
     }
     
