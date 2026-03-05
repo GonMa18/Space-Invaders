@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -56,6 +58,37 @@ public class MainFrame extends JFrame implements Observer {
 		setLocationRelativeTo(null); // Centrar en pantalla
 		setVisible(true);
 		requestFocusInWindow(); // Para que reciba eventos de teclado
+
+		// TECLADO - Controles del jugador //
+		addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				Espacio espacio = Espacio.getInstance();
+				Jugador j = espacio.getJugador();
+				if (j == null) return;
+
+				int nuevaX = j.getX();
+				int nuevaY = j.getY();
+
+				switch (e.getKeyCode()) {
+					case KeyEvent.VK_LEFT:  // Flecha izquierda
+						nuevaX = Math.max(0, nuevaX - 1);
+						break;
+					case KeyEvent.VK_RIGHT: // Flecha derecha
+						nuevaX = Math.min(COLUMNAS - 1, nuevaX + 1);
+						break;
+					case KeyEvent.VK_UP:    // Flecha arriba
+						nuevaY = Math.max(0, nuevaY - 1);
+						break;
+					case KeyEvent.VK_DOWN:  // Flecha abajo
+						nuevaY = Math.min(FILAS - 1, nuevaY + 1);
+						break;
+				}
+				espacio.moverJugador(nuevaX, nuevaY); // Mover jugador a la nueva posicion
+			}
+			@Override public void keyReleased(KeyEvent e) {}
+			@Override public void keyTyped(KeyEvent e) {}
+		});
 	}
 
 	@Override

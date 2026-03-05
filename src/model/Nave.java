@@ -28,6 +28,10 @@ public abstract class Nave {
 		return sigueJugando;
 	}
 	
+	public boolean sigueVivo() {
+		return sigueJugando;
+	}
+	
 	public void setSigueJugando(boolean b) {
 		this.sigueJugando = b;
 	}
