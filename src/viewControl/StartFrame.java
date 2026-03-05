@@ -46,8 +46,7 @@ public class StartFrame extends JFrame implements Observer{
 	 * Create the frame.
 	 */
     public StartFrame() {
-        setTitle("Space Invaders");
-        setTitle("by RetroDevs");
+        setTitle("Space Invaders by RetroDevs");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	// Cierra la aplicación al cerrar el frame
         setResizable(false);
         
