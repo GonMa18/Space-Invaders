@@ -1,3 +1,4 @@
+package viewControl;
 
 
 import java.awt.Color;
@@ -10,6 +11,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -17,7 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class StartFrame extends JFrame {
+import model.Espacio;
+
+public class StartFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -47,7 +51,7 @@ public class StartFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	// Cierra la aplicación al cerrar el frame
         setResizable(false);
         
-
+        Espacio.getInstance().addObserver(this); // Para que el frame se actualice cuando el espacio cambie - REVISAR
         // FONDO //
         ImageIcon bgIcon = new ImageIcon("Resources/Fondo.png");
         Image bgImage = bgIcon.getImage();
@@ -134,11 +138,14 @@ public class StartFrame extends JFrame {
     }
 
     private void iniciarJuego() {	//Iniciamos el juego
-        dispose(); 	// Cerramos el frame de inicio: lo destruye
-        
-        //setVisible(false);     //Solo lo oculta, pero queremos
-        						//seguir usando el SPACE, asi que lo destruimos
-        new MainFrame();	// Abrimos el frame principal
-    }
+    	Espacio.getInstance().iniciarEspacio();	// Notificamos a la vista para que se actualice antes de iniciar el juego
+    	   }
 
+    @Override
+    public void update(java.util.Observable o, Object arg) {
+		// No es necesario actualizar nada en el StartFrame, ya que solo se muestra al inicio
+    	dispose(); // Cerramos el StartFrame cuando se recibe una actualización del Espacio
+    	Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones
+    	new MainFrame(); // Abrimos el MainFrame para iniciar el juego
+	}
 }

@@ -1,3 +1,4 @@
+package model;
 
 public class Jugador extends Nave { //Hereda de NAVE
 	

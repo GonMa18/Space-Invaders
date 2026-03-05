@@ -1,3 +1,4 @@
+package model;
 public class Enemigo extends Nave {
 	
 	public Enemigo(int x, int y) {

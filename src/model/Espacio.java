@@ -1,24 +1,32 @@
+package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 
 public class Espacio extends Observable {
-	
+	private static Espacio miEspacio; // Singleton
 	private int ancho;
 	private int alto;
 	private List<Nave> naves;
 	
 	//Constructora
-    public Espacio(int ancho, int alto) {
-        this.ancho = ancho;
-        this.alto  = alto;
+    private Espacio() {
+        this.ancho = 100;
+        this.alto  = 60;
         this.naves   = new ArrayList<>();
         inicializar(); //Para que empiece directamente
     }
     
+    public static Espacio getInstance() { //Singleton
+		if (miEspacio == null) {
+			miEspacio = new Espacio();
+		}
+		return miEspacio;
+	}
     private void notificarVista() {
-        notificarObservadores();
+    	setChanged();
+    	notifyObservers();
     }
 
     // notificarObservadores() ya está heredado de Observable
@@ -136,6 +144,14 @@ public class Espacio extends Observable {
         return true; // Todos los enemigos han muerto --> victoria
     }
 
-    
+    public void iniciarEspacio() { //Reiniciar el espacio para empezar un nuevo juego
+    	
+    	/// LLAMADA A INICIALIZAR PARA CREAR EL JUEGO
+    	setChanged();
+    	notifyObservers();
+    	
+
+    	
+    }
 
 }
