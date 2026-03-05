@@ -18,13 +18,8 @@ public class Jugador extends Nave { //Hereda de NAVE
 	
 	// mover() sin parametros: obligatorio por ser abstracto en Nave.
 	// El jugador no se mueve solo, asi que se deja vacio.
-	@Override
-	public void mover() {
-		// El jugador no se mueve automaticamente, solo con input del usuario (teclado)
-		// Que se mueva o no se mueve lo decide Espacio.moverJugador() cuando el usuario pulsa una tecla
-		// Se gestionará en la vista, que es la que recibe el input del usuario
-	}
 	
+	@Override
 	// Se llama desde Espacio.moverJugador() cuando el usuario pulsa una tecla
 	public void mover(int x, int y) {
 		this.x = x;
