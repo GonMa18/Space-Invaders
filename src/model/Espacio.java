@@ -44,10 +44,15 @@ public class Espacio extends Observable {
         // Crear jugador
         naves.add(new Jugador());
 
-        // Crear 4 enemigos en y=5 con x aleatoria
+        // Crear 4 enemigos en y=5 con x aleatoria (sin repetir posicion)
         Random rn = new Random();
+        List<Integer> posicionesUsadas = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            int x = rn.nextInt(ancho); // x aleatorio entre 0 y 99
+            int x;
+            do {
+                x = rn.nextInt(ancho); // x aleatorio entre 0 y 99
+            } while (posicionesUsadas.contains(x));
+            posicionesUsadas.add(x);
             naves.add(new Enemigo(x, 5));
         }
     }
