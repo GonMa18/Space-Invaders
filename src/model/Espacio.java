@@ -42,14 +42,14 @@ public class Espacio extends Observable {
 
     private void inicializar() {
         // Crear jugador
-        naves.add(new Jugador()); 		//PORQUE ME DA ERROR
-        //El jugador se crea por defecto en (,)
+        naves.add(new Jugador());
 
-        // Crear enemigo aleatorio
-        Random rn = new Random();	//Random de la libreria Random de JAVA
-        int pos_x = rn.nextInt(ancho);   // x aleatorio entrte 0 y 99 
-        int pos_y = rn.nextInt(5);      // y en la parte de arriba del espacio 0 a 4
-        naves.add(new Enemigo(pos_x, pos_y));
+        // Crear 4 enemigos en y=5 con x aleatoria
+        Random rn = new Random();
+        for (int i = 0; i < 4; i++) {
+            int x = rn.nextInt(ancho); // x aleatorio entre 0 y 99
+            naves.add(new Enemigo(x, 5));
+        }
     }
     
     public List<Nave> getNaves() {
@@ -91,14 +91,20 @@ public class Espacio extends Observable {
         }
     }
 
-    // Metodo para movel el disparo un pixel arriba --> CONTADOR
+    // Metodo para mover todos los disparos un pixel arriba --> CONTADOR
     public void actualizarDisparo() {
-        Jugador j = getJugador();   //Reviso que el jugador siga vivo y tenga un disparo activo 
+        Jugador j = getJugador();
         if (j != null) {
-            Disparo d = j.getDisparo(); 
-            if (d != null && d.isShooting()) {  // Si el disparo sigue activo
-                d.subir(); // Mueve el disparo un pixel hacia arriba
-                comprobarMuertes(d); // Comprueba si ha dado a algun enemigo
+            List<Disparo> disparos = j.getDisparos();
+            for (int i = disparos.size() - 1; i >= 0; i--) { // Recorro al reves para poder eliminar
+                Disparo d = disparos.get(i);
+                if (d.isShooting()) {
+                    d.subir(); // Mueve el disparo un pixel hacia arriba
+                    comprobarMuertes(d); // Comprueba si ha dado a algun enemigo
+                }
+                if (!d.isShooting()) { // Si se ha desactivado (salio de pantalla o impacto)
+                    disparos.remove(i); // Lo elimino de la lista
+                }
             }
         }
         notificarVista();
@@ -108,9 +114,9 @@ public class Espacio extends Observable {
     public void actualizarEnemigos() {  
         for (Enemigo e : getEnemigos()) {	//Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
-                e.mover();
+                e.bajar(); // Baja un pixel
             }
-        } //REVISAR
+        }
         notificarVista();
     }
 
