@@ -12,6 +12,7 @@ import java.util.Observer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import model.Enemigo;
 import model.Espacio;
 import model.Jugador;
@@ -83,12 +84,21 @@ public class MainFrame extends JFrame implements Observer {
 					case KeyEvent.VK_DOWN:  // Flecha abajo
 						nuevaY = Math.min(FILAS - 1, nuevaY + 1);
 						break;
+					case KeyEvent.VK_SPACE: // Espacio para disparar
+						espacio.disparar();
+						return;
 				}
 				espacio.moverJugador(nuevaX, nuevaY); // Mover jugador a la nueva posicion
 			}
 			@Override public void keyReleased(KeyEvent e) {}
 			@Override public void keyTyped(KeyEvent e) {}
 		});
+
+		// TIMER - Mover el disparo hacia arriba cada 50ms //
+		Timer timerDisparo = new Timer(50, ev -> {
+			Espacio.getInstance().actualizarDisparo();
+		});
+		timerDisparo.start();
 	}
 
 	@Override
