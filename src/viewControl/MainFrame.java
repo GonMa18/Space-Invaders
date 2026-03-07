@@ -65,12 +65,11 @@ public class MainFrame extends JFrame implements Observer {
 		setVisible(true);
 		requestFocusInWindow(); // Para que reciba eventos de teclado
 
-		// TECLADO - Controles del jugador //
+		// TECLADO - Solo registrar teclas pulsadas y soltadas //
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				teclasPresionadas.add(e.getKeyCode());
-				procesarTeclas(); // Cada repeticion del SO procesa TODAS las teclas pulsadas
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -78,6 +77,20 @@ public class MainFrame extends JFrame implements Observer {
 			}
 			@Override public void keyTyped(KeyEvent e) {}
 		});
+
+		// TIMER - Movimiento continuo del jugador cada 40ms //
+		Timer timerMovimiento = new Timer(50, ev -> {
+			moverJugador();
+		});
+		timerMovimiento.start();
+
+		// TIMER - Disparo continuo mientras SPACE esta pulsado cada 150ms //
+		Timer timerDisparoJugador = new Timer(180, ev -> {
+			if (teclasPresionadas.contains(KeyEvent.VK_SPACE)) {
+				Espacio.getInstance().disparar();
+			}
+		});
+		timerDisparoJugador.start();
 
 		// TIMER - Mover el disparo hacia arriba cada 50ms //
 		Timer timerDisparo = new Timer(50, ev -> {
@@ -98,8 +111,8 @@ public class MainFrame extends JFrame implements Observer {
 		repaint();
 	}
 
-	// Procesa todas las teclas pulsadas a la vez
-	private void procesarTeclas() {
+	// Mueve al jugador segun las teclas de direccion pulsadas (llamado por Timer)
+	private void moverJugador() {
 		Espacio espacio = Espacio.getInstance();
 		Jugador j = espacio.getJugador();
 		if (j == null) return;
@@ -123,9 +136,6 @@ public class MainFrame extends JFrame implements Observer {
 		if (teclasPresionadas.contains(KeyEvent.VK_DOWN)) {
 			nuevaY = Math.min(FILAS - 1, nuevaY + 1);
 			movido = true;
-		}
-		if (teclasPresionadas.contains(KeyEvent.VK_SPACE)) {
-			espacio.disparar();
 		}
 		if (movido) {
 			espacio.moverJugador(nuevaX, nuevaY);
