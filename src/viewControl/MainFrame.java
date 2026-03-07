@@ -6,9 +6,11 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,6 +30,9 @@ public class MainFrame extends JFrame implements Observer {
 	private static final int FILAS = 60;
 	// Tamaño en pixeles de cada celda de la matriz
 	private static final int TAM_CELDA = 5; // 100*5=500px ancho, 60*5=300px alto
+
+	// Teclas actualmente pulsadas (para permitir varias a la vez)
+	private final Set<Integer> teclasPresionadas = new HashSet<>();
 
 	public MainFrame() {
 		setTitle("Space Invaders");
@@ -60,39 +65,32 @@ public class MainFrame extends JFrame implements Observer {
 		setVisible(true);
 		requestFocusInWindow(); // Para que reciba eventos de teclado
 
-		// TECLADO - Controles del jugador //
+		// TECLADO - Solo registrar teclas pulsadas y soltadas //
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				Espacio espacio = Espacio.getInstance();
-				Jugador j = espacio.getJugador();
-				if (j == null) return;
-
-				int nuevaX = j.getX();
-				int nuevaY = j.getY();
-
-				switch (e.getKeyCode()) {
-					case KeyEvent.VK_LEFT:  // Flecha izquierda
-						nuevaX = Math.max(0, nuevaX - 1);
-						break;
-					case KeyEvent.VK_RIGHT: // Flecha derecha
-						nuevaX = Math.min(COLUMNAS - 1, nuevaX + 1);
-						break;
-					case KeyEvent.VK_UP:    // Flecha arriba
-						nuevaY = Math.max(0, nuevaY - 1);
-						break;
-					case KeyEvent.VK_DOWN:  // Flecha abajo
-						nuevaY = Math.min(FILAS - 1, nuevaY + 1);
-						break;
-					case KeyEvent.VK_SPACE: // Espacio para disparar
-						espacio.disparar();
-						return;
-				}
-				espacio.moverJugador(nuevaX, nuevaY); // Mover jugador a la nueva posicion
+				teclasPresionadas.add(e.getKeyCode());
 			}
-			@Override public void keyReleased(KeyEvent e) {}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				teclasPresionadas.remove(e.getKeyCode());
+			}
 			@Override public void keyTyped(KeyEvent e) {}
 		});
+
+		// TIMER - Movimiento continuo del jugador cada 40ms //
+		Timer timerMovimiento = new Timer(50, ev -> {
+			moverJugador();
+		});
+		timerMovimiento.start();
+
+		// TIMER - Disparo continuo mientras SPACE esta pulsado cada 150ms //
+		Timer timerDisparoJugador = new Timer(180, ev -> {
+			if (teclasPresionadas.contains(KeyEvent.VK_SPACE)) {
+				Espacio.getInstance().disparar();
+			}
+		});
+		timerDisparoJugador.start();
 
 		// TIMER - Mover el disparo hacia arriba cada 50ms //
 		Timer timerDisparo = new Timer(50, ev -> {
@@ -111,6 +109,37 @@ public class MainFrame extends JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		// Repintar el tablero cuando el modelo notifique cambios
 		repaint();
+	}
+
+	// Mueve al jugador segun las teclas de direccion pulsadas (llamado por Timer)
+	private void moverJugador() {
+		Espacio espacio = Espacio.getInstance();
+		Jugador j = espacio.getJugador();
+		if (j == null) return;
+
+		int nuevaX = j.getX();
+		int nuevaY = j.getY();
+		boolean movido = false;
+
+		if (teclasPresionadas.contains(KeyEvent.VK_LEFT)) {
+			nuevaX = Math.max(0, nuevaX - 1);
+			movido = true;
+		}
+		if (teclasPresionadas.contains(KeyEvent.VK_RIGHT)) {
+			nuevaX = Math.min(COLUMNAS - 1, nuevaX + 1);
+			movido = true;
+		}
+		if (teclasPresionadas.contains(KeyEvent.VK_UP)) {
+			nuevaY = Math.max(0, nuevaY - 1);
+			movido = true;
+		}
+		if (teclasPresionadas.contains(KeyEvent.VK_DOWN)) {
+			nuevaY = Math.min(FILAS - 1, nuevaY + 1);
+			movido = true;
+		}
+		if (movido) {
+			espacio.moverJugador(nuevaX, nuevaY);
+		}
 	}
 
 	// Pinta las naves en la matriz 100x60
