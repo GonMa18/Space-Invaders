@@ -34,6 +34,20 @@ public class MainFrame extends JFrame implements Observer {
 	// Teclas actualmente pulsadas (para permitir varias a la vez)
 	private final Set<Integer> teclasPresionadas = new HashSet<>();
 
+	// =====================================================================
+	// SISTEMA A: Disparo por TICKS (sincronizado con proyectiles)
+	// =====================================================================
+
+	private int ticksDesdeUltimoDisparo = 0;
+	private static final int TICKS_ENTRE_DISPAROS = 4; // disparar cada N ticks (N*50ms)
+
+	// =====================================================================
+	// SISTEMA B: Disparo por COOLDOWN (basado en milisegundos)
+	// =====================================================================
+
+	// private long ultimoDisparo = 0;
+	// private static final long COOLDOWN_DISPARO = 175; // ms entre disparos
+
 	public MainFrame() {
 		setTitle("Space Invaders");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,11 +79,18 @@ public class MainFrame extends JFrame implements Observer {
 		setVisible(true);
 		requestFocusInWindow(); // Para que reciba eventos de teclado
 
-		// TECLADO - Solo registrar teclas pulsadas y soltadas //
+		// =====================================================================
+		// SISTEMA A: Disparo por TICKS (sincronizado con proyectiles)
+		// =====================================================================
+
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				teclasPresionadas.add(e.getKeyCode());
+				if (e.getKeyCode() == KeyEvent.VK_SPACE && ticksDesdeUltimoDisparo >= TICKS_ENTRE_DISPAROS) {
+					Espacio.getInstance().disparar();
+					ticksDesdeUltimoDisparo = 0;
+				}
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -78,25 +99,61 @@ public class MainFrame extends JFrame implements Observer {
 			@Override public void keyTyped(KeyEvent e) {}
 		});
 
-		// TIMER - Movimiento continuo del jugador cada 40ms //
+		// =====================================================================
+		// SISTEMA B: Disparo por COOLDOWN (basado en milisegundos)
+		// =====================================================================
+
+		// addKeyListener(new KeyListener() {
+		// 	@Override
+		// 	public void keyPressed(KeyEvent e) {
+		// 		teclasPresionadas.add(e.getKeyCode());
+		// 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+		// 			intentarDisparar();
+		// 		}
+		// 	}
+		// 	@Override
+		// 	public void keyReleased(KeyEvent e) {
+		// 		teclasPresionadas.remove(e.getKeyCode());
+		// 	}
+		// 	@Override public void keyTyped(KeyEvent e) {}
+		// });
+
+		// TIMER - Movimiento continuo del jugador cada 50ms //
 		Timer timerMovimiento = new Timer(50, ev -> {
 			moverJugador();
 		});
 		timerMovimiento.start();
 
-		// TIMER - Disparo continuo mientras SPACE esta pulsado cada 150ms //
-		Timer timerDisparoJugador = new Timer(180, ev -> {
-			if (teclasPresionadas.contains(KeyEvent.VK_SPACE)) {
-				Espacio.getInstance().disparar();
+		// =====================================================================
+		// SISTEMA A: Disparo por TICKS (sincronizado con proyectiles)
+		// =====================================================================
+
+		Timer timerProyectiles = new Timer(50, ev -> {
+			Espacio.getInstance().actualizarDisparo(); // 1. Mover proyectiles
+			ticksDesdeUltimoDisparo++;                  // 2. Contar tick
+			if (teclasPresionadas.contains(KeyEvent.VK_SPACE)
+					&& ticksDesdeUltimoDisparo >= TICKS_ENTRE_DISPAROS) {
+				Espacio.getInstance().disparar();       // 3. Disparar
+				ticksDesdeUltimoDisparo = 0;            // 4. Reset contador
 			}
 		});
-		timerDisparoJugador.start();
+		timerProyectiles.start();
 
-		// TIMER - Mover el disparo hacia arriba cada 50ms //
-		Timer timerDisparo = new Timer(50, ev -> {
-			Espacio.getInstance().actualizarDisparo();
-		});
-		timerDisparo.start();
+		// =====================================================================
+		// SISTEMA B: Disparo por COOLDOWN (basado en milisegundos)
+		// =====================================================================
+
+		// Timer timerDisparoJugador = new Timer(50, ev -> {
+		// 	if (teclasPresionadas.contains(KeyEvent.VK_SPACE)) {
+		// 		intentarDisparar();
+		// 	}
+		// });
+		// timerDisparoJugador.start();
+		//
+		// Timer timerDisparo = new Timer(50, ev -> {
+		// 	Espacio.getInstance().actualizarDisparo();
+		// });
+		// timerDisparo.start();
 
 		// TIMER - Mover los enemigos hacia abajo cada 200ms //
 		Timer timerEnemigos = new Timer(200, ev -> {
@@ -110,6 +167,17 @@ public class MainFrame extends JFrame implements Observer {
 		// Repintar el tablero cuando el modelo notifique cambios
 		repaint();
 	}
+
+	// =====================================================================
+	// SISTEMA B: Disparo por COOLDOWN (basado en milisegundos)
+	// =====================================================================
+	// private void intentarDisparar() {
+	// 	long ahora = System.currentTimeMillis();
+	// 	if (ahora - ultimoDisparo >= COOLDOWN_DISPARO) {
+	// 		Espacio.getInstance().disparar();
+	// 		ultimoDisparo = ahora;
+	// 	}
+	// }
 
 	// Mueve al jugador segun las teclas de direccion pulsadas (llamado por Timer)
 	private void moverJugador() {
