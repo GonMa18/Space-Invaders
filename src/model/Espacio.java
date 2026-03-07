@@ -138,7 +138,7 @@ public class Espacio extends Observable {
 
     private void comprobarMuertes(Disparo d) { //Si el disparo le ha dado a algo
         for (Enemigo e : getEnemigos()) { //Reviso todos los enemigos que siguen vivos
-            if (e.sigueVivo() && e.getX() == d.getX() && e.getY() == d.getY()) {    //Si el disparo ha dado a un enemigo
+            if (e.sigueVivo() && e.getX() == d.getX() && Math.abs(e.getY() - d.getY()) <= 1) {    //Si el disparo ha dado a un enemigo (tolerancia de un pixel)
                 e.setSigueJugando(false); // El enemigo muere
                 d.setShoot(false);        // El disparo desaparece
                 return; // Un disparo solo mata a un enemigo

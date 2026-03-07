@@ -128,7 +128,8 @@ public class MainFrame extends JFrame implements Observer {
 		// SISTEMA A: Disparo por TICKS (sincronizado con proyectiles)
 		// =====================================================================
 
-		Timer timerProyectiles = new Timer(50, ev -> {
+		Timer[] timerProyectiles = new Timer[1]; // Array para poder referenciarlo dentro del lambda
+		timerProyectiles[0] = new Timer(50, ev -> {
 			Espacio.getInstance().actualizarDisparo(); // 1. Mover proyectiles
 			ticksDesdeUltimoDisparo++;                  // 2. Contar tick
 			if (teclasPresionadas.contains(KeyEvent.VK_SPACE)
@@ -136,8 +137,16 @@ public class MainFrame extends JFrame implements Observer {
 				Espacio.getInstance().disparar();       // 3. Disparar
 				ticksDesdeUltimoDisparo = 0;            // 4. Reset contador
 			}
+			
+			if(Espacio.getInstance().isVictory()) {
+				timerProyectiles[0].stop();
+				timerMovimiento.stop();
+				//timerEnemigos[0].stop();
+				dispose(); // Cierra la ventana del juego
+				new FinishFrame("Win").setVisible(true); // Abre la ventana de fin de juego
+			}
 		});
-		timerProyectiles.start();
+		timerProyectiles[0].start();
 
 		// =====================================================================
 		// SISTEMA B: Disparo por COOLDOWN (basado en milisegundos)
@@ -156,10 +165,18 @@ public class MainFrame extends JFrame implements Observer {
 		// timerDisparo.start();
 
 		// TIMER - Mover los enemigos hacia abajo cada 200ms //
-		Timer timerEnemigos = new Timer(200, ev -> {
+		Timer[] timerEnemigos = new Timer[1]; // Array para poder referenciarlo dentro del lambda
+		timerEnemigos[0] = new Timer(200, ev -> {
 			Espacio.getInstance().actualizarEnemigos();
+			if(Espacio.getInstance().isGameOver()) {
+				timerEnemigos[0].stop();
+				timerMovimiento.stop();
+				timerProyectiles[0].stop();
+				dispose(); // Cierra la ventana del juego
+				new FinishFrame("Game Over").setVisible(true); // Abre la ventana de fin de juego
+			}
 		});
-		timerEnemigos.start();
+		timerEnemigos[0].start();
 	}
 
 	@Override

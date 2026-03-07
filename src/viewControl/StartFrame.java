@@ -87,8 +87,8 @@ public class StartFrame extends JFrame implements Observer{
         JLabel subtitulo1 = new JLabel(new ImageIcon(pressSpaceScaled));
         subtitulo1.setHorizontalAlignment(JLabel.CENTER);
         GridBagConstraints gbcPress = new GridBagConstraints();
-        gbcPress.gridx = 0;
-        gbcPress.gridy = 1;
+        gbcPress.gridx = 0;               
+          gbcPress.gridy = 1;
         gbcPress.insets = new Insets(10, 0, 10, 0);
         gbcPress.anchor = GridBagConstraints.CENTER;
         panel.add(subtitulo1, gbcPress);
@@ -102,7 +102,7 @@ public class StartFrame extends JFrame implements Observer{
         gbcControles.gridy = 2;
         gbcControles.insets = new Insets(10, 0, 10, 0);
         gbcControles.anchor = GridBagConstraints.CENTER;
-        panel.add(controles, gbcControles);
+        panel.add(controles, gbcControles); 
 
         getContentPane().add(panel);	
         
