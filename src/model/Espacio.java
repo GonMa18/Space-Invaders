@@ -44,17 +44,28 @@ public class Espacio extends Observable {
         // Crear jugador
         naves.add(new Jugador());
 
-        // Crear 4 enemigos en y=5 con x aleatoria (sin repetir posicion)
+        // Crear entre 4 y 8 enemigos en y=5 con x aleatoria (sin tocarse entre ellos)
         Random rn = new Random();
+        int numEnemigos = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8
         List<Integer> posicionesUsadas = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < numEnemigos; i++) {
             int x;
             do {
                 x = rn.nextInt(ancho); // x aleatorio entre 0 y 99
-            } while (posicionesUsadas.contains(x));
+            } while (posicionOcupadaOAdyacente(posicionesUsadas, x));
             posicionesUsadas.add(x);
             naves.add(new Enemigo(x, 5));
         }
+    }
+
+    // Comprueba si x coincide o es adyacente a alguna posicion ya usada
+    private boolean posicionOcupadaOAdyacente(List<Integer> posiciones, int x) {
+        for (int pos : posiciones) {
+            if (Math.abs(pos - x) <= 1) { // misma posicion o a distancia 1
+                return true;
+            }
+        }
+        return false;
     }
     
     public List<Nave> getNaves() {
