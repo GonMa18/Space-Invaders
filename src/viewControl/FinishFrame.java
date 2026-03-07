@@ -78,6 +78,7 @@ public class FinishFrame extends JFrame {
 		contentPane.add(label);
 
 		setVisible(true);
+		setLocationRelativeTo(null);
 	}
 
 }
