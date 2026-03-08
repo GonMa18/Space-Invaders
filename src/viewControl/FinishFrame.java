@@ -20,7 +20,11 @@ public class FinishFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
 	/**
 	 * Launch the application.
 	 */
@@ -36,7 +40,11 @@ public class FinishFrame extends JFrame {
 			}
 		});
 	}
-
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
 	/**
 	 * Create the frame.
 	 */
@@ -63,7 +71,7 @@ public class FinishFrame extends JFrame {
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
-		 // Elegir imagen según resultado
+		 //// CARGAR IMAGEN ////
 	    String rutaImagen = resultado.equals("Win") 	
 	        ? "Resources/You Win.png" 	
 	        : "Resources/Game Over.png";	

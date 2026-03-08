@@ -26,7 +26,11 @@ public class StartFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
 	/**
 	 * Launch the application.
 	 */
@@ -42,18 +46,22 @@ public class StartFrame extends JFrame implements Observer{
 			}
 		});
 	}
-
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
 	/**
 	 * Create the frame.
 	 */
     public StartFrame() {
         setTitle("Space Invaders by RetroDevs");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	// Cierra la aplicación al cerrar el frame
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		// Cierra la aplicación al cerrar el frame
         setResizable(false);
         
-        Espacio.getInstance().addObserver(this); // Para que el frame se actualice cuando el espacio cambie - REVISAR
+        Espacio.getInstance().addObserver(this); 			// Para que el frame se actualice cuando el espacio cambie
         
-        // FONDO //
+        //// FONDO ////
         ImageIcon bgIcon = new ImageIcon("Resources/Fondo.png");
         Image bgImage = bgIcon.getImage();
 
@@ -70,7 +78,7 @@ public class StartFrame extends JFrame implements Observer{
         gbc.gridx = 0;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        // CABECERA //
+        //// CABECERA ////
         ImageIcon originalIcon = new ImageIcon("Resources/Titulo.jpg");
         Image scaledImage = originalIcon.getImage().getScaledInstance(350, 80, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
@@ -83,7 +91,7 @@ public class StartFrame extends JFrame implements Observer{
         gbcTitulo.anchor = GridBagConstraints.CENTER;
         panel.add(titulo, gbcTitulo);
 
-        // INSTRUCCIONES //
+        //// INSTRUCCIONES ////
         ImageIcon pressSpaceIcon = new ImageIcon("Resources/Press Space.png");
         Image pressSpaceScaled = pressSpaceIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         JLabel subtitulo1 = new JLabel(new ImageIcon(pressSpaceScaled));
@@ -95,7 +103,7 @@ public class StartFrame extends JFrame implements Observer{
         gbcPress.anchor = GridBagConstraints.CENTER;
         panel.add(subtitulo1, gbcPress);
 
-        // CONTROLES //
+        //// CONTROLES ////
         JLabel controles = new JLabel("Flechas para moverte y espacio para disparar");
         controles.setForeground(Color.DARK_GRAY);
         controles.setFont(new Font("Serif", Font.PLAIN, 10));
@@ -108,7 +116,7 @@ public class StartFrame extends JFrame implements Observer{
 
         getContentPane().add(panel);	
         
-        // DESARROLLADORES //
+        //// DESARROLLADORES ////
         JLabel developers = new JLabel("by RetroDevs for Sprint 1");
         developers.setForeground(new Color(255, 128, 0));
         developers.setFont(new Font("SansSerif", Font.ITALIC, 10));
@@ -117,36 +125,35 @@ public class StartFrame extends JFrame implements Observer{
         gbc_developers.gridy = 3;
         panel.add(developers, gbc_developers);
         
-        pack(); 	// Ajusta el tamaño del frame al contenido
-        setLocationRelativeTo(null); // Centra el frame en la pantalla
+        pack(); 								// Ajusta el tamaño del frame al contenido
+        setLocationRelativeTo(null); 			// Centra el frame en la pantalla
         setVisible(true); 
 
-        // TECLADO //
-        setFocusable(true);	// Para que el frame pueda recibir eventos de teclado
+        //// TECLADO ////
+        setFocusable(true);						// Para que el frame pueda recibir eventos de teclado
         requestFocusInWindow();	
-
-//        // SPACE PARA INICIAR //
-//        addKeyListener(new KeyListener() { //Listener que escucha el teclado
-//            @Override
-//            public void keyPressed(KeyEvent e) {	//Cuando se pulse una tecla
-//                if (e.getKeyCode() == KeyEvent.VK_SPACE) {	//Si la tecla es espacio
-//                    iniciarJuego();	//Iniciamos el juego
-//                }
-//            }
-//            @Override public void keyReleased(KeyEvent e) {}
-//            @Override public void keyTyped(KeyEvent e) {}
-//        });
         
-        // CONTROLLER //
-        Controller controller = new Controller();	// Creamos el controlador para que se encargue de gestionar el juego
-        addKeyListener(controller);	// Añadimos el controlador como listener de teclado para que pueda gestionar los eventos de teclado
+		// =====================================================================
+		// 								CONTROLLER
+		// =====================================================================
+        
+        Controller controller = new Controller();		// Creamos el controlador para que se encargue de gestionar el juego
+        addKeyListener(controller);						// Añadimos el controlador como listener de teclado para que pueda gestionar los eventos de teclado
    
     }
-
-    private void iniciarJuego() {	//Iniciamos el juego
-    	Espacio.getInstance().cambiarAMain();	// Notificamos a la vista para que se actualice antes de iniciar el juego
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+    private void iniciarJuego() {	
+    	Espacio.getInstance().cambiarAMain();			// Notificamos a la vista para que se actualice antes de iniciar el juego
     }
-
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
     @Override
     public void update(Observable o, Object arg) {
     	//Cuando el observable es espacio y notifica un cambio, iniciamos el juego
@@ -158,19 +165,30 @@ public class StartFrame extends JFrame implements Observer{
 
 	}
     
-    //////////////// CONTROLLER ////////////////
-   
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+	// =====================================================================
+	// 								CONTROLLER
+	// =====================================================================
+    
     // Gestiona la interaccion del jugadotr con el juego, recibe los eventos de teclado y gestiona el espacio
     // Seguimo la arquitectura MVC: controlador dentro de las views
     
-    private class Controller implements KeyListener {	//Viene implementada ya en JAVA
+    private class Controller implements KeyListener {		//Viene implementada ya en JAVA
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {	// Si se pulsa espacio, iniciamos el juego
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {		// Si se pulsa espacio, iniciamos el juego
 				iniciarJuego();
 			}
 		}
 		@Override public void keyReleased(KeyEvent e) {}
 		@Override public void keyTyped(KeyEvent e) {}
 	}
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
 }
