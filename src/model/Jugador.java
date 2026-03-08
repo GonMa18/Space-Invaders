@@ -9,13 +9,15 @@ public class Jugador extends Nave { //Hereda de NAVE
 	// Las coordenadas (x, y), la velocidad y el estado (sigueJugando)
 	// ya los hereda de Nave.
 	
-	private Disparo disparo;
+	//private Disparo disparo;
+	private ArrayList<Disparo> disparos;
 	
 	
 	// Constructora: crea el jugador en la posicion inicial (y=50, x=55)
 	public Jugador() {
 		super(50, 55, 1); //Posicion inicial (y=50, x=55, velocidad=1)
-		this.disparo = new Disparo(x,y); //Inicialmente sin disparo activo
+		//this.disparo = new Disparo(x,y); //Inicialmente sin disparo activo
+		this.disparos = new ArrayList<>(); 
 	}
 	
 	@Override
@@ -32,14 +34,22 @@ public class Jugador extends Nave { //Hereda de NAVE
 	
 	// Crea un nuevo disparo cada vez que se pulsa espacio
 	public void disparar() {
-		if (!disparo.isShooting()){
-			disparo= new Disparo(x,y-1); //Crea un nuevo disparo en la posicion actual del jugador
-			disparo.setShoot(true); // Activa el disparo
-		}
+//		if (!disparo.isShooting()){
+//			disparo= new Disparo(x,y-1); //Crea un nuevo disparo en la posicion actual del jugador
+//			disparo.setShoot(true); // Activa el disparo
+//		}
+		Disparo nuevoDisparo = new Disparo(x, y-1); //Crea un nuevo disparo en la posicion actual del jugador
+		nuevoDisparo.setShoot(true); // Activa el disparo
+		disparos.add(nuevoDisparo); // Agrega el nuevo disparo a la lista de disparos activos
 	}
 	
-	public Disparo getDisparos() {
-		return disparo;
+	public ArrayList<Disparo> getDisparos() {
+		//return disparo;
+		return disparos;
 	}
 	
+    // Elimina los disparos que ya no están activos (limpieza)
+    public void limpiarDisparos() {
+        disparos.removeIf(d -> !d.isShooting());			//REVISAR
+    }
 }

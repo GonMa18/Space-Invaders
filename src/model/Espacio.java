@@ -154,27 +154,38 @@ public class Espacio extends Observable {
     public void actualizarDisparo() {
     	if (jugador ==null) return; // Si no hay jugador, no hay disparos que actualizar
         
-        Disparo disparo = jugador.getDisparos();
+        ArrayList<Disparo> disparos = jugador.getDisparos();
 
-        if (disparo.isShooting()) {
-        	disparo.subir(); // Mueve el disparo un pixel hacia arriba
-            comprobarMuertes(disparo); // Comprueba si ha dado a algun enemigo
-        }
-   
+//        if (disparo.isShooting()) {
+//        	disparo.subir(); // Mueve el disparo un pixel hacia arriba
+//            comprobarMuertes(disparo); // Comprueba si ha dado a algun enemigo
+//        }
+        
+        for (Disparo disparo : disparos) {
+            if (disparo.isShooting()) {
+                disparo.subir();	//Mueve el disparo un pixel hacia arriba
+                // Si el disparo sale de la pantalla, desactivarlo
+                comprobarMuertes(disparo);
+                }
+            }
+        jugador.limpiarDisparos(); // Elimina los disparos que ya no están activos
         notificarVista();
     }
 
     // Metodo para movel los enemigos un pixel abajo --> TIMER 200ms
     public void actualizarEnemigos() {  
-    	Disparo disparo = jugador.getDisparos();
+    	ArrayList<Disparo> disparos = jugador.getDisparos();
     	
         for (Enemigo e : enemigos) {	//Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
                 //e.bajar(); // Baja un pixel
             	e.mover(1,0); // Mueve un pixel hacia abajo (y+1)
-            	if(disparo.isShooting() && disparo !=null) {
-            		comprobarMuertes(disparo); // Comprueba si el disparo ha dado a algun enemigo
+            	for (Disparo disparo : disparos) {
+            		if(disparo.isShooting() && disparo !=null) {
+                		comprobarMuertes(disparo); // Comprueba si el disparo ha dado a algun enemigo
+                	}
             	}
+            	
             }
         }
         notificarVista();

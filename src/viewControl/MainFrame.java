@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -294,16 +295,25 @@ public class MainFrame extends JFrame implements Observer {
 		}
 		
 		//Disparos -- Amarillo	//REVISAR
-		if (j != null) {
-			Disparo d = j.getDisparos();
+		ArrayList<Disparo> disparos = j.getDisparos();
+		for(Disparo d : disparos) {
 			if (d.isShooting()) {	// Si el disparo está activo
 				int dx = d.getX() * TAM_CELDA; // Convertir coordenada logica a pixel
 				int dy = d.getY() * TAM_CELDA;
 				g.setColor(Color.YELLOW); // Disparos en amarillo
 				g.fillRect(dx, dy, TAM_CELDA, TAM_CELDA);
-				
 			}
 		}
+////		if (j != null) {
+////			Disparo d = j.getDisparos();
+////			if (d.isShooting()) {	// Si el disparo está activo
+////				int dx = d.getX() * TAM_CELDA; // Convertir coordenada logica a pixel
+////				int dy = d.getY() * TAM_CELDA;
+////				g.setColor(Color.YELLOW); // Disparos en amarillo
+////				g.fillRect(dx, dy, TAM_CELDA, TAM_CELDA);
+////				
+////			}
+//		}
 		
 		//Enemigo -- rojo
 		for (Enemigo e : espacio.getEnemigos()) {
