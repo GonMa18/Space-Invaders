@@ -64,17 +64,17 @@ public class FinishFrame extends JFrame {
 		setContentPane(contentPane);
 		
 		 // Elegir imagen según resultado
-	    String rutaImagen = resultado.equals("Win") 
-	        ? "Resources/You Win.png" 
-	        : "Resources/Game Over.png";
+	    String rutaImagen = resultado.equals("Win") 	
+	        ? "Resources/You Win.png" 	
+	        : "Resources/Game Over.png";	
 		
 		ImageIcon iconoGameOver = new ImageIcon(rutaImagen);
 		int alturaImagen = 200;
 		int anchoImagen = iconoGameOver.getIconWidth() * alturaImagen / iconoGameOver.getIconHeight();
 		Image imagenGameOver = iconoGameOver.getImage().getScaledInstance(anchoImagen, alturaImagen, Image.SCALE_SMOOTH);
 		JLabel label = new JLabel(new ImageIcon(imagenGameOver));
-		int x = (450 - anchoImagen) / 2; // centrado horizontal
-		label.setBounds(x, 20, anchoImagen, alturaImagen);
+		int x = (getWidth() - anchoImagen) / 2;
+		int y = (getHeight() - alturaImagen) / 2;		label.setBounds(x, 20, anchoImagen, alturaImagen);
 		contentPane.add(label);
 
 		setVisible(true);

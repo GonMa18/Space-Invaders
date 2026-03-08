@@ -83,7 +83,7 @@ public class MainFrame extends JFrame implements Observer {
 		// SISTEMA A: Disparo por TICKS (sincronizado con proyectiles)
 		// =====================================================================
 
-		addKeyListener(new KeyListener() {
+		addKeyListener(new KeyListener() {	//Para detectar las teclas pulsadas
 			@Override
 			public void keyPressed(KeyEvent e) {
 				teclasPresionadas.add(e.getKeyCode());
@@ -119,34 +119,38 @@ public class MainFrame extends JFrame implements Observer {
 		// });
 
 		// TIMER - Movimiento continuo del jugador cada 50ms //
-		Timer timerMovimiento = new Timer(50, ev -> {
+		Timer timerMovimiento = new Timer(50, ev -> {	// Llamado cada 50ms para mover al jugador según las teclas presionadas
 			moverJugador();
 		});
-		timerMovimiento.start();
+		timerMovimiento.start();	// Iniciar el timer de movimiento del jugador
 
+
+		
+		////////////////////////////// TIMER  JUGADOR Y DISPAROS	///////////////////////////////////////
+		
 		// =====================================================================
 		// SISTEMA A: Disparo por TICKS (sincronizado con proyectiles)
 		// =====================================================================
 
 		Timer[] timerProyectiles = new Timer[1]; // Array para poder referenciarlo dentro del lambda
-		timerProyectiles[0] = new Timer(50, ev -> {
+		timerProyectiles[0] = new Timer(50, ev -> {	// Llamado cada 50ms para actualizar proyectiles y manejar disparos
 			Espacio.getInstance().actualizarDisparo(); // 1. Mover proyectiles
 			ticksDesdeUltimoDisparo++;                  // 2. Contar tick
 			if (teclasPresionadas.contains(KeyEvent.VK_SPACE)
-					&& ticksDesdeUltimoDisparo >= TICKS_ENTRE_DISPAROS) {
+					&& ticksDesdeUltimoDisparo >= TICKS_ENTRE_DISPAROS) {	// Intentar disparar si se mantiene espacio y ha pasado el tiempo
 				Espacio.getInstance().disparar();       // 3. Disparar
 				ticksDesdeUltimoDisparo = 0;            // 4. Reset contador
 			}
 			
-			if(Espacio.getInstance().isVictory()) {
-				timerProyectiles[0].stop();
-				timerMovimiento.stop();
+			if(Espacio.getInstance().isVictory()) {	// Si se ha ganado el juego
+				timerProyectiles[0].stop();	// Detener timer de proyectiles
+				timerMovimiento.stop();	// Detener timer de movimiento del jugador
 				//timerEnemigos[0].stop();
 				dispose(); // Cierra la ventana del juego
-				new FinishFrame("Win").setVisible(true); // Abre la ventana de fin de juego
+				new FinishFrame("Win").setVisible(true); // Abre la ventana de fin de juego --> VICTORIA
 			}
 		});
-		timerProyectiles[0].start();
+		timerProyectiles[0].start();	// Iniciar el timer de proyectiles
 
 		// =====================================================================
 		// SISTEMA B: Disparo por COOLDOWN (basado en milisegundos)
@@ -163,24 +167,26 @@ public class MainFrame extends JFrame implements Observer {
 		// 	Espacio.getInstance().actualizarDisparo();
 		// });
 		// timerDisparo.start();
+		
+		////////////////////////////// TIMER  ENEMIGOS	///////////////////////////////////////
 
-		// TIMER - Mover los enemigos hacia abajo cada 200ms //
+		// Mover los enemigos hacia abajo cada 200ms
 		Timer[] timerEnemigos = new Timer[1]; // Array para poder referenciarlo dentro del lambda
-		timerEnemigos[0] = new Timer(200, ev -> {
-			Espacio.getInstance().actualizarEnemigos();
-			if(Espacio.getInstance().isGameOver()) {
-				timerEnemigos[0].stop();
-				timerMovimiento.stop();
-				timerProyectiles[0].stop();
+		timerEnemigos[0] = new Timer(200, ev -> {	// Llamado cada 200ms para mover enemigos y verificar condiciones de juego
+			Espacio.getInstance().actualizarEnemigos(); // Mover enemigos hacia abajo
+			if(Espacio.getInstance().isGameOver()) {	// Si se ha perdido el juego (enemigo llegó al fondo o colisionó con jugador)
+				timerEnemigos[0].stop();	// Detener timer de enemigos
+				timerMovimiento.stop();		// Detener timer de movimiento del jugado
+				timerProyectiles[0].stop();	// Detener timer de proyectiles
 				dispose(); // Cierra la ventana del juego
-				new FinishFrame("Game Over").setVisible(true); // Abre la ventana de fin de juego
+				new FinishFrame("Game Over").setVisible(true); // Abre la ventana de fin de juego --> DERROTA
 			}
 		});
-		timerEnemigos[0].start();
+		timerEnemigos[0].start();	
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable o, Object arg) {	// Método llamado por el modelo (Espacio) cuando hay cambios que requieren actualizar la vista
 		// Repintar el tablero cuando el modelo notifique cambios
 		repaint();
 	}
@@ -195,35 +201,38 @@ public class MainFrame extends JFrame implements Observer {
 	// 		ultimoDisparo = ahora;
 	// 	}
 	// }
+	
+	////////////////////////////// MOVIMIENTO DEL JUGADOR	///////////////////////////////////////
+
 
 	// Mueve al jugador segun las teclas de direccion pulsadas (llamado por Timer)
 	private void moverJugador() {
-		Espacio espacio = Espacio.getInstance();
-		Jugador j = espacio.getJugador();
+		Espacio espacio = Espacio.getInstance();	// Obtener instancia del modelo para acceder al jugador
+		Jugador j = espacio.getJugador();	// Obtener el jugador actual del modelo
 		if (j == null) return;
 
-		int nuevaX = j.getX();
-		int nuevaY = j.getY();
-		boolean movido = false;
+		int nuevaX = j.getX();	// Coordenada actual X  del jugador
+		int nuevaY = j.getY();	// Coordenada actual Y del jugador
+		boolean movido = false;	
 
-		if (teclasPresionadas.contains(KeyEvent.VK_LEFT)) {
-			nuevaX = Math.max(0, nuevaX - 1);
+		if (teclasPresionadas.contains(KeyEvent.VK_LEFT)) {	// Si la tecla izquierda está presionada
+			nuevaX = Math.max(0, nuevaX - 1);	// Mover izquierda y asegurar que no salga del borde izquierdo (mínimo 0)
 			movido = true;
 		}
-		if (teclasPresionadas.contains(KeyEvent.VK_RIGHT)) {
-			nuevaX = Math.min(COLUMNAS - 1, nuevaX + 1);
+		if (teclasPresionadas.contains(KeyEvent.VK_RIGHT)) {	// Si la tecla derecha está presionada
+			nuevaX = Math.min(COLUMNAS - 1, nuevaX + 1);	// Mover derecha y asegurar que no salga del borde derecho (máximo COLUMNAS-1)
 			movido = true;
 		}
-		if (teclasPresionadas.contains(KeyEvent.VK_UP)) {
-			nuevaY = Math.max(0, nuevaY - 1);
+		if (teclasPresionadas.contains(KeyEvent.VK_UP)) {	// Si la tecla arriba está presionada
+			nuevaY = Math.max(0, nuevaY - 1); 	// Mover arriba y asegurar que no salga del borde superior (mínimo 0)
 			movido = true;
 		}
-		if (teclasPresionadas.contains(KeyEvent.VK_DOWN)) {
-			nuevaY = Math.min(FILAS - 1, nuevaY + 1);
+		if (teclasPresionadas.contains(KeyEvent.VK_DOWN)) {	// Si la tecla abajo está presionada
+			nuevaY = Math.min(FILAS - 1, nuevaY + 1);	// Mover abajo y asegurar que no salga del borde inferior (máximo FILAS-1)
 			movido = true;
 		}
 		if (movido) {
-			espacio.moverJugador(nuevaX, nuevaY);
+			espacio.moverJugador(nuevaX, nuevaY);	// Notificar al modelo que el jugador se ha movido a las nuevas coordenadas
 		}
 	}
 
@@ -236,7 +245,7 @@ public class MainFrame extends JFrame implements Observer {
 			int px = n.getX() * TAM_CELDA; // Convertir coordenada logica a pixel
 			int py = n.getY() * TAM_CELDA;
 
-			if (n instanceof Jugador) {
+			if (n instanceof Jugador) {	// Si la nave es el jugador
 				g.setColor(Color.GREEN); // Jugador en verde
 			} else if (n instanceof Enemigo) {
 				if (n.continuesPlaying()) {
