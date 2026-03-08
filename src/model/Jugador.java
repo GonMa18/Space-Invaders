@@ -25,11 +25,11 @@ public class Jugador extends Nave { //Hereda de NAVE
 	public void mover(int x, int y) {
 		this.x += x;
 		this.y += y;
-		//Limites
-//		if (x < 0) {x = 0;}
-//		if (x > 99) {x = 99;}
-//		if (y < 0) {y = 0;}
-//		if (y > 59) {y = 59;}
+	    // Limites del espacio
+	    if (this.x < 0) { this.x = 0; }
+	    if (this.x > 99) { this.x = 99; }
+	    if (this.y < 0) { this.y = 0; }
+	    if (this.y > 59) { this.y = 59; }
 	}
 	
 	// Crea un nuevo disparo cada vez que se pulsa espacio
