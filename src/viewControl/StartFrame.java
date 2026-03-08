@@ -1,6 +1,5 @@
 package viewControl;
 
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -11,16 +10,18 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import model.Espacio;
 
+
+@SuppressWarnings("deprecation")
 public class StartFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 1L;
@@ -51,6 +52,7 @@ public class StartFrame extends JFrame implements Observer{
         setResizable(false);
         
         Espacio.getInstance().addObserver(this); // Para que el frame se actualice cuando el espacio cambie - REVISAR
+        
         // FONDO //
         ImageIcon bgIcon = new ImageIcon("Resources/Fondo.png");
         Image bgImage = bgIcon.getImage();
@@ -123,28 +125,52 @@ public class StartFrame extends JFrame implements Observer{
         setFocusable(true);	// Para que el frame pueda recibir eventos de teclado
         requestFocusInWindow();	
 
-        // SPACE PARA INICIAR //
-        addKeyListener(new KeyListener() { //Listener que escucha el teclado
-            @Override
-            public void keyPressed(KeyEvent e) {	//Cuando se pulse una tecla
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {	//Si la tecla es espacio
-                    iniciarJuego();	//Iniciamos el juego
-                }
-            }
-            @Override public void keyReleased(KeyEvent e) {}
-            @Override public void keyTyped(KeyEvent e) {}
-        });
+//        // SPACE PARA INICIAR //
+//        addKeyListener(new KeyListener() { //Listener que escucha el teclado
+//            @Override
+//            public void keyPressed(KeyEvent e) {	//Cuando se pulse una tecla
+//                if (e.getKeyCode() == KeyEvent.VK_SPACE) {	//Si la tecla es espacio
+//                    iniciarJuego();	//Iniciamos el juego
+//                }
+//            }
+//            @Override public void keyReleased(KeyEvent e) {}
+//            @Override public void keyTyped(KeyEvent e) {}
+//        });
+        
+        // CONTROLLER //
+        Controller controller = new Controller();	// Creamos el controlador para que se encargue de gestionar el juego
+        addKeyListener(controller);	// Añadimos el controlador como listener de teclado para que pueda gestionar los eventos de teclado
+   
     }
 
     private void iniciarJuego() {	//Iniciamos el juego
-    	Espacio.getInstance().iniciarEspacio();	// Notificamos a la vista para que se actualice antes de iniciar el juego
-    	   }
+    	Espacio.getInstance().cambiarAMain();	// Notificamos a la vista para que se actualice antes de iniciar el juego
+    }
 
     @Override
-    public void update(java.util.Observable o, Object arg) {
-		// No es necesario actualizar nada en el StartFrame, ya que solo se muestra al inicio
-    	dispose(); // Cerramos el StartFrame cuando se recibe una actualización del Espacio
-    	Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones
-    	new MainFrame(); // Abrimos el MainFrame para iniciar el juego
+    public void update(Observable o, Object arg) {
+    	//Cuando el observable es espacio y notifica un cambio, iniciamos el juego
+    	if (o instanceof Espacio) {
+    		Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones
+    		this.dispose(); // Cerramos el StartFrame
+    		new MainFrame(); // Abrimos el MainFrame para iniciar el juego DESDE EL CONTROLLER
+    	}
+
+	}
+    
+    //////////////// CONTROLLER ////////////////
+   
+    // Gestiona la interaccion del jugadotr con el juego, recibe los eventos de teclado y gestiona el espacio
+    // Seguimo la arquitectura MVC: controlador dentro de las views
+    
+    private class Controller implements KeyListener {	//Viene implementada ya en JAVA
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {	// Si se pulsa espacio, iniciamos el juego
+				iniciarJuego();
+			}
+		}
+		@Override public void keyReleased(KeyEvent e) {}
+		@Override public void keyTyped(KeyEvent e) {}
 	}
 }

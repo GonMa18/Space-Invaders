@@ -8,8 +8,8 @@ public class Enemigo extends Nave {
 	
 	@Override
 	public void mover(int y, int x) {
-		this.y = y;
-		this.x = x;
+		this.y += y;
+		this.x += x;
 	}
 
 	public void bajar() {
