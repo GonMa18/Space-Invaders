@@ -56,7 +56,7 @@ public class FinishFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		ImageIcon iconoFondo = new ImageIcon("Resources/Fondo.png");
+		ImageIcon iconoFondo = new ImageIcon("Resources/Images/Fondo.png");
 		Image imagenFondo = iconoFondo.getImage();
 		
 		 // Establecer el fondo del panel
@@ -73,8 +73,8 @@ public class FinishFrame extends JFrame {
 		
 		 //// CARGAR IMAGEN ////
 	    String rutaImagen = resultado.equals("Win") 	
-	        ? "Resources/You Win.png" 	
-	        : "Resources/Game Over.png";	
+	        ? "Resources/Images/You Win.png" 	
+	        : "Resources/Images/Game Over.png";	
 		
 		ImageIcon iconoGameOver = new ImageIcon(rutaImagen);
 		int alturaImagen = 200;

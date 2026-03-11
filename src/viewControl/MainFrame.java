@@ -52,7 +52,7 @@ public class MainFrame extends JFrame implements Observer {
 		setResizable(false);
 		
 		//// FONDO ////
-		ImageIcon iconoFondo = new ImageIcon("Resources/Fondo.png");
+		ImageIcon iconoFondo = new ImageIcon("Resources/Images/Fondo.png");
 		Image imagenFondo = iconoFondo.getImage();
 
 		contentPane = new JPanel() {
