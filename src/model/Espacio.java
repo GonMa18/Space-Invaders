@@ -217,7 +217,12 @@ public class Espacio extends Observable {
         if (jugador == null || !jugador.sigueVivo()) return true; 			//Reviso que haya muerto el jugador
         																	//Si sigue vivo:
         for (Enemigo e : enemigos) { 										//Paso a revisar donde estan los enemigos
-            if (e.sigueVivo() && e.getY() >= jugador.getY()) return true; 	//Han llegado a la fila del jugador
+//            if (e.sigueVivo() && e.getY() >= jugador.getY()) return true; 	//Han llegado a la fila del jugador
+            if (e.sigueVivo() && e.getX() == jugador.getX() && e.getY() >= jugador.getY()) {
+                jugador.setSigueJugando(false); 							// El jugador muere al ser tocado
+                return true;
+            }
+        
         }
         return false; 														//Sino, el juego continua
     }

@@ -1,4 +1,4 @@
-package main;
+   package main;
 //import java.util.Observer;
 
 
@@ -8,7 +8,7 @@ import model.Espacio;
 import viewControl.FinishFrame;
 import viewControl.MainFrame;
 import viewControl.StartFrame;
-
+   
 public class main {	//extends JFrame implements Observer{
 	public static void main(String[] args) {
 		
