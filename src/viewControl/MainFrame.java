@@ -125,7 +125,8 @@ public class MainFrame extends JFrame implements Observer {
         }
 		@Override
 		public void keyReleased(KeyEvent e) {}
-		@Override public void keyTyped(KeyEvent e) {}
+		@Override 
+		public void keyTyped(KeyEvent e) {}
 	}
 	
     

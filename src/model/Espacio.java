@@ -114,6 +114,9 @@ public class Espacio extends Observable {
 	}
     
     
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+    
     // Comprueba si x coincide o es adyacente a alguna posicion ya usada
     private boolean posicionOcupadaOAdyacente(List<Integer> posiciones, int x) {
         for (int pos : posiciones) {
