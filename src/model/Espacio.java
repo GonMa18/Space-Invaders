@@ -17,7 +17,7 @@ public class Espacio extends Observable {
 	
 	////TIMER////
 	private Timer timer; 						// Timer para actualizar el juego
-	private int frameCount; 					// Contador de frames para controlar la frecuencia de actualización
+	private int ticks; 					// Contador de frames para controlar la frecuencia de actualización
 	
     private Espacio() {
         this.ancho = 100;		
@@ -244,16 +244,16 @@ public class Espacio extends Observable {
 	// =====================================================================    
     
     private void iniciarTimer() {
-		frameCount=0;										// Reiniciamos el contador de frames
+		ticks=0;										// Reiniciamos el contador de frames
 		timer = new Timer(50,new ActionListener() {			//TICK cada 50ms --> DISPAROS
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				actualizarDisparo(); 						// Actualizamos el disparo cada 50ms
-				frameCount++;
+				ticks++;
 				
 				// TICK cada 200ms = 4 TICKS de 50ms --> ENEMIGOS
 				
-				if (frameCount % 4 == 0) { 					// Cada 200ms (4*50ms)
+				if (ticks % 4 == 0) { 					// Cada 200ms (4*50ms)
 					actualizarEnemigos(); 					// Actualizamos los enemigos cada 200ms
 				}
 				

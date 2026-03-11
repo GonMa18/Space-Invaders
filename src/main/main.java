@@ -31,3 +31,5 @@ public class main {	//extends JFrame implements Observer{
 	}
 
 }
+
+
