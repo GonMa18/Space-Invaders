@@ -7,6 +7,9 @@ import java.util.Observable;
 import java.util.Random;
 import javax.swing.Timer;
 
+import viewControl.FinishFrame;
+import viewControl.MainFrame;
+
 @SuppressWarnings("deprecation")
 public class Espacio extends Observable {
 	private static Espacio miEspacio; 			// Singleton
@@ -77,7 +80,7 @@ public class Espacio extends Observable {
     	inicializar(); 					// Para crear el juego al pasar a la pantalla principal
     	iniciarTimer(); 				// Para iniciar el timer que actualiza el juego
     	setChanged(); 					// Para notificar a la vista que el juego ha cambiado (se ha inicializado)
-    	notifyObservers(); 				// Para que la vista se actualice
+    	notifyObservers("iniciar"); 				// Para que la vista se actualice
     }
     
     
@@ -101,16 +104,63 @@ public class Espacio extends Observable {
             posicionesUsadas.add(x);
             enemigos.add(new Enemigo(x, 5));
         }
+        
     }
     
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    public int[][] generarMatriz() {
+    	
+    	//TODO -- Revisar bien
+    	
+    	int[][] matriz;
+    	boolean jug= false;
+    	boolean enem=false;
+    	boolean disp=false;
+    	int contE = 0;
+    	int contD = 0;
+    	
+    	//Recorremos la matriz
+    	matriz = new int[alto][ancho];
+    	for (int i=0; i<alto; i++) {
+			for (int j=0; j<ancho; j++) {
+				
+				if (!jug && matriz[i][j] == jugador.x && matriz[i][j] == jugador.y ) {
+					matriz[i][j] = 1; // Jugador
+					jug=true;
+					
+				} else if (!enem){
+					for (Enemigo e: enemigos) {
+						if (matriz[i][j] == e.x && matriz[i][j] == e.y) {
+							matriz[i][j] = 2; // Enemigo
+						}
+					}contE++;
+					
+				} else if (	!jug && !enem) {
+					for (Disparo d: jugador.getDisparos()) {
+						if (matriz[i][j] == d.getX() && matriz[i][j] == d.getY()) {
+							matriz[i][j] = 3; // Disparo
+						}
+					}disp=true;
+					
+					//TODO -- Disparo seguramente será mas complejo que esto
+				
+				} else {
+					matriz[i][j] = 0; // Espacio vacío
+				}
+			}
+		}
+    	notificarVista(matriz);
+    	return matriz;
+    }
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
 
-    private void notificarVista() {							// Para notificar a la vista que el juego ha cambiado
+    private void notificarVista(Object arg) {							// Para notificar a la vista que el juego ha cambiado
 		setChanged();
-		notifyObservers();
+		notifyObservers(arg);
 	}
     
     
@@ -135,7 +185,8 @@ public class Espacio extends Observable {
     public void moverJugador(int x, int y) { 
         if (jugador != null && jugador.sigueVivo()) { //Si el colega sigue vivo
             jugador.mover(x, y); //Me muevo a la nueva posicion
-            notificarVista(); //Notifico a la vista
+            
+            notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
         }
     }
     
@@ -146,7 +197,8 @@ public class Espacio extends Observable {
     public void disparar() {  
         if (jugador != null && jugador.sigueVivo()) { 
             jugador.disparar();  
-            notificarVista(); 
+            
+            notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
         }
     }
     
@@ -168,7 +220,8 @@ public class Espacio extends Observable {
                 }
             }
         jugador.limpiarDisparos(); 				// Elimina los disparos que ya no están activos
-        notificarVista();
+        
+        notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
     }
     
     
@@ -190,7 +243,7 @@ public class Espacio extends Observable {
             	
             }
         }
-        notificarVista();
+        notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
     }
     
     
@@ -201,8 +254,9 @@ public class Espacio extends Observable {
         for (Enemigo e : enemigos) { 						
             if (e.sigueVivo() && e.getX() == d.getX() && Math.abs(e.getY() - d.getY()) <= 1) {    	//Si el disparo ha dado a un enemigo (tolerancia de un pixel)
                 e.setSigueJugando(false); 															// El enemigo muere
-                d.setShoot(false);       															// El disparo desaparece
-                notificarVista(); 
+                d.setShoot(false);    
+
+                notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
             }
         }
     }
@@ -223,10 +277,15 @@ public class Espacio extends Observable {
                 // Si un enemigo llega al final del espacio (fila del jugador o más abajo)
                 if (e.getY() >= jugador.getY()) {
                     jugador.setSigueJugando(false);
+                    
+                     						// Notifico a la vista que el jugador ha perdido
                     return true;
                     }
             }
-        }        return false;
+            
+        }   
+        notificarVista("perder");
+        return false;
     }
 
     
@@ -240,8 +299,11 @@ public class Espacio extends Observable {
                 return false; 								// Todavia queda algun enemigo vivo
             }
         }
+        notificarVista("ganar");
         return true; 										// Todos los enemigos han muerto --> victoria
+
     }
+    
     
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -268,7 +330,8 @@ public class Espacio extends Observable {
 				//Comprobar GameOver
 				if (isGameOver() || isVictory()) {
 					detenerTimer(); 						// Detenemos el timer si el juego ha terminado
-					notificarVista(); 						// Notificamos a la vista para que muestre el FinishFrame
+		            
+					notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
 				}
 			}
 			

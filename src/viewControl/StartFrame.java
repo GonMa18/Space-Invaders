@@ -147,7 +147,7 @@ public class StartFrame extends JFrame implements Observer{
     
     
     private void iniciarJuego() {	
-    	Espacio.getInstance().cambiarAMain();			// Notificamos a la vista para que se actualice antes de iniciar el juego
+    	Espacio.getInstance().cambiarAMain();			
     }
     
     
@@ -156,16 +156,26 @@ public class StartFrame extends JFrame implements Observer{
     
     @Override
     public void update(Observable o, Object arg) {
-    	//Cuando el observable es espacio y notifica un cambio, iniciamos el juego
-    	if (o instanceof Espacio) {
-    		Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones
-    		this.dispose(); // Cerramos el StartFrame
-    		new MainFrame(); // Abrimos el MainFrame para iniciar el juego DESDE EL CONTROLLER
+    	
+		//// CASTING A STRING ////
+
+		Object[] res = (Object[])arg;					
+		String resul=(String) (res[0]);					
+    	
+    	if (resul=="iniciar") {
+    		
+    		//TODO -- Revisar bien
+    		
+    		if (o instanceof Espacio) {	
+    			Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones
+    			this.dispose(); 							// Cerramos el StartFrame
+    			new MainFrame(); 							// Abrimos el MainFrame para iniciar el juego DESDE EL CONTROLLER
+    		}
     	}
 
 	}
     
-    
+     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     

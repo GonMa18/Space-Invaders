@@ -72,7 +72,7 @@ public class FinishFrame extends JFrame {
 		setContentPane(contentPane);
 		
 		 //// CARGAR IMAGEN ////
-	    String rutaImagen = resultado.equals("Win") 	
+	    String rutaImagen = resultado.equals("ganar") 	
 	        ? "Resources/Images/You Win.png" 	
 	        : "Resources/Images/Game Over.png";	
 		
