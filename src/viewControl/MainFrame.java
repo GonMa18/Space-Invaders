@@ -7,8 +7,10 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -111,20 +113,34 @@ public class MainFrame extends JFrame implements Observer {
 	// =====================================================================
 	
 	private class Controller implements KeyListener {			// Clase interna para manejar eventos de teclado
+		
+		private final Set<Integer> teclasPulsadas = new HashSet<>();	//Disoarar mientras me muevo
+		
 		@Override
         public void keyPressed(KeyEvent e) {
             if (espacio.isGameOver() || espacio.isVictory()) return;
 
-            switch (e.getKeyCode()) {							
-                case KeyEvent.VK_LEFT:  espacio.moverJugador(-1,  0); break;
-                case KeyEvent.VK_RIGHT: espacio.moverJugador( 1,  0); break;
-                case KeyEvent.VK_UP:    espacio.moverJugador( 0, -1); break;
-                case KeyEvent.VK_DOWN:  espacio.moverJugador( 0,  1); break;
-                case KeyEvent.VK_SPACE: espacio.disparar();           break;
+            teclasPulsadas.add(e.getKeyCode());							//Disparar mientras me muevo
+
+            if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
+            	espacio.disparar();
+            }
+
+            int dx = 0;
+            int dy = 0;
+            if (teclasPulsadas.contains(KeyEvent.VK_LEFT))  dx--;
+            if (teclasPulsadas.contains(KeyEvent.VK_RIGHT)) dx++;
+            if (teclasPulsadas.contains(KeyEvent.VK_UP))    dy--;
+            if (teclasPulsadas.contains(KeyEvent.VK_DOWN))  dy++;
+
+            if (dx != 0 || dy != 0) {
+            	espacio.moverJugador(dx, dy);
             }
         }
 		@Override
-		public void keyReleased(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {							//Disparar mientras me muevo
+			teclasPulsadas.remove(e.getKeyCode());
+		}
 		@Override 
 		public void keyTyped(KeyEvent e) {}
 	}
