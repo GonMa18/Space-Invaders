@@ -156,15 +156,13 @@ public class StartFrame extends JFrame implements Observer{
     
     @Override
     public void update(Observable o, Object arg) {
-    	
+    	     
 		//// CASTING A STRING ////
 
 		Object[] res = (Object[])arg;					
 		String resul=(String) (res[0]);					
     	
-    	if (resul=="iniciar") {
-    		
-    		//TODO -- Revisar bien
+    	if (resul.equals("iniciar")) {      
     		
     		if (o instanceof Espacio) {	
     			Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones

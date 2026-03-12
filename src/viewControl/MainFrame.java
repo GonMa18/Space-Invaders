@@ -38,6 +38,9 @@ public class MainFrame extends JFrame implements Observer {
 	
 	// Referencia al modelo del juego para acceder a su estado y métodos
 	private Espacio espacio;
+	
+	// Matriz logica del juego que se pintará en el MainFrame
+	private int[][] matrizActual;	
 
     
     
@@ -62,8 +65,9 @@ public class MainFrame extends JFrame implements Observer {
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
-//				pintarMatriz(g, null);
-				//TODO -- se quita o se deja??
+				if(matrizActual != null) {						// Si la matriz ya ha sido inicializada, la pintamos
+				pintarMatriz(g, matrizActual);	// Pintamos la matriz actual del juego en el fondo
+				}
 			}
 		};
 		
@@ -100,32 +104,18 @@ public class MainFrame extends JFrame implements Observer {
 		String resul=(String) (res[0]);			
 		
 		//// CASTING A MATRIZ ////
-		//TODO
+		int[][] matriz = (int[][]) res[1];		// Suponiendo que el segundo elemento del array es la matriz actualizada
 		
-		
-	   // Espacio esp = Espacio.getInstance();
-//	    if (esp.isGameOver() || esp.isVictory()) {
-//	        esp.deleteObserver(this);   			// Dejar de observar
-//	        String resultado = esp.isVictory() 
-//	        		? "Win" 
-//	        		: "Lose";
-//	        dispose();                   			// Cerrar MainFrame
-//	        new FinishFrame(resultado);  			// Abrir FinishFrame
-//	    } else {
-//	        repaint();
-//	    }
-		
-		if (resul== "ganar" || resul== "perder") {
+		if (resul.equals("ganar") || resul.equals( "perder")) {
 			Espacio.getInstance().deleteObserver(this); 		// Eliminamos el MainFrame como observador para evitar futuras actualizaciones
     		this.dispose(); 									// Cerramos el MainFrame
 			new FinishFrame(resul);
 
+		}else if (resul == "actualizar" && matriz != null) {
+			matrizActual = matriz;								// Actualizamos la matriz actual para que se pinte en el fondo
+			repaint();											// Llamamos a repaint para que se vuelva a pintar el fondo con la nueva matriz
 		}
-		
-		//FALTA LA CONDICION DE CUANDO RECIBE LA MATRIZ --> ACTUALIZA pintarMatriz
-		//TODO
-		
-					
+							
 	}
     
     
@@ -198,41 +188,7 @@ public class MainFrame extends JFrame implements Observer {
     
 
 	//// PINTAR LA MATRIZ ////
-	public void pintarMatriz(Graphics g, int[][] matriz) {
-		
-//		Espacio espacio = Espacio.getInstance();
-//		
-//		//Jugador -- Verde
-//		Jugador j= espacio.getJugador();
-//		if(j!=null && j.sigueVivo()) {					// Si el jugador existe y sigue vivo
-//			int px = j.getX() * TAM_CELDA; 				// Convertir coordenada logica a pixel
-//			int py = j.getY() * TAM_CELDA;
-//			g.setColor(Color.GREEN); 				
-//			g.fillRect(px, py, TAM_CELDA, TAM_CELDA); 	// Pintar celda del jugador
-//		}
-//		
-//		//Disparos -- Amarillo	
-//		ArrayList<Disparo> disparos = j.getDisparos();
-//		for(Disparo d : disparos) {
-//			if (d.isShooting()) {						// Si el disparo está activo
-//				int dx = d.getX() * TAM_CELDA; 			// Convertir coordenada logica a pixel
-//				int dy = d.getY() * TAM_CELDA;
-//				g.setColor(Color.YELLOW); 
-//				g.fillRect(dx, dy, TAM_CELDA, TAM_CELDA);
-//			}
-//		}
-//
-//		//Enemigo -- Rojo
-//		for (Enemigo e : espacio.getEnemigos()) {
-//			if (e.sigueVivo()) {							// Si el enemigo sigue vivo
-//				int px = e.getX() * TAM_CELDA; 				// Convertir coordenada logica a pixel
-//				int py = e.getY() * TAM_CELDA;
-//				g.setColor(Color.RED); 
-//				g.fillRect(px, py, TAM_CELDA, TAM_CELDA);	 // Pintar celda del enemigo
-//			}
-//		}
-		
-		
+	public void pintarMatriz(Graphics g, int[][] matriz) {	
 		
 		for (int i = 0; i < FILAS; i++) {
 			for (int j = 0; j < COLUMNAS; j++) {
