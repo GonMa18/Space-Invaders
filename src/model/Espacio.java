@@ -267,18 +267,20 @@ public class Espacio extends Observable {
 
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
-                // Si un enemigo llega al final del espacio (fila del jugador o más abajo)
-                if (e.getY() >= jugador.getY()) {
+                // Si un enemigo llega al final del tablero (última fila)
+                if (e.getY() >= alto - 1) {
                     jugador.setSigueJugando(false);
-                    
-                     														// Notifico a la vista que el jugador ha perdido
-                    notificarVista(new Object[]{"perder",null}); 
-
+                    notificarVista(new Object[]{"perder", null});
                     return true;
-                    }
+                }
+                // Si un enemigo choca con el jugador (misma posición)
+                if (e.getX() == jugador.getX() && e.getY() == jugador.getY()) {
+                    jugador.setSigueJugando(false);
+                    notificarVista(new Object[]{"perder", null});
+                    return true;
+                }
             }
-            
-        }   
+        }
         return false;
     }
 
@@ -293,7 +295,7 @@ public class Espacio extends Observable {
                 return false; 								// Todavia queda algun enemigo vivo
             }
         }
-        notificarVista(new Object[]{"ganar",null}); //Notifico a la vista que el jugador ha ganado
+        notificarVista(new Object[]{"ganar",null}); 		//Notifico a la vista que el jugador ha ganado
         return true; 										// Todos los enemigos han muerto --> victoria
 
     }
@@ -325,7 +327,7 @@ public class Espacio extends Observable {
 				if (isGameOver() || isVictory()) {
 					detenerTimer(); 						// Detenemos el timer si el juego ha terminado
 		            
-					//notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
+				//notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
 				}
 			}
 			
