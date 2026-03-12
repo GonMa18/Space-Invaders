@@ -162,7 +162,7 @@ public class StartFrame extends JFrame implements Observer{
 		Object[] res = (Object[])arg;					
 		String resul=(String) (res[0]);					
     	
-    	if (resul.equals("iniciar")) {      
+    	if (resul.equals("iniciar")) {           
     		
     		if (o instanceof Espacio) {	
     			Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones

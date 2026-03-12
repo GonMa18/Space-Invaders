@@ -112,7 +112,6 @@ public class Espacio extends Observable {
     public int[][] generarMatriz() {
     	
     	int[][] matriz;
-    	
     	//Recorremos la matriz
     	matriz = new int[alto][ancho];
 
