@@ -41,6 +41,9 @@ public class MainFrame extends JFrame implements Observer {
 	
 	// Matriz logica del juego que se pintará en el MainFrame
 	private int[][] matrizActual;	
+	
+	// Imagen de fondo
+	private Image fondo;
 
     
     
@@ -58,15 +61,15 @@ public class MainFrame extends JFrame implements Observer {
 		
 		//// FONDO ////
 		ImageIcon iconoFondo = new ImageIcon("Resources/Images/Fondo.png");
-		Image imagenFondo = iconoFondo.getImage();
-
+		fondo = iconoFondo.getImage();
+		
 		contentPane = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
+				g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
 				if(matrizActual != null) {						// Si la matriz ya ha sido inicializada, la pintamos
-				pintarMatriz(g, matrizActual);	// Pintamos la matriz actual del juego en el fondo
+				pintarMatriz(g, matrizActual);					// Pintamos la matriz actual del juego en el fondo
 				}
 			}
 		};
@@ -104,7 +107,7 @@ public class MainFrame extends JFrame implements Observer {
 		String resul=(String) (res[0]);			
 		
 		//// CASTING A MATRIZ ////
-		int[][] matriz = (int[][]) res[1];		// Suponiendo que el segundo elemento del array es la matriz actualizada
+		int[][] matriz = (int[][]) res[1];						// Suponiendo que el segundo elemento del array es la matriz actualizada
 		
 		if (resul.equals("ganar") || resul.equals( "perder")) {
 			Espacio.getInstance().deleteObserver(this); 		// Eliminamos el MainFrame como observador para evitar futuras actualizaciones
@@ -112,8 +115,9 @@ public class MainFrame extends JFrame implements Observer {
 			new FinishFrame(resul);
 
 		}else if (resul == "actualizar" && matriz != null) {
+			repintar(matriz);									// Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
+
 			matrizActual = matriz;								// Actualizamos la matriz actual para que se pinte en el fondo
-			repaint();											// Llamamos a repaint para que se vuelva a pintar el fondo con la nueva matriz
 		}
 							
 	}
@@ -121,7 +125,85 @@ public class MainFrame extends JFrame implements Observer {
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
-    
+	// Repinta solo las celdas que han cambiado entre la matriz anterior y la nueva,
+	// Metodo equivalente a repaint(), pero sin chatGPT -_-
+	
+	private void repintar(int[][] m) {
+		
+	    Graphics g = contentPane.getGraphics();			// Dibujamos sobre el contentPane
+	    if (g == null) return;
+
+	    ImageIcon imagen = new ImageIcon("Resources/Images/Fondo.png");
+	    Image fondo = imagen.getImage();				// Cargamos la imagen de fondo
+
+	    for (int i = 0; i < FILAS; i++) {
+	        for (int j = 0; j < COLUMNAS; j++) {		// Recorremos cada celda de la matriz
+	            int nuevoValor = m[i][j];				// Comparamos el nuevo valor con el valor anterior en la misma posición//
+	            int viejoValor = (matrizActual != null) 
+	            		? matrizActual[i][j] 			// Si la matriz actual no es null, obtenemos el valor anterior de esa celda
+	            		: -1;							// Si la matriz actual es null (primer repintado), valor anterior es -1 para que se pinten todas las celdas
+
+	            if (nuevoValor != viejoValor) {			// Si el valor ha cambiado, repintamos esa celda
+	                int x = j * TAM_CELDA;
+	                int y = i * TAM_CELDA;
+
+	                pintarCelda(g, nuevoValor, x, y);	// Pintamos la celda con el nuevo valor
+	                
+	            }
+	        }
+	    }
+	    g.dispose();		// Cerramps los recursos gráficos después de pintar
+	}
+	
+	
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+	   
+
+		//// PINTAR LA MATRIZ ////
+		public void pintarMatriz(Graphics g, int[][] matriz) {	
+			
+			for (int i = 0; i < FILAS; i++) {
+				for (int j = 0; j < COLUMNAS; j++) {
+
+					int x = j * TAM_CELDA;
+		            int y = i * TAM_CELDA;
+		            
+		            pintarCelda(g, matriz[i][j], x, y); 			
+		       
+					}
+				}
+			
+		}
+		
+		
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	//// PINTAR LA CASILLA ////
+	private void pintarCelda(Graphics g, int valor, int x, int y) {
+		
+	    if (valor == 1) {           // Jugador
+	        g.setColor(Color.GREEN);
+	        g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+	    } else if (valor == 2) {   // Enemigo
+	        g.setColor(Color.RED);
+	        g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+	    } else if (valor == 3) {   // Disparo
+	        g.setColor(Color.YELLOW);
+	        g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+
+	    }else {						//Celda vacia -- negro
+	    	g.setColor(Color.BLACK);
+	    	g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+	    	
+	    }
+			
+		}
+	
+		
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
 	
 	// =====================================================================
 	// 								CONTROLLER
@@ -185,34 +267,6 @@ public class MainFrame extends JFrame implements Observer {
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
-    
-
-	//// PINTAR LA MATRIZ ////
-	public void pintarMatriz(Graphics g, int[][] matriz) {	
-		
-		for (int i = 0; i < FILAS; i++) {
-			for (int j = 0; j < COLUMNAS; j++) {
-				int valor = matriz[i][j];
-				if (valor == 1) { 					// Jugador
-					g.setColor(Color.GREEN);
-					g.fillRect(j * TAM_CELDA, i * TAM_CELDA, TAM_CELDA, TAM_CELDA);
-				} else if (valor == 2) { 			// Enemigo
-					g.setColor(Color.RED);
-					g.fillRect(j * TAM_CELDA, i * TAM_CELDA, TAM_CELDA, TAM_CELDA);
-				} else if (valor == 3) { 			// Disparo
-					g.setColor(Color.YELLOW);
-					g.fillRect(j * TAM_CELDA, i * TAM_CELDA, TAM_CELDA, TAM_CELDA);
-				}else {
-					g.setColor(Color.BLACK);
-					g.fillRect(j * TAM_CELDA, i * TAM_CELDA, TAM_CELDA, TAM_CELDA);
-				}
-			}
-		}
-		
-		
-		
-		
-	}
-
-	
 }
+	
+
