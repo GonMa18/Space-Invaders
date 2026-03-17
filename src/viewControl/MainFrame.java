@@ -36,10 +36,6 @@ public class MainFrame extends JFrame implements Observer {
 	// Tamaño en pixeles de cada celda de la matriz
 	private static final int TAM_CELDA = 5; // 100*5=500px ancho, 60*5=300px alto
 	
-	// Referencia al modelo del juego para acceder a su estado y métodos
-	private Espacio espacio;
-	//Esto no se yo si es muy legal
-	//TODO
 	
 	// Matriz logica del juego que se pintará en el MainFrame
 	private int[][] matrizActual;	
@@ -47,10 +43,6 @@ public class MainFrame extends JFrame implements Observer {
 	// Imagen de fondo
 	private Image fondo;
 	
-	//Controller
-	private Controller controller;
-	//Hace realmente falta si ya lo creo mas abajo????? 
-	//TODO
 
     
     
@@ -59,8 +51,7 @@ public class MainFrame extends JFrame implements Observer {
     
 	public MainFrame() {
 		
-		espacio = Espacio.getInstance();	// Obtener instancia del modelo para interactuar con él
-		espacio.addObserver(this);			// Registrarse como observador del modelo para recibir actualizaciones
+		Espacio.getInstance().addObserver(this);			// Registrarse como observador del modelo para recibir actualizaciones
 		//Esto si es legal
 		
 		setTitle("Space Invaders");
@@ -229,7 +220,7 @@ public class MainFrame extends JFrame implements Observer {
             teclasPulsadas.add(e.getKeyCode());							//Disparar mientras me muevo
 
             if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
-            	espacio.disparar();
+            	Espacio.getInstance().disparar();
             }
 
             int dx = 0;
@@ -240,7 +231,7 @@ public class MainFrame extends JFrame implements Observer {
             if (teclasPulsadas.contains(KeyEvent.VK_DOWN))  dy++;
 
             if (dx != 0 || dy != 0) {
-            	espacio.moverJugador(dx, dy);
+            	Espacio.getInstance().moverJugador(dx, dy);
             }
         }
 		@Override
@@ -253,7 +244,7 @@ public class MainFrame extends JFrame implements Observer {
 		public void windowOpened(WindowEvent e) {	
 			
 			//Pinto la matriz una primera vez (cuando MainFrame se abre)
-			pintarMatriz(contentPane.getGraphics(), espacio.generarMatriz());
+			pintarMatriz(contentPane.getGraphics(), Espacio.getInstance().generarMatriz());
 			//Desde el controller y SOLO desde el controller puedo llamar a espacio
 			
 			

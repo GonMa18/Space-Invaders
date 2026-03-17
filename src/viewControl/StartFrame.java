@@ -27,8 +27,6 @@ public class StartFrame extends JFrame implements Observer{
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
-	private Controller controller;
-	//TODO
     
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,17 +149,6 @@ public class StartFrame extends JFrame implements Observer{
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-    private void iniciarJuego() {	
-    	Espacio.getInstance().cambiarAMain();		
-    	// Esto no me parece muy legal
-    	//TODO
-    	
-    }
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
     @Override
     public void update(Observable o, Object arg) {
     	     
@@ -194,7 +181,7 @@ public class StartFrame extends JFrame implements Observer{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {		// Si se pulsa espacio, iniciamos el juego
-				iniciarJuego();
+		    	Espacio.getInstance().cambiarAMain();		
 			}
 		}
 		@Override public void keyReleased(KeyEvent e) {}
