@@ -170,15 +170,11 @@ public class StartFrame extends JFrame implements Observer{
 		Object[] res = (Object[])arg;					
 		String resul=(String) (res[0]);					
     	
-    	if (resul.equals("iniciar")) {           
-    		
-    		//TODO: Cambiar el instanceof
-    		//No creo que sea muy legal llamar al espacio 
-    		//if (o instanceof Espacio) {	
+    	if (resul.equals("iniciar")) {
     			Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones
     			this.dispose(); 							// Cerramos el StartFrame
     			new MainFrame(); 							// Abrimos el MainFrame para iniciar el juego DESDE EL CONTROLLER
-    		//}
+    			//Esto si es legal
     	}
 
 	}

@@ -121,7 +121,8 @@ public class MainFrame extends JFrame implements Observer {
 			Espacio.getInstance().deleteObserver(this); 		// Eliminamos el MainFrame como observador para evitar futuras actualizaciones
     		this.dispose(); 									// Cerramos el MainFrame
 			new FinishFrame(resul);
-
+			//Esto si es legal
+			
 		}else if (resul == "actualizar" && matriz != null) {
 			repintar(matriz);									// Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
 
