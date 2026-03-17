@@ -56,7 +56,7 @@ public class FinishFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		ImageIcon iconoFondo = new ImageIcon("Resources/Images/Fondo.png");
+		ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
 		Image imagenFondo = iconoFondo.getImage();
 		
 		 //// FONDO ////
@@ -72,11 +72,12 @@ public class FinishFrame extends JFrame {
 		setContentPane(contentPane);
 		
 		 //// CARGAR IMAGEN ////
-	    String rutaImagen = resultado.equals("ganar") 	
-	        ? "Resources/Images/You Win.png" 	
-	        : "Resources/Images/Game Over.png";	
-		
-		ImageIcon iconoGameOver = new ImageIcon(rutaImagen);
+		ImageIcon iconoGameOver;
+		if (resultado.equals("ganar")) {
+			iconoGameOver = new ImageIcon(getClass().getResource("/Resources/Images/You Win.png"));
+		} else {
+			iconoGameOver = new ImageIcon(getClass().getResource("/Resources/Images/Game Over.png"));
+		}
 		int alturaImagen = 200;
 		int anchoImagen = iconoGameOver.getIconWidth() * alturaImagen / iconoGameOver.getIconHeight();
 		Image imagenGameOver = iconoGameOver.getImage().getScaledInstance(anchoImagen, alturaImagen, Image.SCALE_SMOOTH);

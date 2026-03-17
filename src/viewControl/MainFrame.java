@@ -59,8 +59,8 @@ public class MainFrame extends JFrame implements Observer {
 		setResizable(false);
 		
 		//// FONDO ////
-		ImageIcon iconoFondo = new ImageIcon("Resources/Images/Fondo.png");
-		fondo = iconoFondo.getImage();
+		ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
+		fondo = iconoFondo.getImage(); 
 		
 		contentPane = new JPanel() {
 			@Override
@@ -133,7 +133,7 @@ public class MainFrame extends JFrame implements Observer {
 	    Graphics g = contentPane.getGraphics();			// Dibujamos sobre el contentPane
 	    if (g == null) return;
 
-	    ImageIcon imagen = new ImageIcon("Resources/Images/Fondo.png");
+	    ImageIcon imagen = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
 	    Image fondo = imagen.getImage();				// Cargamos la imagen de fondo
 
 	    for (int i = 0; i < FILAS; i++) {

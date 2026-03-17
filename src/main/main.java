@@ -12,6 +12,7 @@ import viewControl.StartFrame;
 public class main {	//extends JFrame implements Observer{
 	public static void main(String[] args) {
 		
+		
 		//VISTA//
 		@SuppressWarnings("unused")
 		StartFrame startFrame = new StartFrame();

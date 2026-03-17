@@ -64,7 +64,7 @@ public class StartFrame extends JFrame implements Observer{
         //Esto si que es legal
         
         //// FONDO ////
-        ImageIcon bgIcon = new ImageIcon("Resources/Images/Fondo.png");
+        ImageIcon bgIcon = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
         Image bgImage = bgIcon.getImage();
 
         JPanel panel = new JPanel(new GridBagLayout()) {	//Panel del fondo
@@ -81,7 +81,7 @@ public class StartFrame extends JFrame implements Observer{
         gbc.insets = new Insets(10, 0, 10, 0);
 
         //// CABECERA ////
-        ImageIcon originalIcon = new ImageIcon("Resources/Images/Titulo.jpg");
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/Resources/Images/Titulo.jpg"));
         Image scaledImage = originalIcon.getImage().getScaledInstance(350, 80, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
@@ -94,7 +94,7 @@ public class StartFrame extends JFrame implements Observer{
         panel.add(titulo, gbcTitulo);
 
         //// INSTRUCCIONES ////
-        ImageIcon pressSpaceIcon = new ImageIcon("Resources/Images/Press Space.png");
+        ImageIcon pressSpaceIcon = new ImageIcon(getClass().getResource("/Resources/Images/Press Space.png"));
         Image pressSpaceScaled = pressSpaceIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         JLabel subtitulo1 = new JLabel(new ImageIcon(pressSpaceScaled));
         subtitulo1.setHorizontalAlignment(JLabel.CENTER);
