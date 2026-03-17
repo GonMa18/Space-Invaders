@@ -38,12 +38,19 @@ public class MainFrame extends JFrame implements Observer {
 	
 	// Referencia al modelo del juego para acceder a su estado y métodos
 	private Espacio espacio;
+	//Esto no se yo si es muy legal
+	//TODO
 	
 	// Matriz logica del juego que se pintará en el MainFrame
 	private int[][] matrizActual;	
 	
 	// Imagen de fondo
 	private Image fondo;
+	
+	//Controller
+	private Controller controller;
+	//Hace realmente falta si ya lo creo mas abajo????? 
+	//TODO
 
     
     
@@ -54,6 +61,7 @@ public class MainFrame extends JFrame implements Observer {
 		
 		espacio = Espacio.getInstance();	// Obtener instancia del modelo para interactuar con él
 		espacio.addObserver(this);			// Registrarse como observador del modelo para recibir actualizaciones
+		//Esto si es legal
 		
 		setTitle("Space Invaders");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -59,7 +59,7 @@ public class FinishFrame extends JFrame {
 		ImageIcon iconoFondo = new ImageIcon("Resources/Images/Fondo.png");
 		Image imagenFondo = iconoFondo.getImage();
 		
-		 // Establecer el fondo del panel
+		 //// FONDO ////
 		contentPane = new JPanel() {
 			@Override
 			protected void paintComponent(java.awt.Graphics g) {

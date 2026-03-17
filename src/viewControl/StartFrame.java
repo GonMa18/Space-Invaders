@@ -26,6 +26,9 @@ public class StartFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	
+	private Controller controller;
+	//TODO
     
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,6 +63,7 @@ public class StartFrame extends JFrame implements Observer{
         setResizable(false);
         
         Espacio.getInstance().addObserver(this); 			// Para que el frame se actualice cuando el espacio cambie
+        //Esto si que es legal
         
         //// FONDO ////
         ImageIcon bgIcon = new ImageIcon("Resources/Images/Fondo.png");
@@ -98,7 +102,7 @@ public class StartFrame extends JFrame implements Observer{
         subtitulo1.setHorizontalAlignment(JLabel.CENTER);
         GridBagConstraints gbcPress = new GridBagConstraints();
         gbcPress.gridx = 0;               
-          gbcPress.gridy = 1;
+        gbcPress.gridy = 1;
         gbcPress.insets = new Insets(10, 0, 10, 0);
         gbcPress.anchor = GridBagConstraints.CENTER;
         panel.add(subtitulo1, gbcPress);
@@ -124,6 +128,7 @@ public class StartFrame extends JFrame implements Observer{
         gbc_developers.gridx = 0;
         gbc_developers.gridy = 3;
         panel.add(developers, gbc_developers);
+        				
         
         pack(); 								// Ajusta el tamaño del frame al contenido
         setLocationRelativeTo(null); 			// Centra el frame en la pantalla
@@ -147,7 +152,10 @@ public class StartFrame extends JFrame implements Observer{
     
     
     private void iniciarJuego() {	
-    	Espacio.getInstance().cambiarAMain();			
+    	Espacio.getInstance().cambiarAMain();		
+    	// Esto no me parece muy legal
+    	//TODO
+    	
     }
     
     
@@ -164,6 +172,8 @@ public class StartFrame extends JFrame implements Observer{
     	
     	if (resul.equals("iniciar")) {           
     		
+    		//TODO: Cambiar el instanceof
+    		//No creo que sea muy legal llamar al espacio 
     		if (o instanceof Espacio) {	
     			Espacio.getInstance().deleteObserver(this); // Eliminamos el StartFrame como observador para evitar futuras actualizaciones
     			this.dispose(); 							// Cerramos el StartFrame
