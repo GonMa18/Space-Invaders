@@ -31,11 +31,11 @@ public class Jugador extends Nave { 	//Hereda de NAVE
 		this.x += x;
 		this.y += y;
 		
-	    //// LIMITES ////
+		 //// LIMITES ////
 	    if (this.x < 0) { this.x = 0; }
-	    if (this.x > 99) { this.x = 99; }
+	    if (this.x > Espacio.getAnchura()-1) { this.x = Espacio.getAnchura()-1; }
 	    if (this.y < 0) { this.y = 0; }
-	    if (this.y > 59) { this.y = 59; }
+	    if (this.y > Espacio.getAltura()-1) { this.y = Espacio.getAltura()-1; }
 	}
     
     

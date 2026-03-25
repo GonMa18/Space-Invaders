@@ -15,16 +15,18 @@ public class Espacio extends Observable {
 	private static Espacio miEspacio; 			// Singleton
 	private ArrayList<Enemigo> enemigos; 		// Lista de enemigos
 	private Jugador jugador; 					// El jugador
-	private int ancho;
-	private int alto;
+	private static int ancho;
+	private static int alto;
+	
+	private Rojo prueba;
 	
 	////TIMER////
 	private Timer timer; 						// Timer para actualizar el juego
 	private int ticks; 					// Contador de frames para controlar la frecuencia de actualización
 	
     private Espacio() {
-        this.ancho = 100;		
-        this.alto  = 60;
+        this.ancho = 160;		
+        this.alto  = 120;
         this.enemigos   = new ArrayList<>();
     }
     
@@ -43,7 +45,7 @@ public class Espacio extends Observable {
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-	public int getAnchura() { 
+	public static int getAnchura() { 
     	return ancho; 
     }
     
@@ -51,7 +53,7 @@ public class Espacio extends Observable {
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-    public int getAltura()  { 
+    public static int getAltura()  { 
     	return alto;  
     }
     
@@ -109,6 +111,7 @@ public class Espacio extends Observable {
     
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     public int[][] generarMatriz() {
     	
     	int[][] matriz;

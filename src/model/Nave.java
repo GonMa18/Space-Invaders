@@ -1,5 +1,7 @@
 package model;
- 
+
+import java.util.ArrayList;
+
 public abstract class Nave {
 	
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
@@ -8,6 +10,9 @@ public abstract class Nave {
 	protected int x;					//Protected para que las que heredan puedan accedder
 	protected int y;
     
+	private ArrayList<Disparo> disparos;
+
+	
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -22,6 +27,10 @@ public abstract class Nave {
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
+	
+	
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
     
 	public int getX() {
 		return x;
@@ -63,6 +72,36 @@ public abstract class Nave {
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-	public abstract void mover(int x, int y); 	// Metodo que todas las naves que hereden "Nave" tienen que implementar
-												// No pongo codigo porque enemigos y jugador se mueven distinto
+	public  void mover(int x, int y){	//REVISAR
+		this.x += x;
+		this.y += y;
+		
+		 //// LIMITES ////
+	    if (this.x < 0) { this.x = 0; }
+	    if (this.x > Espacio.getAnchura()-1) { this.x = Espacio.getAnchura()-1; }
+	    if (this.y < 0) { this.y = 0; }
+	    if (this.y > Espacio.getAltura()-1) { this.y = Espacio.getAltura()-1; }
+	}
+    
+    
+	
+	public void disparar() {
+		Disparo nuevoDisparo = new Disparo(x, y-1); 	//Crea un nuevo disparo en la posicion actual del jugador
+		nuevoDisparo.setShoot(true); 					// Activa el disparo
+		disparos.add(nuevoDisparo); 					// Agrega el nuevo disparo a la lista de disparos activos
+	}
+	
+	public ArrayList<Disparo> getDisparos() {
+		return disparos;
+	}
+
+
+// Elimina los disparos que ya no están activos
+public void limpiarDisparos() {
+	 for (int i = disparos.size() - 1; i >= 0; i--) {
+	        if (!disparos.get(i).isShooting()) {
+	            disparos.remove(i);
+	        }
+	  }    
+}
 }

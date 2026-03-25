@@ -128,7 +128,7 @@ public class StartFrame extends JFrame implements Observer{
         panel.add(developers, gbc_developers);
         				
         
-        pack(); 								// Ajusta el tamaño del frame al contenido
+        pack(); 					// Ajusta el tamaño del frame al contenido
         setLocationRelativeTo(null); 			// Centra el frame en la pantalla
         setVisible(true); 
 

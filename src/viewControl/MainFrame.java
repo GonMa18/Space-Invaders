@@ -30,8 +30,8 @@ public class MainFrame extends JFrame implements Observer {
 	private JPanel contentPane;
 
 	// Tamaño de la matriz logica (100 columnas x 60 filas)
-	private static final int COLUMNAS = 100;
-	private static final int FILAS = 60;
+	private static final int COLUMNAS = 160;
+	private static final int FILAS = 120;
 	
 	// Tamaño en pixeles de cada celda de la matriz
 	private static final int TAM_CELDA = 5; // 100*5=500px ancho, 60*5=300px alto
@@ -50,6 +50,7 @@ public class MainFrame extends JFrame implements Observer {
     
     
 	public MainFrame() {
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		Espacio.getInstance().addObserver(this);			// Registrarse como observador del modelo para recibir actualizaciones
 		//Esto si es legal
@@ -175,6 +176,7 @@ public class MainFrame extends JFrame implements Observer {
 			
 		}
 		
+		Rojo.getRojo().dibujarCuerpo();
 		
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	
