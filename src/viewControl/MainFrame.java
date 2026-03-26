@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import model.Enemigo;
 import model.Espacio;
 import model.Jugador;
+import model.Rojo;
 import model.Disparo;
 
 @SuppressWarnings("deprecation")
@@ -174,9 +175,12 @@ public class MainFrame extends JFrame implements Observer {
 					}
 				}
 			
+			Rojo rojo = new Rojo(50, 55, Color.white);
+			rojo.dibujarCuerpo();
+
+			
 		}
 		
-		Rojo.getRojo().dibujarCuerpo();
 		
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	
