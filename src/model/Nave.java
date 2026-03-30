@@ -1,26 +1,22 @@
 package model;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 public abstract class Nave {
 	
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
-	private int velocidad;
 	private boolean sigueJugando;
-	protected int x;					//Protected para que las que heredan puedan accedder
-	protected int y;
-    
-	private ArrayList<Disparo> disparos;
+	protected ArrayList<Coordenada> coordenadas;
 
 	
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-	public Nave(int x, int y, int velocidad) {
-		this.x = x;
-		this.y = y;
-		this.velocidad = velocidad;
+	public Nave(int x, int y) {
+		this.coordenadas = new ArrayList<>();
+		this.iniciarCuerpo(x, y);
 		this.sigueJugando = true;
 	}
     
@@ -32,16 +28,8 @@ public abstract class Nave {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
     
-	public int getX() {
-		return x;
-	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public int getY() {
-		return y;
+	public ArrayList<Coordenada> getCoordenadas() {
+		return coordenadas;
 	}
     
     
@@ -73,35 +61,30 @@ public abstract class Nave {
     
     
 	public  void mover(int x, int y){	//REVISAR
-		this.x += x;
-		this.y += y;
-		
-		 //// LIMITES ////
-	    if (this.x < 0) { this.x = 0; }
-	    if (this.x > Espacio.getAnchura()-1) { this.x = Espacio.getAnchura()-1; }
-	    if (this.y < 0) { this.y = 0; }
-	    if (this.y > Espacio.getAltura()-1) { this.y = Espacio.getAltura()-1; }
+		//this.x += x;
+		//this.y += y;
+		// Mueve cada coordenada del cuerpo de la nave dentro de los límites del espacio
+		for (Coordenada c : coordenadas) {
+			c.setX(c.getX() + x);
+			c.setY(c.getY() + y);
+			if (c.getX() < 0) { c.setX(0); }
+		    if (c.getX() > Espacio.getAnchura()-1) { c.setX(Espacio.getAnchura()-1); }
+		    if (c.getY() < 0) { c.setY(0); }
+		    if (c.getY() > Espacio.getAltura()-1) { c.setY(Espacio.getAltura()-1); }
+		}
+		//// LIMITES ////
+	    //if (this.x < 0) { this.x = 0; }
+	    //if (this.x > Espacio.getAnchura()-1) { this.x = Espacio.getAnchura()-1; }
+	    //if (this.y < 0) { this.y = 0; }
+	    //if (this.y > Espacio.getAltura()-1) { this.y = Espacio.getAltura()-1; }
 	}
     
     
-	
-	public void disparar() {
-		Disparo nuevoDisparo = new Disparo(x, y-1); 	//Crea un nuevo disparo en la posicion actual del jugador
-		nuevoDisparo.setShoot(true); 					// Activa el disparo
-		disparos.add(nuevoDisparo); 					// Agrega el nuevo disparo a la lista de disparos activos
-	}
-	
-	public ArrayList<Disparo> getDisparos() {
-		return disparos;
-	}
+	protected abstract void iniciarCuerpo(int x , int y);
 
-
-// Elimina los disparos que ya no están activos
-public void limpiarDisparos() {
-	 for (int i = disparos.size() - 1; i >= 0; i--) {
-	        if (!disparos.get(i).isShooting()) {
-	            disparos.remove(i);
-	        }
-	  }    
-}
+	public void pintarCuerpo(Graphics g, int tamCelda) {
+		for (Coordenada c : coordenadas) {
+			c.pintar(g, tamCelda);
+		}
+	}
 }

@@ -1,138 +1,132 @@
 package model;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
-public class Rojo extends Nave{
-	
-	private ArrayList<Coordenada> coordenadas;
-	
-	private ArrayList<Disparo> flechas;
-	private ArrayList<Disparo> rombos;
-	private ArrayList<Disparo> bala;
+public class Rojo extends Jugador {
 
-	public Rojo(int x, int y, int velocidad) {
-		super(x, y, velocidad);
-		
-		
+	// Hace @Override del metodo iniciarCuerpo() para definir la forma de la nave
+
+	public Rojo(int x, int y) {
+		super(x, y);
+		this.flechas = 30;
+		this.rombos = 20;
 
 	}
-	public Rojo getRojo() {
-		return this;
-	}
-	
-	
-	public void dibujarCuerpo() {
-		
+
+	@Override
+	public void iniciarCuerpo(int x, int y) { // REVISAR FORMA
+
 		// Base and Engines
-		coordenadas.add(new Coordenada(48,55,Color.RED));
-		coordenadas.add(new Coordenada(49,55,Color.RED));
-		coordenadas.add(new Coordenada(50,55,Color.WHITE)); // Tail (Reference)
-		coordenadas.add(new Coordenada(51,55,Color.RED));
-		coordenadas.add(new Coordenada(52,55,Color.RED));
+		coordenadas.add(new Coordenada(x - 2, y, Color.PINK));
+		coordenadas.add(new Coordenada(x - 1, y, Color.PINK));
+		coordenadas.add(new Coordenada(x, y, Color.WHITE)); // Tail (Reference)
+		coordenadas.add(new Coordenada(x + 1, y, Color.RED));
+		coordenadas.add(new Coordenada(x + 2, y, Color.RED));
 
-		coordenadas.add(new Coordenada(48,54,Color.RED));
-		coordenadas.add(new Coordenada(49,54,Color.WHITE));
-		coordenadas.add(new Coordenada(50,54,Color.WHITE));
-		coordenadas.add(new Coordenada(51,54,Color.WHITE));
-		coordenadas.add(new Coordenada(52,54,Color.RED));
+		coordenadas.add(new Coordenada(x - 2, y - 1, Color.RED));
+		coordenadas.add(new Coordenada(x - 1, y - 1, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 1, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 1, y - 1, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 2, y - 1, Color.RED));
 
 		// Lower Body and Outer Wings
-		coordenadas.add(new Coordenada(45,53,Color.WHITE));
-		coordenadas.add(new Coordenada(48,53,Color.WHITE));
-		coordenadas.add(new Coordenada(49,53,Color.WHITE));
-		coordenadas.add(new Coordenada(50,53,Color.WHITE));
-		coordenadas.add(new Coordenada(51,53,Color.WHITE));
-		coordenadas.add(new Coordenada(52,53,Color.WHITE));
-		coordenadas.add(new Coordenada(55,53,Color.WHITE));
+		coordenadas.add(new Coordenada(x - 5, y - 2, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 2, y - 2, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 1, y - 2, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 2, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 1, y - 2, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 2, y - 2, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 5, y - 2, Color.WHITE));
 
-		coordenadas.add(new Coordenada(45,52,Color.WHITE));
-		coordenadas.add(new Coordenada(46,52,Color.WHITE));
-		coordenadas.add(new Coordenada(47,52,Color.WHITE));
-		coordenadas.add(new Coordenada(48,52,Color.WHITE));
-		coordenadas.add(new Coordenada(52,52,Color.WHITE));
-		coordenadas.add(new Coordenada(53,52,Color.WHITE));
-		coordenadas.add(new Coordenada(54,52,Color.WHITE));
-		coordenadas.add(new Coordenada(55,52,Color.WHITE));
+		coordenadas.add(new Coordenada(x - 10, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 9, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 8, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 7, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 3, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 2, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 1, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 3, Color.WHITE));
 
 		// Central Zone and Cockpit
-		coordenadas.add(new Coordenada(45,51,Color.WHITE));
-		coordenadas.add(new Coordenada(46,51,Color.WHITE));
-		coordenadas.add(new Coordenada(47,51,Color.WHITE));
-		coordenadas.add(new Coordenada(48,51,Color.WHITE));
-		coordenadas.add(new Coordenada(49,51,Color.WHITE));
-		coordenadas.add(new Coordenada(50,51,Color.RED));
-		coordenadas.add(new Coordenada(51,51,Color.WHITE));
-		coordenadas.add(new Coordenada(52,51,Color.WHITE));
-		coordenadas.add(new Coordenada(53,51,Color.WHITE));
-		coordenadas.add(new Coordenada(54,51,Color.WHITE));
-		coordenadas.add(new Coordenada(55,51,Color.WHITE));
+		coordenadas.add(new Coordenada(x - 10, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 9, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 8, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 7, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 6, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 5, y - 4, Color.RED));
+		coordenadas.add(new Coordenada(x - 4, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 3, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 3, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 4, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 5, y - 4, Color.WHITE));
 
-		coordenadas.add(new Coordenada(45,50,Color.RED));
-		coordenadas.add(new Coordenada(46,50,Color.WHITE));
-		coordenadas.add(new Coordenada(47,50,Color.BLUE));
-		coordenadas.add(new Coordenada(48,50,Color.WHITE));
-		coordenadas.add(new Coordenada(49,50,Color.RED));
-		coordenadas.add(new Coordenada(50,50,Color.RED));
-		coordenadas.add(new Coordenada(51,50,Color.RED));
-		coordenadas.add(new Coordenada(52,50,Color.WHITE));
-		coordenadas.add(new Coordenada(53,50,Color.BLUE));
-		coordenadas.add(new Coordenada(54,50,Color.WHITE));
-		coordenadas.add(new Coordenada(55,50,Color.RED));
+		coordenadas.add(new Coordenada(x - 10, y - 5, Color.RED));
+		coordenadas.add(new Coordenada(x - 9, y - 5, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 8, y - 5, Color.BLUE));
+		coordenadas.add(new Coordenada(x - 7, y - 5, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 6, y - 5, Color.RED));
+		coordenadas.add(new Coordenada(x - 5, y - 5, Color.RED));
+		coordenadas.add(new Coordenada(x - 4, y - 5, Color.RED));
+		coordenadas.add(new Coordenada(x - 3, y - 5, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 2, y - 5, Color.BLUE));
+		coordenadas.add(new Coordenada(x + 4, y - 5, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 5, y - 5, Color.RED));
 
-		coordenadas.add(new Coordenada(46,49,Color.WHITE));
-		coordenadas.add(new Coordenada(47,49,Color.WHITE));
-		coordenadas.add(new Coordenada(48,49,Color.BLUE));
-		coordenadas.add(new Coordenada(49,49,Color.WHITE));
-		coordenadas.add(new Coordenada(50,49,Color.RED));
-		coordenadas.add(new Coordenada(51,49,Color.WHITE));
-		coordenadas.add(new Coordenada(52,49,Color.BLUE));
-		coordenadas.add(new Coordenada(53,49,Color.WHITE));
-		coordenadas.add(new Coordenada(54,49,Color.WHITE));
+		coordenadas.add(new Coordenada(x - 4, y - 6, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 3, y - 6, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 2, y - 6, Color.BLUE));
+		coordenadas.add(new Coordenada(x - 1, y - 6, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 6, Color.RED));
+		coordenadas.add(new Coordenada(x + 1, y - 6, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 2, y - 6, Color.BLUE));
+		coordenadas.add(new Coordenada(x + 3, y - 6, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 4, y - 6, Color.WHITE));
 
 		// Upper Structure
-		coordenadas.add(new Coordenada(46,48,Color.RED));
-		coordenadas.add(new Coordenada(47,48,Color.WHITE));
-		coordenadas.add(new Coordenada(48,48,Color.WHITE));
-		coordenadas.add(new Coordenada(49,48,Color.WHITE));
-		coordenadas.add(new Coordenada(50,48,Color.WHITE));
-		coordenadas.add(new Coordenada(51,48,Color.WHITE));
-		coordenadas.add(new Coordenada(52,48,Color.WHITE));
-		coordenadas.add(new Coordenada(53,48,Color.WHITE));
-		coordenadas.add(new Coordenada(54,48,Color.RED));
+		coordenadas.add(new Coordenada(x - 4, y - 7, Color.RED));
+		coordenadas.add(new Coordenada(x - 3, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 2, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 1, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 1, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 2, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 3, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 4, y - 7, Color.RED));
 
-		coordenadas.add(new Coordenada(47,47,Color.WHITE));
-		coordenadas.add(new Coordenada(48,47,Color.WHITE));
-		coordenadas.add(new Coordenada(49,47,Color.WHITE));
-		coordenadas.add(new Coordenada(50,47,Color.WHITE));
-		coordenadas.add(new Coordenada(51,47,Color.WHITE));
-		coordenadas.add(new Coordenada(52,47,Color.WHITE));
-		coordenadas.add(new Coordenada(53,47,Color.WHITE));
+		coordenadas.add(new Coordenada(x - 3, y - 8, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 2, y - 8, Color.WHITE));
+		coordenadas.add(new Coordenada(x - 1, y - 8, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 8, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 1, y - 8, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 2, y - 8, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 3, y - 8, Color.WHITE));
 
 		// Tip and Secondary Cannons
-		coordenadas.add(new Coordenada(48,46,Color.RED));
-		coordenadas.add(new Coordenada(49,46,Color.WHITE));
-		coordenadas.add(new Coordenada(50,46,Color.WHITE));
-		coordenadas.add(new Coordenada(51,46,Color.WHITE));
-		coordenadas.add(new Coordenada(52,46,Color.RED));
+		coordenadas.add(new Coordenada(x - 2, y - 9, Color.RED));
+		coordenadas.add(new Coordenada(x - 1, y - 9, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 9, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 1, y - 9, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 2, y - 9, Color.RED));
 
-		coordenadas.add(new Coordenada(49,45,Color.WHITE));
-		coordenadas.add(new Coordenada(50,45,Color.WHITE));
-		coordenadas.add(new Coordenada(51,45,Color.WHITE));
+		coordenadas.add(new Coordenada(x - 1, y - 10, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 10, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 1, y - 10, Color.WHITE));
 
-		coordenadas.add(new Coordenada(49,44,Color.WHITE));
-		coordenadas.add(new Coordenada(50,44,Color.WHITE));
-		coordenadas.add(new Coordenada(51,44,Color.WHITE));
+		coordenadas.add(new Coordenada(x - 1, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x + 1, y - 7, Color.WHITE));
 
-		coordenadas.add(new Coordenada(50,43,Color.WHITE));
-		coordenadas.add(new Coordenada(50,42,Color.WHITE));
-		coordenadas.add(new Coordenada(50,41,Color.WHITE));
-		coordenadas.add(new Coordenada(50,40,Color.WHITE));
-		coordenadas.add(new Coordenada(50,39,Color.WHITE));
-		coordenadas.add(new Coordenada(50,38,Color.WHITE));
-		coordenadas.add(new Coordenada(50,37,Color.RED));		
+		coordenadas.add(new Coordenada(x, y - 2, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 3, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 4, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 5, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 6, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 7, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 8, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 9, Color.WHITE));
+		coordenadas.add(new Coordenada(x, y - 10, Color.WHITE));
 	}
-	
+
 	
 
 }
