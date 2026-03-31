@@ -1,7 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public abstract class Jugador extends Nave { // Hereda de NAVE
 
@@ -24,7 +24,7 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void disparar() { // TODO
-		Disparo nuevoDisparo = new Disparo(x, y - 1); // Crea un nuevo disparo en la posicion actual del jugador
+		Disparo nuevoDisparo = new Disparo(55, 60); // Crea un nuevo disparo en la posicion actual del jugador
 		nuevoDisparo.setShoot(true); // Activa el disparo
 		disparos.add(nuevoDisparo); // Agrega el nuevo disparo a la lista de disparos activos
 	}

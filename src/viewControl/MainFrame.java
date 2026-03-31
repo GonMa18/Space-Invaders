@@ -15,10 +15,7 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import model.Enemigo;
 import model.Espacio;
-import model.Rojo;
 
 @SuppressWarnings("deprecation")
 public class MainFrame extends JFrame implements Observer {
@@ -54,7 +51,6 @@ public class MainFrame extends JFrame implements Observer {
 		//// FONDO ////
 		ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
 		fondo = iconoFondo.getImage();
-
 		contentPane = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -107,7 +103,6 @@ public class MainFrame extends JFrame implements Observer {
 
 		} else if (resul == "actualizar" && matriz != null) {
 			repintar(matriz); // Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
-
 			matrizActual = matriz; // Actualizamos la matriz actual para que se pinte en el fondo
 		}
 
@@ -124,8 +119,8 @@ public class MainFrame extends JFrame implements Observer {
 		if (g == null)
 			return;
 
-		ImageIcon imagen = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
-		Image fondo = imagen.getImage(); // Cargamos la imagen de fondo
+		ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
+		fondo = iconoFondo.getImage();
 
 		for (int i = 0; i < FILAS; i++) {
 			for (int j = 0; j < COLUMNAS; j++) { // Recorremos cada celda de la matriz
@@ -142,14 +137,13 @@ public class MainFrame extends JFrame implements Observer {
 					pintarCelda(g, nuevoValor, x, y); // Pintamos la celda con el nuevo valor
 
 				}
+				
+				g.setColor(Color.BLUE);
+				g.fillRect(40, 30, 5, 5);
 			}
 		}
-		g.setColor(Color.PINK);
-		g.fillRect(80, 55, TAM_CELDA, TAM_CELDA);
-		Rojo rojo = new Rojo(50, 55, 100);
-		rojo.iniciarCuerpo();
-		rojo.pintarCuerpo(g, TAM_CELDA);
-		g.dispose(); // Cerramps los recursos gráficos después de pintar
+		g.dispose(); // Cerramos los recursos gráficos después de pintar
+		
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -167,15 +161,6 @@ public class MainFrame extends JFrame implements Observer {
 
 			}
 		}
-
-		Rojo rojo = new Rojo(50, 55);
-		rojo.pintarCuerpo(g, TAM_CELDA);
-
-		Enemigo enemigo = new Enemigo(80, 55);
-		enemigo.pintarCuerpo(g, TAM_CELDA);
-
-		g.setColor(Color.PINK);
-		g.fillRect(80, 55, TAM_CELDA, TAM_CELDA);
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -183,22 +168,29 @@ public class MainFrame extends JFrame implements Observer {
 	//// PINTAR LA CASILLA ////
 	private void pintarCelda(Graphics g, int valor, int x, int y) {
 
-		if (valor == 1) { // Jugador
-			g.setColor(Color.GREEN);
-			g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
-		} else if (valor == 2) { // Enemigo
-			//g.setColor(Color.RED);
-			//g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
-		} else if (valor == 3) { // Disparo
-			g.setColor(Color.YELLOW);
-			g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
-
-		} else { // Celda vacia -- negro
-			g.setColor(Color.BLACK);
-			g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
-
+		switch (valor) {
+			case 1 -> {
+				// Jugador
+				g.setColor(Color.WHITE);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			case 2 -> {
+				// Enemigo
+				g.setColor(Color.RED);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			case 3 -> {
+				// Disparo
+				g.setColor(Color.YELLOW);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			default -> {
+				// Celda vacia -- negro
+				g.setColor(Color.BLACK);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
 		}
-
+            
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -214,7 +206,6 @@ public class MainFrame extends JFrame implements Observer {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
-
 			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
 
 			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
@@ -248,11 +239,13 @@ public class MainFrame extends JFrame implements Observer {
 
 		@Override
 		public void windowOpened(WindowEvent e) {
-
+			//Graphics g = contentPane.getGraphics();
+			//g.setColor(Color.GREEN);
+			//g.fillRect(40, 30, 5, 5);
+			//g.dispose();
 			// Pinto la matriz una primera vez (cuando MainFrame se abre)
 			pintarMatriz(contentPane.getGraphics(), Espacio.getInstance().generarMatriz());
 			// Desde el controller y SOLO desde el controller puedo llamar a espacio
-
 		}
 
 		@Override

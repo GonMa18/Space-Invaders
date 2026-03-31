@@ -126,18 +126,20 @@ public class Espacio extends Observable {
 
         }
         if (jugador != null && jugador.sigueVivo()) {
-            for (Disparo d : jugador.getDisparos()) {
-                if (d.isShooting()) {
-                    int dx = d.getX();
-                    int dy = d.getY();
-                    if (dx >= 0 && dx < ancho && dy >= 0 && dy < alto) {
-                        matriz[dy][dx] = 3; // Disparo
+            if (jugador.getDisparos() != null) {
+                for (Disparo d : jugador.getDisparos()) {
+                    if (d.isShooting()) {
+                        int dx = d.getX();
+                        int dy = d.getY();
+                        if (dx >= 0 && dx < ancho && dy >= 0 && dy < alto) {
+                            matriz[dy][dx] = 3; // Disparo
+                        }
                     }
                 }
             }
-
         }
         return matriz;
+        
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -187,7 +189,10 @@ public class Espacio extends Observable {
             return;
 
         ArrayList<Disparo> disparos = jugador.getDisparos();
-
+        if (disparos == null) {
+                // System.out.println("ff2"); // Si no hay disparos, no hay muertes que comprobar
+                return;
+        }
         for (Disparo disparo : disparos) {
             if (disparo.isShooting()) {
                 disparo.subir();
@@ -208,6 +213,10 @@ public class Espacio extends Observable {
         for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
                 e.mover(1, 0); // Mueve un pixel hacia abajo (y+1)
+                if (jugador.getDisparos() == null) {
+                    // System.out.println("ff3"); // Si no hay disparos, no hay muertes que comprobar
+                    return;
+                }
                 for (Disparo disparo : disparos) {
                     if (disparo.isShooting() && disparo != null) {
                         comprobarMuertes(disparo); // Comprueba si el disparo ha dado a algun enemigo
@@ -223,12 +232,15 @@ public class Espacio extends Observable {
 
     private void comprobarMuertes(Disparo d) {
         for (Enemigo e : enemigos) {
-            if (e.sigueVivo() && e.getX() == d.getX() && Math.abs(e.getY() - d.getY()) <= 1) { // Si el disparo ha dado
-                                                                                               // a un enemigo
-                                                                                               // (tolerancia de un
-                                                                                               // pixel)
-                e.setSigueJugando(false); // El enemigo muere
-                d.setShoot(false);
+            if (e.sigueVivo()) {
+                for (Coordenada c : e.getCoordenadas()) {
+                    int ex = c.getX();
+                    int ey = c.getY();
+                    if (ex == d.getX() && Math.abs(ey - d.getY()) <= 1) {
+                        e.setSigueJugando(false); // El enemigo muere
+                        d.setShoot(false);
+                    }
+                }
 
                 // notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
             }
@@ -237,7 +249,7 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    public boolean isGameOver() { // Enemigos llegan a la fila del jugador o muere
+    public boolean isGameOver() { // Enemigos llegan a la fila del jugador o muere //TODO
 
         if (jugador == null || !jugador.sigueVivo())
             return true; // Reviso que haya muerto el jugador
@@ -247,16 +259,22 @@ public class Espacio extends Observable {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
                 // Si un enemigo llega al final del tablero (última fila)
-                if (e.getY() >= alto - 1) {
-                    jugador.setSigueJugando(false);
-                    notificarVista(new Object[] { "perder", null });
-                    return true;
+                for (Coordenada c : e.getCoordenadas()) {
+                    if (c.getY() >= alto - 1) {
+                        jugador.setSigueJugando(false);
+                        notificarVista(new Object[] { "perder", null });
+                        return true;
+                    }
                 }
                 // Si un enemigo choca con el jugador (misma posición)
-                if (e.getX() == jugador.getX() && e.getY() == jugador.getY()) {
-                    jugador.setSigueJugando(false);
-                    notificarVista(new Object[] { "perder", null });
-                    return true;
+                for (Coordenada ec : e.getCoordenadas()) {
+                    for (Coordenada j : jugador.getCoordenadas()) {
+                        if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
+                            jugador.setSigueJugando(false);
+                            notificarVista(new Object[] { "perder", null });
+                            return true;
+                        }
+                    }
                 }
             }
         }
