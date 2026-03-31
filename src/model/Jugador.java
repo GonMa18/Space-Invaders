@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-
 public abstract class Jugador extends Nave { // Hereda de NAVE
 
 	// El jugador necesita una lista de disparos activos
@@ -47,4 +46,23 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public void mover(int x, int y) { // TODO
+		for (Coordenada c : this.coordenadas) {
+			c.setX(c.getX() + x);
+			c.setY(c.getY() + y);
+			if (c.getX() < 0) {
+				c.setX(0);
+			}
+			if (c.getX() > Espacio.getAnchura() - 1) {
+				c.setX(Espacio.getAnchura() - 1);
+			}
+			if (c.getY() < 0) {
+				c.setY(0);
+			}
+			if (c.getY() > Espacio.getAltura() - 1) {
+				c.setY(Espacio.getAltura() - 1);
+			}
+		}
+	}
 }

@@ -114,36 +114,30 @@ public class MainFrame extends JFrame implements Observer {
 	// Metodo equivalente a repaint(), pero sin chatGPT -_-
 
 	private void repintar(int[][] m) {
-
-		Graphics g = contentPane.getGraphics(); // Dibujamos sobre el contentPane
-		if (g == null)
-			return;
-
-		ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
-		fondo = iconoFondo.getImage();
-
-		for (int i = 0; i < FILAS; i++) {
-			for (int j = 0; j < COLUMNAS; j++) { // Recorremos cada celda de la matriz
-				int nuevoValor = m[i][j]; // Comparamos el nuevo valor con el valor anterior en la misma posición//
-				int viejoValor = (matrizActual != null)
-						? matrizActual[i][j] // Si la matriz actual no es null, obtenemos el valor anterior de esa celda
-						: -1; // Si la matriz actual es null (primer repintado), valor anterior es -1 para que
-								// se pinten todas las celdas
-
-				if (nuevoValor != viejoValor) { // Si el valor ha cambiado, repintamos esa celda
-					int x = j * TAM_CELDA;
-					int y = i * TAM_CELDA;
-
-					pintarCelda(g, nuevoValor, x, y); // Pintamos la celda con el nuevo valor
-
-				}
-				
-				g.setColor(Color.BLUE);
-				g.fillRect(40, 30, 5, 5);
-			}
-		}
-		g.dispose(); // Cerramos los recursos gráficos después de pintar
 		
+	    Graphics g = contentPane.getGraphics();			// Dibujamos sobre el contentPane
+	    if (g == null) return;
+
+	    ImageIcon imagen = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
+	    Image fondo = imagen.getImage();				// Cargamos la imagen de fondo
+
+	    for (int i = 0; i < FILAS; i++) {
+	        for (int j = 0; j < COLUMNAS; j++) {		// Recorremos cada celda de la matriz
+	            int nuevoValor = m[i][j];				// Comparamos el nuevo valor con el valor anterior en la misma posición//
+	            int viejoValor = (matrizActual != null) 
+	            		? matrizActual[i][j] 			// Si la matriz actual no es null, obtenemos el valor anterior de esa celda
+	            		: -1;							// Si la matriz actual es null (primer repintado), valor anterior es -1 para que se pinten todas las celdas
+
+	            if (nuevoValor != viejoValor) {			// Si el valor ha cambiado, repintamos esa celda
+	                int x = j * TAM_CELDA;
+	                int y = i * TAM_CELDA;
+
+	                pintarCelda(g, nuevoValor, x, y);	// Pintamos la celda con el nuevo valor
+	                
+	            }
+	        }
+	    }
+	    g.dispose();		// Cerramps los recursos gráficos después de pintar
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
