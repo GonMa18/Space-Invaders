@@ -72,9 +72,8 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void inicializar() {
+    private void inicializar() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
         this.jugador = new Rojo(100, 100);
-        System.out.println(jugador.getCoordenadas().get(0).getX());
         
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
@@ -85,7 +84,7 @@ public class Espacio extends Observable {
         for (int i = 0; i < numEnemigos; i++) {
             int x;
             do {
-                x = rn.nextInt(ancho); // x aleatorio entre 0 y 99
+                x = rn.nextInt(ancho-3); // x aleatorio entre 0 y 99
             } while (posicionOcupadaOAdyacente(posicionesUsadas, x));
             posicionesUsadas.add(x);
             enemigos.add(new Enemigo(x, 20));
@@ -154,9 +153,9 @@ public class Espacio extends Observable {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     // Comprueba si x coincide o es adyacente a alguna posicion ya usada
-    private boolean posicionOcupadaOAdyacente(List<Integer> posiciones, int x) {
+    private boolean posicionOcupadaOAdyacente(List<Integer> posiciones, int x) { //TODO
         for (int pos : posiciones) {
-            if (Math.abs(pos - x) <= 1) { // misma posicion o a distancia 1
+            if (Math.abs(pos - x) <= 6) { // misma posicion o a distancia 1
                 return true;
             }
         }
