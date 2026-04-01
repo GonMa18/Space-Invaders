@@ -19,6 +19,24 @@ public class Enemigo extends Nave {
 		}
 	}
 
+	public void bajar_zigzag() { // TODO
+		Boolean zigzag = false;
+		for (Coordenada c : this.getCoordenadas()) {
+			if ((c.getX() >= Espacio.getAnchura() - 1)||(c.getX() <= 1)) {
+				c.setY(c.getX() + 1);
+				zigzag = !zigzag; // Cambia la dirección del zigzag
+			}
+			else{
+				if (zigzag) {
+					c.setX(c.getX() + 1); // Mueve un pixel a la derecha
+				} else {
+				c.setX(c.getX() - 1); // Mueve un pixel a la izquierda
+				}
+			}
+			
+		}
+	}
+
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	@Override
@@ -38,11 +56,6 @@ public class Enemigo extends Nave {
 			}
 		}
 		return false; // Si el disparo no coincide con ninguna coordenada de la nave, devuelve false
-	}
-
-	public void mover(int x, int y) {
-		// El enemigo no se mueve horizontalmente, solo baja, así que este método puede
-		// estar vacío o lanzar una excepción si se llama
 	}
 
 }

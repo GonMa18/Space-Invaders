@@ -1,15 +1,12 @@
 package model;
 
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 import javax.swing.Timer;
-
-import viewControl.FinishFrame;
-import viewControl.MainFrame;
 
 @SuppressWarnings("deprecation")
 public class Espacio extends Observable {
@@ -209,20 +206,16 @@ public class Espacio extends Observable {
     // Metodo para movel los enemigos un pixel abajo --> TIMER 200ms
     public void actualizarEnemigos() {
         ArrayList<Disparo> disparos = jugador.getDisparos();
-
         for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
-                e.mover(1, 0); // Mueve un pixel hacia abajo (y+1)
-                if (jugador.getDisparos() == null) {
-                    // System.out.println("ff3"); // Si no hay disparos, no hay muertes que comprobar
-                    return;
-                }
-                for (Disparo disparo : disparos) {
-                    if (disparo.isShooting() && disparo != null) {
-                        comprobarMuertes(disparo); // Comprueba si el disparo ha dado a algun enemigo
+                e.bajar(); // Mueve un pixel hacia abajo (y+1)
+                if (disparos != null) {
+                    for (Disparo disparo : disparos) {
+                        if (disparo.isShooting() && disparo != null) {
+                            comprobarMuertes(disparo); // Comprueba si el disparo ha dado a algun enemigo
+                        }
                     }
                 }
-
             }
         }
         notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz

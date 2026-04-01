@@ -45,7 +45,24 @@ public abstract class Nave {
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public abstract void mover(int x, int y);
+	public void mover(int x, int y) { // TODO
+		for (Coordenada c : this.coordenadas) {
+			c.setX(c.getX() + x);
+			c.setY(c.getY() + y);
+			if (c.getX() < 0) {
+				c.setX(0);
+			}
+			if (c.getX() > Espacio.getAnchura() - 1) {
+				c.setX(Espacio.getAnchura() - 1);
+			}
+			if (c.getY() < 0) {
+				c.setY(0);
+			}
+			if (c.getY() > Espacio.getAltura() - 1) {
+				c.setY(Espacio.getAltura() - 1);
+			}
+		}
+	}
 
 	protected abstract void iniciarCuerpo(int x, int y);
 
