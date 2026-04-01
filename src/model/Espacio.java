@@ -102,7 +102,7 @@ public class Espacio extends Observable {
 
         if (jugador != null && jugador.sigueVivo()) {
             for (Coordenada c : jugador.getCoordenadas()) {
-                if (jugador.cuerpo.containPixel(c.getX(), c.getY())) {
+                if (jugador.containPixel(c.getX(), c.getY())) {
                     matriz[c.getY()][c.getX()] = 1; // Jugador
                 }
             }
@@ -111,7 +111,7 @@ public class Espacio extends Observable {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()){
                 for (Coordenada c : e.getCoordenadas()) {
-                    if (e.cuerpo.containPixel(c.getX(), c.getY())) {
+                    if (e.containPixel(c.getX(), c.getY())) {
                         matriz[c.getY()][c.getX()] = 2; // Enemigo
                     }
                 }
@@ -166,7 +166,7 @@ public class Espacio extends Observable {
 
     public void moverJugador(int x, int y) {
         if (jugador != null && jugador.sigueVivo()) { // Si el colega sigue vivo
-            jugador.cuerpo.mover(x, y); // Me muevo a la nueva posicion
+            jugador.mover(x, y); // Me muevo a la nueva posicion
 
             notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
         }
@@ -212,7 +212,7 @@ public class Espacio extends Observable {
         ArrayList<Disparo> disparos = jugador.getDisparos();
         for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
-                e.cuerpo.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
+                e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
                 //System.out.println("enemigo bajando");
                 if (disparos != null) {
                     for (Disparo disparo : disparos) {

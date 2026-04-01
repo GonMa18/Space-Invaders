@@ -8,7 +8,7 @@ public abstract class Nave {
 
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private boolean sigueJugando;
-	protected Composite cuerpo;
+	private Composite cuerpo;
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ public abstract class Nave {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public ArrayList<Coordenada> getCoordenadas() {
-		return cuerpo.pixeles;
+		return cuerpo.getPixeles();
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -51,8 +51,23 @@ public abstract class Nave {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void pintarCuerpo(Graphics g, int tamCelda) {
-		for (Coordenada c : cuerpo.pixeles) {
+		for (Coordenada c : cuerpo.getPixeles()) {
 			c.pintar(g, tamCelda);
 		}
+	}
+	
+	public void mover(int dx, int dy) {
+		cuerpo.mover(dx, dy);
+	}
+
+	public boolean containPixel(int x, int y) {
+		return cuerpo.containPixel(x, y);
+	}
+
+	public int getX() {
+		return cuerpo.getX();
+	}
+	public int getY() {
+		return cuerpo.getY();
 	}
 }

@@ -24,7 +24,7 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void disparar() { // TODO
-		Disparo nuevoDisparo = new Disparo(this.cuerpo.x, this.cuerpo.y - 2); // Crea un nuevo disparo en la posicion actual del jugador
+		Disparo nuevoDisparo = new Disparo(this.getX(), this.getY() - 2); // Crea un nuevo disparo en la posicion actual del jugador
 		//System.out.println("disparo creado");
 		nuevoDisparo.setShoot(true); // Activa el disparo
 		//System.out.println("disparo setShoot(true)");

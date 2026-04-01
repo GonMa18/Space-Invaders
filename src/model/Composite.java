@@ -2,9 +2,9 @@ package model;
 import java.util.ArrayList;
 
 public class Composite implements Component {
-    protected int x;
-    protected int y;
-    protected  ArrayList<Coordenada> pixeles;
+    private int x;
+    private int y;
+    private ArrayList<Coordenada> pixeles;
 
     public Composite(int x, int y) {
         this.x = x;
@@ -29,5 +29,14 @@ public class Composite implements Component {
             }
         }
         return false;
+    }
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+    public ArrayList<Coordenada> getPixeles() {
+        return pixeles;
     }
 }
