@@ -254,29 +254,38 @@ public class Espacio extends Observable {
                          // Si sigue vivo:
                          // Paso a revisar donde estan los enemigos
 
+        if (enemigosHanLlegadoAlFinal() || enemigoChocaConJugador()) {
+            notificarVista(new Object[] { "perder", null }); // Notifico a la vista que el jugador ha perdido
+        }
+        return false;
+    }
+
+    private boolean enemigosHanLlegadoAlFinal() {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
-                // Si un enemigo llega al final del tablero (última fila)
                 for (Coordenada c : e.getCoordenadas()) {
                     if (c.getY() >= alto - 1) {
-                        jugador.setSigueJugando(false);
-                        notificarVista(new Object[] { "perder", null });
-                        return true;
+                        return true; // Un enemigo ha llegado al final del tablero
                     }
                 }
-                // Si un enemigo choca con el jugador (misma posición)
+            }
+        }
+        return false; // Ningún enemigo ha llegado al final del tablero
+    }
+
+    private boolean enemigoChocaConJugador() {
+        for (Enemigo e : enemigos) {
+            if (e.sigueVivo()) {
                 for (Coordenada ec : e.getCoordenadas()) {
                     for (Coordenada j : jugador.getCoordenadas()) {
                         if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
-                            jugador.setSigueJugando(false);
-                            notificarVista(new Object[] { "perder", null });
-                            return true;
+                            return true; // Un enemigo ha chocado con el jugador
                         }
                     }
                 }
             }
         }
-        return false;
+        return false; // Ningún enemigo ha chocado con el jugador
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
