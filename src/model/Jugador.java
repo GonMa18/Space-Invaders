@@ -18,14 +18,18 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 
 	public Jugador(int x, int y) {
 		super(x, y);
+		this.disparos = new ArrayList<>();
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void disparar() { // TODO
-		Disparo nuevoDisparo = new Disparo(55, 60); // Crea un nuevo disparo en la posicion actual del jugador
+		Disparo nuevoDisparo = new Disparo(this.x, this.y - 2); // Crea un nuevo disparo en la posicion actual del jugador
+		//System.out.println("disparo creado");
 		nuevoDisparo.setShoot(true); // Activa el disparo
+		//System.out.println("disparo setShoot(true)");
 		disparos.add(nuevoDisparo); // Agrega el nuevo disparo a la lista de disparos activos
+		//System.out.println("disparo añadido");
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,6 +42,9 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 
 	// Elimina los disparos que ya no están activos
 	public void limpiarDisparos() { // TODO
+		if (disparos == null) {
+			return; // Si la lista de disparos es null, no hay nada que limpiar
+		}
 		for (int i = disparos.size() - 1; i >= 0; i--) {
 			if (!disparos.get(i).isShooting()) {
 				disparos.remove(i);

@@ -173,7 +173,7 @@ public class Espacio extends Observable {
     public void disparar() {
         if (jugador != null && jugador.sigueVivo()) {
             jugador.disparar();
-
+            //System.out.println("disparar espacio");
             notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
         }
     }
@@ -187,8 +187,8 @@ public class Espacio extends Observable {
 
         ArrayList<Disparo> disparos = jugador.getDisparos();
         if (disparos == null) {
-                // System.out.println("ff2"); // Si no hay disparos, no hay muertes que comprobar
-                return;
+            //System.out.println("ff2"); // Si no hay disparos, no hay muertes que comprobar
+            return;
         }
         for (Disparo disparo : disparos) {
             if (disparo.isShooting()) {

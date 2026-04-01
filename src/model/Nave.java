@@ -8,6 +8,8 @@ public abstract class Nave {
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private boolean sigueJugando;
 	protected ArrayList<Coordenada> coordenadas;
+	protected int x;
+	protected int y;
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -15,6 +17,8 @@ public abstract class Nave {
 		this.coordenadas = new ArrayList<>();
 		this.iniciarCuerpo(x, y);
 		this.sigueJugando = true;
+		this.x = x;
+		this.y = y;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -46,6 +50,8 @@ public abstract class Nave {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void mover(int x, int y) { // TODO
+		this.x += x;
+		this.y += y;
 		for (Coordenada c : this.coordenadas) {
 			c.setX(c.getX() + x);
 			c.setY(c.getY() + y);

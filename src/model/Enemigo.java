@@ -14,9 +14,7 @@ public class Enemigo extends Nave {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void bajar() { // Va bajando un pixel cada 200ms
-		for (Coordenada c : this.getCoordenadas()) {
-			c.setY(c.getY() + 1); // Actualiza las coordenadas de cada pixel de la nave
-		}
+		this.mover(0,1);
 	}
 
 	public void bajar_zigzag() { // TODO

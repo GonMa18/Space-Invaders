@@ -203,7 +203,9 @@ public class MainFrame extends JFrame implements Observer {
 			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
 
 			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
+				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
 				Espacio.getInstance().disparar();
+				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
 			}
 
 			int dx = 0;
