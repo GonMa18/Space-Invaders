@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.Color;
-
 public class Enemigo extends Nave {
 
 	public Enemigo(int x, int y) {
@@ -12,12 +10,7 @@ public class Enemigo extends Nave {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	public void bajar() { // Va bajando un pixel cada 200ms
-		this.mover(0,1);
-	}
-
-	public void bajar_zigzag() { // TODO
+/* 	public void bajar_zigzag() { // TODO
 		Boolean zigzag = false;
 		for (Coordenada c : this.getCoordenadas()) {
 			if ((c.getX() >= Espacio.getAnchura() - 1)||(c.getX() <= 1)) {
@@ -33,22 +26,12 @@ public class Enemigo extends Nave {
 			}
 			
 		}
-	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	@Override
-	protected void iniciarCuerpo(int x, int y) {
-		coordenadas.add(new Coordenada(x, y, Color.WHITE));
-		coordenadas.add(new Coordenada(x, y + 1, Color.WHITE));
-		coordenadas.add(new Coordenada(x + 1, y, Color.WHITE));
-		coordenadas.add(new Coordenada(x + 1, y + 1, Color.WHITE));
-	}
-
+	} */
+	
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public boolean meHanDisparado(int x, int y) {
-		for (Coordenada coord : coordenadas) {
+		for (Coordenada coord : this.getCoordenadas()) {
 			if (coord.getX() == x && coord.getY() == y) {
 				return true; // Si el disparo coincide con alguna coordenada de la nave, devuelve true
 			}

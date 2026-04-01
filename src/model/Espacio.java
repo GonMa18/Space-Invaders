@@ -74,6 +74,7 @@ public class Espacio extends Observable {
 
     private void inicializar() {
         this.jugador = new Rojo(100, 100);
+        System.out.println(jugador.getCoordenadas().get(0).getX());
         
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
@@ -102,28 +103,24 @@ public class Espacio extends Observable {
 
         if (jugador != null && jugador.sigueVivo()) {
             for (Coordenada c : jugador.getCoordenadas()) {
-                int x = c.getX();
-                int y = c.getY();
-                if (x >= 0 && x < ancho && y >= 0 && y < alto) {
-                    matriz[y][x] = 1; // Jugador
+                if (jugador.cuerpo.containPixel(c.getX(), c.getY())) {
+                    matriz[c.getY()][c.getX()] = 1; // Jugador
                 }
             }
-
         }
+
         for (Enemigo e : enemigos) {
-            if (e.sigueVivo()) {
+            if (e.sigueVivo()){
                 for (Coordenada c : e.getCoordenadas()) {
-                    int ex = c.getX();
-                    int ey = c.getY();
-                    if (ex >= 0 && ex < ancho && ey >= 0 && ey < alto) {
-                        matriz[ey][ex] = 2; // Enemigo
+                    if (e.cuerpo.containPixel(c.getX(), c.getY())) {
+                        matriz[c.getY()][c.getX()] = 2; // Enemigo
                     }
                 }
             }
-
         }
+
         if (jugador != null && jugador.sigueVivo()) {
-            if (jugador.getDisparos() != null) {
+            if (jugador.getDisparos() != null) {/*  */
                 for (Disparo d : jugador.getDisparos()) {
                     if (d.isShooting()) {
                         int dx = d.getX();
@@ -135,7 +132,15 @@ public class Espacio extends Observable {
                 }
             }
         }
-        return matriz;
+
+        /* for (int[] i : matriz) {
+            for (int j : i) {
+                System.out.print(j);
+            }
+            System.out.println();
+        }
+            */
+        return matriz; 
         
     }
 
@@ -162,7 +167,7 @@ public class Espacio extends Observable {
 
     public void moverJugador(int x, int y) {
         if (jugador != null && jugador.sigueVivo()) { // Si el colega sigue vivo
-            jugador.mover(x, y); // Me muevo a la nueva posicion
+            jugador.cuerpo.mover(x, y); // Me muevo a la nueva posicion
 
             notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
         }
@@ -208,7 +213,8 @@ public class Espacio extends Observable {
         ArrayList<Disparo> disparos = jugador.getDisparos();
         for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
-                e.bajar(); // Mueve un pixel hacia abajo (y+1)
+                e.cuerpo.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
+                //System.out.println("enemigo bajando");
                 if (disparos != null) {
                     for (Disparo disparo : disparos) {
                         if (disparo.isShooting() && disparo != null) {
@@ -234,7 +240,6 @@ public class Espacio extends Observable {
                         d.setShoot(false);
                     }
                 }
-
                 // notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
             }
         }
@@ -242,7 +247,7 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    public boolean isGameOver() { // Enemigos llegan a la fila del jugador o muere //TODO
+    public boolean isGameOver() { // Enemigos llegan a la fila del jugador o muere //TODO, modularidad, metodos privados de comprobar que los enemigos hayan llegado al final y otro de choque entre jugador y enemigos
 
         if (jugador == null || !jugador.sigueVivo())
             return true; // Reviso que haya muerto el jugador

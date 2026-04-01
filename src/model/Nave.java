@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -7,26 +8,26 @@ public abstract class Nave {
 
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private boolean sigueJugando;
-	protected ArrayList<Coordenada> coordenadas;
-	protected int x;
-	protected int y;
+	protected Composite cuerpo;
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public Nave(int x, int y) {
-		this.coordenadas = new ArrayList<>();
-		this.iniciarCuerpo(x, y);
 		this.sigueJugando = true;
-		this.x = x;
-		this.y = y;
-	}
+		this.cuerpo = new Composite(x, y);
+		cuerpo.addPixel(new Coordenada(x , y, Color.WHITE));
+		cuerpo.addPixel(new Coordenada(x, y + 1, Color.WHITE));
+		cuerpo.addPixel(new Coordenada(x - 1, y + 1, Color.WHITE));
+		cuerpo.addPixel(new Coordenada(x + 1, y + 1, Color.WHITE));
+
+	} 
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public ArrayList<Coordenada> getCoordenadas() {
-		return coordenadas;
+		return cuerpo.pixeles;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -49,31 +50,8 @@ public abstract class Nave {
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public void mover(int x, int y) { // TODO
-		this.x += x;
-		this.y += y;
-		for (Coordenada c : this.coordenadas) {
-			c.setX(c.getX() + x);
-			c.setY(c.getY() + y);
-			if (c.getX() < 0) {
-				c.setX(0);
-			}
-			if (c.getX() > Espacio.getAnchura() - 1) {
-				c.setX(Espacio.getAnchura() - 1);
-			}
-			if (c.getY() < 0) {
-				c.setY(0);
-			}
-			if (c.getY() > Espacio.getAltura() - 1) {
-				c.setY(Espacio.getAltura() - 1);
-			}
-		}
-	}
-
-	protected abstract void iniciarCuerpo(int x, int y);
-
 	public void pintarCuerpo(Graphics g, int tamCelda) {
-		for (Coordenada c : coordenadas) {
+		for (Coordenada c : cuerpo.pixeles) {
 			c.pintar(g, tamCelda);
 		}
 	}
