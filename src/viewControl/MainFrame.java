@@ -55,7 +55,6 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
 				if (matrizActual != null) { // Si la matriz ya ha sido inicializada, la pintamos
 					pintarMatriz(g, matrizActual); // Pintamos la matriz actual del juego en el fondo
 				}
@@ -118,9 +117,6 @@ public class MainFrame extends JFrame implements Observer {
 	    Graphics g = contentPane.getGraphics();			// Dibujamos sobre el contentPane
 	    if (g == null) return;
 
-	    ImageIcon imagen = new ImageIcon(getClass().getResource("/Resources/Images/Fondo.png"));
-	    Image fondo = imagen.getImage();				// Cargamos la imagen de fondo
-
 	    for (int i = 0; i < FILAS; i++) {
 	        for (int j = 0; j < COLUMNAS; j++) {		// Recorremos cada celda de la matriz
 	            int nuevoValor = m[i][j];				// Comparamos el nuevo valor con el valor anterior en la misma posición//
@@ -179,9 +175,19 @@ public class MainFrame extends JFrame implements Observer {
 				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
 			}
 			default -> {
-				// Celda vacia -- negro
-				g.setColor(Color.BLACK);
-				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+				// Fondo
+				int anchoTablero = COLUMNAS * TAM_CELDA;
+				int altoTablero = FILAS * TAM_CELDA;
+				int fondoW = fondo.getWidth(contentPane);
+				int fondoH = fondo.getHeight(contentPane);
+
+				if (fondoW > 0 && fondoH > 0) {
+					int sx1 = x * fondoW / anchoTablero;
+					int sy1 = y * fondoH / altoTablero;
+					int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
+					int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
+					g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
+				}
 			}
 		}
             
