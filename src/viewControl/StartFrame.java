@@ -119,7 +119,7 @@ public class StartFrame extends JFrame implements Observer{
         getContentPane().add(panel);	
         
         //// DESARROLLADORES ////
-        JLabel developers = new JLabel("by RetroDevs for Sprint 1");
+        JLabel developers = new JLabel("by RetroDevs for Sprint 2");
         developers.setForeground(new Color(255, 128, 0));
         developers.setFont(new Font("SansSerif", Font.ITALIC, 10));
         GridBagConstraints gbc_developers = new GridBagConstraints();
