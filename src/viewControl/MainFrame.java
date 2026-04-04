@@ -100,9 +100,9 @@ public class MainFrame extends JFrame implements Observer {
 			new FinishFrame(resul);
 			// Esto si es legal
 
-		} else if (resul == "actualizar" && matriz != null) {
+		} else if (resul.equals("actualizar") && matriz != null) {
 			repintar(matriz); // Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
-			matrizActual = matriz; // Actualizamos la matriz actual para que se pinte en el fondo
+			//matrizActual = matriz; // Actualizamos la matriz actual para que se pinte en el fondo
 		}
 
 	}
@@ -112,28 +112,53 @@ public class MainFrame extends JFrame implements Observer {
 	// Repinta solo las celdas que han cambiado entre la matriz anterior y la nueva,
 	// Metodo equivalente a repaint(), pero sin chatGPT -_-
 
+//	private void repintar(int[][] m) {
+//		
+//	    Graphics g = contentPane.getGraphics();			// Dibujamos sobre el contentPane
+//	    if (g == null) return;
+//
+//	    for (int i = 0; i < FILAS; i++) {
+//	        for (int j = 0; j < COLUMNAS; j++) {		// Recorremos cada celda de la matriz
+//	            int nuevoValor = m[i][j];				// Comparamos el nuevo valor con el valor anterior en la misma posición//
+//	            int viejoValor = (matrizActual != null) 
+//	            		? matrizActual[i][j] 			// Si la matriz actual no es null, obtenemos el valor anterior de esa celda
+//	            		: -1;							// Si la matriz actual es null (primer repintado), valor anterior es -1 para que se pinten todas las celdas
+//
+//	            if (nuevoValor != viejoValor) {			// Si el valor ha cambiado, repintamos esa celda
+//	                int x = j * TAM_CELDA;
+//	                int y = i * TAM_CELDA;
+//
+//	                pintarCelda(g, nuevoValor, x, y);	// Pintamos la celda con el nuevo valor
+//	                
+//	            }
+//	        }
+//	    }
+//	    
+//	    
+//	    g.dispose();		// Cerramps los recursos gráficos después de pintar
+//	    matrizActual = m;	// Actualizamos la matriz actual con la nueva matriz después de repintar
+//	}
 	private void repintar(int[][] m) {
-		
-	    Graphics g = contentPane.getGraphics();			// Dibujamos sobre el contentPane
+	    Graphics g = contentPane.getGraphics();
 	    if (g == null) return;
 
-	    for (int i = 0; i < FILAS; i++) {
-	        for (int j = 0; j < COLUMNAS; j++) {		// Recorremos cada celda de la matriz
-	            int nuevoValor = m[i][j];				// Comparamos el nuevo valor con el valor anterior en la misma posición//
-	            int viejoValor = (matrizActual != null) 
-	            		? matrizActual[i][j] 			// Si la matriz actual no es null, obtenemos el valor anterior de esa celda
-	            		: -1;							// Si la matriz actual es null (primer repintado), valor anterior es -1 para que se pinten todas las celdas
+	    // 1 — Pinta el fondo entero de una sola vez
+	    g.drawImage(fondo, 0, 0, COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA, contentPane);
 
-	            if (nuevoValor != viejoValor) {			// Si el valor ha cambiado, repintamos esa celda
+	    // 2 — Encima pinta solo los elementos (jugador, enemigos, disparos)
+	    for (int i = 0; i < FILAS; i++) {
+	        for (int j = 0; j < COLUMNAS; j++) {
+	            int valor = m[i][j];
+	            if (valor != 0) { // solo pinta si no es fondo
 	                int x = j * TAM_CELDA;
 	                int y = i * TAM_CELDA;
-
-	                pintarCelda(g, nuevoValor, x, y);	// Pintamos la celda con el nuevo valor
-	                
+	                pintarCelda(g, valor, x, y);
 	            }
 	        }
 	    }
-	    g.dispose();		// Cerramps los recursos gráficos después de pintar
+
+	    g.dispose();
+	    matrizActual = m;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -174,21 +199,21 @@ public class MainFrame extends JFrame implements Observer {
 				g.setColor(Color.YELLOW);
 				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
 			}
-			default -> {
-				// Fondo
-				int anchoTablero = COLUMNAS * TAM_CELDA;
-				int altoTablero = FILAS * TAM_CELDA;
-				int fondoW = fondo.getWidth(contentPane);
-				int fondoH = fondo.getHeight(contentPane);
-
-				if (fondoW > 0 && fondoH > 0) {
-					int sx1 = x * fondoW / anchoTablero;
-					int sy1 = y * fondoH / altoTablero;
-					int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
-					int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
-					g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
-				}
-			}
+//			default -> {
+//				// Fondo
+//				int anchoTablero = COLUMNAS * TAM_CELDA;
+//				int altoTablero = FILAS * TAM_CELDA;
+//				int fondoW = fondo.getWidth(contentPane);
+//				int fondoH = fondo.getHeight(contentPane);
+//
+//				if (fondoW > 0 && fondoH > 0) {
+//					int sx1 = x * fondoW / anchoTablero;
+//					int sy1 = y * fondoH / altoTablero;
+//					int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
+//					int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
+//					g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
+//				}
+//			}
 		}
             
 	}
