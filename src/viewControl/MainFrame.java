@@ -210,8 +210,18 @@ public class MainFrame extends JFrame implements Observer {
 
 			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
 				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
+				//Espacio.getInstance().disparar();
+				Espacio.getInstance().cambiarTipoBala(0);
 				Espacio.getInstance().disparar();
 				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
+			}
+			if(teclasPulsadas.contains(KeyEvent.VK_C)) {
+				Espacio.getInstance().cambiarTipoBala(1);
+				Espacio.getInstance().disparar();
+			}
+			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
+				Espacio.getInstance().cambiarTipoBala(2);
+				Espacio.getInstance().disparar();
 			}
 
 			int dx = 0;

@@ -13,6 +13,7 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	protected ArrayList<Disparo> disparos;
 	protected int flechas;
 	protected int rombos;
+	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -21,15 +22,16 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 		this.disparos = new ArrayList<>();
 	}
 
+	
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	public void disparar() { // TODO
-		Disparo nuevoDisparo = new Disparo(this.getX(), this.getY() - 2); // Crea un nuevo disparo en la posicion actual del jugador
-		//System.out.println("disparo creado");
-		nuevoDisparo.setShoot(true); // Activa el disparo
-		//System.out.println("disparo setShoot(true)");
-		disparos.add(nuevoDisparo); // Agrega el nuevo disparo a la lista de disparos activos
-		//System.out.println("disparo añadido");
+	
+	public void disparar() {
+		disparos.addAll(strategyBala.disparar(this.getX(), this.getY() - 2));		// Crea un nuevo disparo en la posicion actual del jugador
+																				// Agrega el nuevo disparo a la lista de disparos activos	
+	}
+	
+	public void changestrategyBala(StrategyBala sb) {
+		this.strategyBala = sb;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------

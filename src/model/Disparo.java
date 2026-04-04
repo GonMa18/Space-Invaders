@@ -1,19 +1,24 @@
 package model;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
 public class Disparo {
 	
 	private int x;
 	private int y;
 	private boolean shoot;
+	private ArrayList<Coordenada> forma;
     
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-	public Disparo(int x, int y) {
+	public Disparo(int x, int y, ArrayList<Coordenada> forma) {
 		this.x = x;
 		this.y = y;
 		this.shoot = false;
+		this.forma = forma;
 	}
     
     
@@ -66,6 +71,15 @@ public class Disparo {
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
+	public ArrayList<Coordenada> getPixeles(){
+		ArrayList<Coordenada> pixeles = new ArrayList<>();
+		for (Coordenada c : forma) {
+			pixeles.add(new Coordenada(x + c.getX(), y + c.getY(), Color.YELLOW));
+		}
+		return pixeles;
+	}
+	
+   //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
 }
 	

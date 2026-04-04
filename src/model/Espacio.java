@@ -120,12 +120,14 @@ public class Espacio extends Observable {
 
         if (jugador != null && jugador.sigueVivo()) {
             if (jugador.getDisparos() != null) {/*  */
-                for (Disparo d : jugador.getDisparos()) {
+            	for (Disparo d : jugador.getDisparos()) {
                     if (d.isShooting()) {
-                        int dx = d.getX();
-                        int dy = d.getY();
-                        if (dx >= 0 && dx < ancho && dy >= 0 && dy < alto) {
-                            matriz[dy][dx] = 3; // Disparo
+                        for (Coordenada c : d.getPixeles()) {
+                            int dx = c.getX();
+                            int dy = c.getY();
+                            if (dx >= 0 && dx < ancho && dy >= 0 && dy < alto) {
+                                matriz[dy][dx] = 3;
+                            }
                         }
                     }
                 }
@@ -181,6 +183,19 @@ public class Espacio extends Observable {
             notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
         }
     }
+    
+    // --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    public void cambiarTipoBala(int tipo) {
+		if (jugador != null && jugador.sigueVivo()) {
+			if (tipo == 0) {
+				jugador.changestrategyBala(new BalaPixel());
+			}else if (tipo == 1) {
+				jugador.changestrategyBala(new BalaFlecha());
+			}else
+				jugador.changestrategyBala(new BalaRombo());
+		}
+	}
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -231,14 +246,16 @@ public class Espacio extends Observable {
     private void comprobarMuertes(Disparo d) {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
-                for (Coordenada c : e.getCoordenadas()) {
-                    int ex = c.getX();
-                    int ey = c.getY();
-                    if (ex == d.getX() && Math.abs(ey - d.getY()) <= 1) {
-                        e.setSigueJugando(false); // El enemigo muere
-                        d.setShoot(false);
+            	for(Coordenada pixelBala : d.getPixeles()) {
+                    for (Coordenada c : e.getCoordenadas()) {
+                        int ex = c.getX();
+                        int ey = c.getY();
+                        if (ex == pixelBala.getX() && Math.abs(ey - pixelBala.getY()) <= 1) {
+                            e.setSigueJugando(false); // El enemigo muere
+                            d.setShoot(false);
+                        }
                     }
-                }
+            	}
                 // notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
             }
         }
