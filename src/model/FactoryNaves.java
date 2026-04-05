@@ -21,18 +21,21 @@ public class FactoryNaves {
 		
 		int x= 50;
 		int y=55;
-		if (tipo==null) {
-			return new Rojo(x,y); //Si no se especifica el tipo, por defecto es rojo
-		}
+//		if (tipo==null) {
+//			return new Rojo(x,y); //Si no se especifica el tipo, por defecto es rojo
+//		}
 		
 		switch (tipo) {
-			case "rojo":
-				return new Rojo(x,y);
+			
 			case "azul":
 				return new Azul(x,y);	//TODO clase nave azul
 			case "verde":
 				return new Verde(x,y);	//TODO clase nave verde
-		
+			case "rojo":
+				return new Rojo(x,y);
+			
+			default:
+				return new Rojo(x,y); 
 		}
 	}
 
