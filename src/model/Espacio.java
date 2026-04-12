@@ -83,8 +83,9 @@ public class Espacio extends Observable {
         List<Integer> posicionesUsadas = new ArrayList<>();
         for (int i = 0; i < numEnemigos; i++) {
             int x;
+            int margen = 2; // Para evitar que los enemigos se generen en los bordes
             do {
-                x = rn.nextInt(ancho-3); // x aleatorio entre 0 y 99
+                x = rn.nextInt(ancho - margen) + 1;
             } while (posicionOcupadaOAdyacente(posicionesUsadas, x));
             posicionesUsadas.add(x);
             enemigos.add(new Enemigo(x, 20));
@@ -157,7 +158,7 @@ public class Espacio extends Observable {
     // Comprueba si x coincide o es adyacente a alguna posicion ya usada
     private boolean posicionOcupadaOAdyacente(List<Integer> posiciones, int x) { //TODO
         for (int pos : posiciones) {
-            if (Math.abs(pos - x) <= 6) { // misma posicion o a distancia 1
+            if (Math.abs(pos - x) <= 1) { // misma posicion o a distancia 1
                 return true;
             }
         }
