@@ -139,11 +139,26 @@ public class MainFrame extends JFrame implements Observer {
 //	    matrizActual = m;	// Actualizamos la matriz actual con la nueva matriz después de repintar
 //	}
 	private void repintar(int[][] m) {
+		
+/* 		String VERDE = "\u001B[32m";
+		String ROJO  = "\u001B[31m";
+		String RESET = "\u001B[0m";
+
+		String estado = ROJO + "Error" + RESET;
+		for (int[] i : m) {
+			for (int j : i) {
+				if (j != 0) {
+					estado = VERDE + "Correcto" + RESET;
+				}
+			}
+		}
+		System.out.println(estado); */
+
 	    Graphics g = contentPane.getGraphics();
 	    if (g == null) return;
 
 	    // 1 — Pinta el fondo entero de una sola vez
-	    g.drawImage(fondo, 0, 0, COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA, contentPane);
+	    //g.drawImage(fondo, 0, 0, COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA, contentPane);
 
 	    // 2 — Encima pinta solo los elementos (jugador, enemigos, disparos)
 	    for (int i = 0; i < FILAS; i++) {
@@ -154,11 +169,42 @@ public class MainFrame extends JFrame implements Observer {
 	                int y = i * TAM_CELDA;
 	                pintarCelda(g, valor, x, y);
 	            }
+				else {
+					int x = j * TAM_CELDA;
+	                int y = i * TAM_CELDA;
+					int anchoTablero = COLUMNAS * TAM_CELDA;
+					int altoTablero = FILAS * TAM_CELDA;
+					int fondoW = fondo.getWidth(contentPane);
+					int fondoH = fondo.getHeight(contentPane);
+
+					if (fondoW > 0 && fondoH > 0) {
+						int sx1 = x * fondoW / anchoTablero;
+						int sy1 = y * fondoH / altoTablero;
+						int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
+						int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
+						g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
+					}
+				}
 	        }
 	    }
 
 	    g.dispose();
 	    matrizActual = m;
+
+/* 		int contador = 0;
+		if (contador % 1 == 0) {
+			for (int[] i : matrizActual) {
+				for (int j : i) {
+					if (j != 0) {
+					System.out.print(j);
+					}
+				}
+        	}
+			System.out.println();
+			System.out.println("-");
+		}
+		contador++; */
+           
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
