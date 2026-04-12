@@ -12,14 +12,9 @@ public class Composite implements Component {
         this.pixeles = new ArrayList<>();
     }
     public void addPixel(Coordenada c) {
-	pixeles.add(c);
-    }
-    public void mover(int x, int y) {
-        this.x += x;
-        this.y += y;
+	p
         for (Coordenada c : this.pixeles) {
-            c.mover(x, y);
-            //System.out.println("moviendome a " + c.getX() + ", " + c.getY());
+            c.mover(dx, dy);
         }
     }
     public boolean containPixel(int x, int y) {

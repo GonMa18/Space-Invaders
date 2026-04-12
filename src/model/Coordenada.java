@@ -14,9 +14,9 @@ public class Coordenada {
 		this.color = color;
 	}
 
-	public void mover(int x, int y) {
-		this.x += x;
-		this.y += y;
+	public void mover(int dx, int dy) {
+		this.x += dx;
+		this.y += dy;
 		if (this.x < 0) {
 			this.x = 0;
 		}
