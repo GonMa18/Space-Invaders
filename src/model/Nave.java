@@ -9,6 +9,12 @@ public abstract class Nave {
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private boolean sigueJugando;
 	private Composite cuerpo;
+	
+	protected int x;
+	protected int y;
+	
+	protected ArrayList<Disparo> disparos;
+	private int estrategias = 0;	//TODO revisar
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -50,8 +56,8 @@ public abstract class Nave {
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public void pintarCuerpo(Graphics g, int tamCelda) {
-		for (Coordenada c : cuerpo.getPixeles()) {
+	public void pintarCuerpo(Graphics g, int tamCelda) {	//TODO revisar
+		for (Coordenada c : cuerpo.getPixeles()) {	
 			c.pintar(g, tamCelda);
 		}
 	}
@@ -69,5 +75,27 @@ public abstract class Nave {
 	}
 	public int getY() {
 		return cuerpo.getY();
+	}
+	
+	public abstract void pintarCuerpo();	//TODO revisar
+
+	public abstract ArrayList<StrategyBala> getEstrategiasPermitidas();	//TODO revisar
+
+	public abstract int[][] celdasOcupadas();
+
+	protected int disparoX() {
+		return x;
+	}
+
+	protected int disparoY() {
+		return y - 3;
+	}
+		
+	protected void inicializarNave() {		
+		this.cuerpo = new Composite();	//TODO revisar
+		construir();
+		this.x = cuerpo.getX();	//TODO esto es del composite
+		this.y = cuerpo.getY();	//TODO esto es del composite
+		this.disparos = new ArrayList<>();
 	}
 }
