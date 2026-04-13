@@ -192,6 +192,8 @@ public class Espacio extends Observable {
             return 7;
         } else if (color.equals(Color.BLUE)) {
             return 8;
+        } else if (color.equals(Color.PINK)) {
+            return 9;
         }
         return 0; // Espacio vacío
     }

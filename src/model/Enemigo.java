@@ -39,7 +39,7 @@ public class Enemigo extends Nave {
 		return false; // Si el disparo no coincide con ninguna coordenada de la nave, devuelve false
 	}
 
-	protected void iniciarCuerpo(int x, int y) {
+	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
 		this.cuerpo.addPixel(new Coordenada(x - 3, y - 3, Color.GREEN));
 		this.cuerpo.addPixel(new Coordenada(x + 3, y - 3, Color.GREEN));
 

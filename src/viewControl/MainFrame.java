@@ -270,6 +270,11 @@ public class MainFrame extends JFrame implements Observer {
 				g.setColor(Color.BLUE);
 				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
 			}
+			case 9 -> {
+				// Enemigo rosa
+				g.setColor(Color.PINK);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
 //			default -> {
 //				// Fondo
 //				int anchoTablero = COLUMNAS * TAM_CELDA;

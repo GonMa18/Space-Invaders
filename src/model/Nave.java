@@ -15,7 +15,7 @@ public abstract class Nave {
 	public Nave(int x, int y) {
 		this.sigueJugando = true;
 		this.cuerpo = new Composite(x, y);
-		this.iniciarCuerpo(x, y);
+		this.iniciarCuerpo(x, y, Color.WHITE, Color.WHITE);	// Por defecto, el cuerpo se inicia con rojo y azul
 	} 
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -71,10 +71,10 @@ public abstract class Nave {
 		return cuerpo.getColor(x, y);
 	}
 
-	protected void iniciarCuerpo(int x, int y) {
-		this.cuerpo.addPixel(new Coordenada(x , y, Color.WHITE));
-		this.cuerpo.addPixel(new Coordenada(x, y + 1, Color.WHITE));
-		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, Color.WHITE));
-		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, Color.WHITE));
+	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
+		this.cuerpo.addPixel(new Coordenada(x , y, primario));
+		this.cuerpo.addPixel(new Coordenada(x, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, primario));
 	}
 }
