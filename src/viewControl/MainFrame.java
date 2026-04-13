@@ -321,7 +321,7 @@ public class MainFrame extends JFrame implements Observer {
 				Espacio.getInstance().disparar();
 			}
 			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
-				Espacio.getInstance().cambiarTipoBala(3);
+				Espacio.getInstance().cambiarTipoBala(2);
 				Espacio.getInstance().disparar();
 			}
 
