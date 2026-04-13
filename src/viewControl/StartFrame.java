@@ -10,13 +10,20 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
+import javax.swing.ButtonGroup;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.KeyStroke;
 
 import model.Espacio;
 
@@ -26,6 +33,9 @@ public class StartFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+    private JRadioButton rbRojo;
+    private JRadioButton rbAzul;
+    private JRadioButton rbVerde;
 	
     
     
@@ -105,13 +115,60 @@ public class StartFrame extends JFrame implements Observer{
         gbcPress.anchor = GridBagConstraints.CENTER;
         panel.add(subtitulo1, gbcPress);
 
+        //// SELECCION DE NAVE ////
+        JLabel naveLabel = new JLabel("Elige tu nave:");
+        naveLabel.setForeground(Color.WHITE);
+        naveLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
+        GridBagConstraints gbcNaveLabel = new GridBagConstraints();
+        gbcNaveLabel.gridx = 0;
+        gbcNaveLabel.gridy = 2;
+        gbcNaveLabel.insets = new Insets(5, 0, 5, 0);
+        gbcNaveLabel.anchor = GridBagConstraints.CENTER;
+        panel.add(naveLabel, gbcNaveLabel);
+
+        JPanel selectorPanel = new JPanel();
+        selectorPanel.setOpaque(false);
+
+        rbRojo = new JRadioButton("Rojo");
+        rbAzul = new JRadioButton("Azul");
+        rbVerde = new JRadioButton("Verde");
+
+        rbRojo.setOpaque(false);
+        rbAzul.setOpaque(false);
+        rbVerde.setOpaque(false);
+        rbRojo.setFocusable(false);
+        rbAzul.setFocusable(false);
+        rbVerde.setFocusable(false);
+
+        rbRojo.setForeground(Color.RED);
+        rbAzul.setForeground(Color.CYAN);
+        rbVerde.setForeground(Color.GREEN);
+
+        ButtonGroup grupoNaves = new ButtonGroup();
+        grupoNaves.add(rbRojo);
+        grupoNaves.add(rbAzul);
+        grupoNaves.add(rbVerde);
+
+        rbRojo.setSelected(true);
+
+        selectorPanel.add(rbRojo);
+        selectorPanel.add(rbAzul);
+        selectorPanel.add(rbVerde);
+
+        GridBagConstraints gbcSelector = new GridBagConstraints();
+        gbcSelector.gridx = 0;
+        gbcSelector.gridy = 3;
+        gbcSelector.insets = new Insets(0, 0, 10, 0);
+        gbcSelector.anchor = GridBagConstraints.CENTER;
+        panel.add(selectorPanel, gbcSelector);
+
         //// CONTROLES ////
-        JLabel controles = new JLabel("Flechas para moverte y espacio para disparar");
+        JLabel controles = new JLabel("Elige nave, pulsa ESPACIO para empezar");
         controles.setForeground(Color.DARK_GRAY);
         controles.setFont(new Font("Serif", Font.PLAIN, 10));
         GridBagConstraints gbcControles = new GridBagConstraints();
         gbcControles.gridx = 0;
-        gbcControles.gridy = 2;
+        gbcControles.gridy = 4;
         gbcControles.insets = new Insets(10, 0, 10, 0);
         gbcControles.anchor = GridBagConstraints.CENTER;
         panel.add(controles, gbcControles); 
@@ -124,7 +181,7 @@ public class StartFrame extends JFrame implements Observer{
         developers.setFont(new Font("SansSerif", Font.ITALIC, 10));
         GridBagConstraints gbc_developers = new GridBagConstraints();
         gbc_developers.gridx = 0;
-        gbc_developers.gridy = 3;
+        gbc_developers.gridy = 5;
         panel.add(developers, gbc_developers);
         				
         
@@ -135,6 +192,18 @@ public class StartFrame extends JFrame implements Observer{
         //// TECLADO ////
         setFocusable(true);						// Para que el frame pueda recibir eventos de teclado
         requestFocusInWindow();	
+
+        Action iniciarConEspacio = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                iniciarPartidaConNaveSeleccionada();
+            }
+        };
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "iniciarJuego");
+        getRootPane().getActionMap().put("iniciarJuego", iniciarConEspacio);
         
 		// =====================================================================
 		// 								CONTROLLER
@@ -165,6 +234,17 @@ public class StartFrame extends JFrame implements Observer{
     	}
 
 	}
+
+    private void iniciarPartidaConNaveSeleccionada() {
+        String colorSeleccionado = "rojo";
+        if (rbAzul != null && rbAzul.isSelected()) {
+            colorSeleccionado = "azul";
+        } else if (rbVerde != null && rbVerde.isSelected()) {
+            colorSeleccionado = "verde";
+        }
+        Espacio.getInstance().setColorJugador(colorSeleccionado);
+        Espacio.getInstance().cambiarAMain();
+    }
     
      
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -181,7 +261,7 @@ public class StartFrame extends JFrame implements Observer{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {		// Si se pulsa espacio, iniciamos el juego
-		    	Espacio.getInstance().cambiarAMain();		
+                iniciarPartidaConNaveSeleccionada();
 			}
 		}
 		@Override public void keyReleased(KeyEvent e) {}

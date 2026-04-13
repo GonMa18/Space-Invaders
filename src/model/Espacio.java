@@ -13,6 +13,7 @@ public class Espacio extends Observable {
     private static Espacio miEspacio; // Singleton
     private ArrayList<Enemigo> enemigos; // Lista de enemigos
     private Jugador jugador; // El jugador
+    private String colorJugadorSeleccionado;
     private static int ancho;
     private static int alto;
 
@@ -26,6 +27,7 @@ public class Espacio extends Observable {
         this.ancho = 160;
         this.alto = 120;
         this.enemigos = new ArrayList<>();
+        this.colorJugadorSeleccionado = "rojo";
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -63,6 +65,16 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    public void setColorJugador(String color) {
+        if ("azul".equals(color) || "verde".equals(color) || "rojo".equals(color)) {
+            this.colorJugadorSeleccionado = color;
+        } else {
+            this.colorJugadorSeleccionado = "rojo";
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------------------------------------
+
     public void cambiarAMain() {
         inicializar(); // Para crear el juego al pasar a la pantalla principal
         iniciarTimer(); // Para iniciar el timer que actualiza el juego
@@ -73,7 +85,7 @@ public class Espacio extends Observable {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void inicializar() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
-        this.jugador = FactoryNaves.getFactory().crearJugador(ancho/2, alto-(alto/8), "rojo"); // Creo el jugador en la parte inferior central del espacio
+        this.jugador = FactoryNaves.getFactory().crearJugador(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
         // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
