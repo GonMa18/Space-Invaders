@@ -9,7 +9,7 @@ public class Azul extends Jugador {
 
 	public Azul(int x, int y) {
 		super(x, y);
-		this.flechas = 30; 
+		this.flechas = 0; 
 		this.rombos = 20;
 	}
 

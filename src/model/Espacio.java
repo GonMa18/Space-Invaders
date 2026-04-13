@@ -233,10 +233,14 @@ public class Espacio extends Observable {
 				jugador.changestrategyBala(new BalaPixel());
 			}else if (tipo == 1) {
 				jugador.changestrategyBala(new BalaFlecha());
-			}else
+			}else if (tipo == 2) {
 				jugador.changestrategyBala(new BalaRombo());
+			}else {
+                System.out.println("Tipo de bala no válido");
+            }
 		}
 	}
+
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 

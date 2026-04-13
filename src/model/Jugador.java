@@ -27,8 +27,21 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void disparar() {
+		if (strategyBala instanceof BalaFlecha && flechas > 0) {
+			flechas--; // Decrementa el contador de flechas
+		}
+		else if (strategyBala instanceof BalaRombo && rombos > 0) {
+			rombos--; // Decrementa el contador de rombos
+		}
+		else if (strategyBala instanceof BalaPixel) {
+			// No hay necesidad de decrementar nada para BalaPixel
+		} else {
+			return; // No hay munición disponible para el tipo de bala actual, no se dispara
+		}
 		disparos.addAll(strategyBala.disparar(this.getX(), this.getY() - 10));		// Crea un nuevo disparo en la posicion actual del jugador
-																				// Agrega el nuevo disparo a la lista de disparos activos	
+																				// Agrega el nuevo disparo a la lista de disparos activos
+		
+
 	}
 	
 	public void changestrategyBala(StrategyBala sb) {
@@ -39,6 +52,14 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 
 	public ArrayList<Disparo> getDisparos() { // TODO
 		return disparos;
+	}
+
+	public int getFlechas() {
+		return flechas;
+	}
+
+	public int getRombos() {
+		return rombos;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
