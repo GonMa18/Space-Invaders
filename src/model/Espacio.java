@@ -1,9 +1,9 @@
 package model;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 import javax.swing.Timer;
@@ -73,22 +73,51 @@ public class Espacio extends Observable {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void inicializar() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
-        this.jugador = new Rojo(100, 100);
-        
+        this.jugador = FactoryNaves.getFactory().crearJugador(ancho/2, alto-(alto/8), "rojo"); // Creo el jugador en la parte inferior central del espacio
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
-        // Crear entre 4 y 8 enemigos en y=5 con x aleatoria (sin tocarse entre ellos)
+        // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
         Random rn = new Random();
         int numEnemigos = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8
-        List<Integer> posicionesUsadas = new ArrayList<>();
+        int yObjetivo = alto / 10;
+        int maxIntentos = 100;
+        int margenSeparacion = 1;
+
         for (int i = 0; i < numEnemigos; i++) {
-            int x;
-            int margen = 2; // Para evitar que los enemigos se generen en los bordes
-            do {
-                x = rn.nextInt(ancho - margen) + 1;
-            } while (posicionOcupadaOAdyacente(posicionesUsadas, x));
-            posicionesUsadas.add(x);
-            enemigos.add(new Enemigo(x, 20));
+            boolean colocado = false;
+
+            for (int intento = 0; intento < maxIntentos && !colocado; intento++) {
+                int x = rn.nextInt(ancho - 10) + 5;
+                int yTemporal = rn.nextInt(alto);
+
+                Enemigo candidato = new Enemigo(x, yTemporal);
+                candidato.mover(0, yObjetivo - yTemporal);
+
+                boolean solapa = false;
+                for (Enemigo existente : enemigos) {
+                    for (Coordenada c : candidato.getCoordenadas()) {
+                        for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
+                            for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
+                                if (existente.containPixel(c.getX() + dx, c.getY() + dy)) {
+                                    solapa = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (solapa) {
+                            break;
+                        }
+                    }
+                    if (solapa) {
+                        break;
+                    }
+                }
+
+                if (!solapa) {
+                    enemigos.add(candidato);
+                    colocado = true;
+                }
+            }
         }
 
     }
@@ -104,7 +133,7 @@ public class Espacio extends Observable {
         if (jugador != null && jugador.sigueVivo()) {
             for (Coordenada c : jugador.getCoordenadas()) {
                 if (jugador.containPixel(c.getX(), c.getY())) {
-                    matriz[c.getY()][c.getX()] = 1; // Jugador
+                    matriz[c.getY()][c.getX()] = colorToInt(jugador.getColor(c.getX(), c.getY())); // Jugador
                 }
             }
         }
@@ -113,14 +142,14 @@ public class Espacio extends Observable {
             if (e.sigueVivo()){
                 for (Coordenada c : e.getCoordenadas()) {
                     if (e.containPixel(c.getX(), c.getY())) {
-                        matriz[c.getY()][c.getX()] = 2; // Enemigo
+                        matriz[c.getY()][c.getX()] = colorToInt(e.getColor(c.getX(), c.getY())); // Enemigo
                     }
                 }
             }
         }
 
         if (jugador != null && jugador.sigueVivo()) {
-            if (jugador.getDisparos() != null) {/*  */
+            if (jugador.getDisparos() != null) {
             	for (Disparo d : jugador.getDisparos()) {
                     if (d.isShooting()) {
                         for (Coordenada c : d.getPixeles()) {
@@ -146,23 +175,32 @@ public class Espacio extends Observable {
         
     }
 
+    private int colorToInt(Color color) {
+        if (color.equals(Color.WHITE)) {
+            return 1;
+        } else if (color.equals(Color.RED)) {
+            return 2;
+        } else if (color.equals(Color.YELLOW)) {
+            return 3;
+        } else if (color.equals(Color.CYAN)) {
+            return 4;
+        } else if (color.equals(Color.MAGENTA)) {
+            return 5;
+        } else if (color.equals(Color.ORANGE)) {
+            return 6;
+        } else if (color.equals(Color.GREEN)) {
+            return 7;
+        } else if (color.equals(Color.BLUE)) {
+            return 8;
+        }
+        return 0; // Espacio vacío
+    }
+
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void notificarVista(Object arg) { // Para notificar a la vista que el juego ha cambiado
         setChanged();
         notifyObservers(arg);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    // Comprueba si x coincide o es adyacente a alguna posicion ya usada
-    private boolean posicionOcupadaOAdyacente(List<Integer> posiciones, int x) { //TODO
-        for (int pos : posiciones) {
-            if (Math.abs(pos - x) <= 1) { // misma posicion o a distancia 1
-                return true;
-            }
-        }
-        return false;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -326,15 +364,16 @@ public class Espacio extends Observable {
 
     private void iniciarTimer() {
         ticks = 0; // Reiniciamos el contador de frames
-        timer = new Timer(50, new ActionListener() { // TICK cada 50ms --> DISPAROS
+        timer = new Timer(10, new ActionListener() { // TICK cada 50ms --> DISPAROS
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarDisparo(); // Actualizamos el disparo cada 50ms
                 ticks++;
-
+                if (ticks % 1 == 0) { // Cada 10ms (1*10ms)
+                actualizarDisparo(); // Actualizamos el disparo cada 50ms
+                }
                 // TICK cada 200ms = 4 TICKS de 50ms --> ENEMIGOS
 
-                if (ticks % 4 == 0) { // Cada 200ms (4*50ms)
+                if (ticks % 20 == 0) { // Cada 200ms (20*10ms)
                     actualizarEnemigos(); // Actualizamos los enemigos cada 200ms
                 }
 

@@ -38,4 +38,8 @@ public class Coordenada {
 	    g.fillRect(x * tamCelda, y * tamCelda, tamCelda, tamCelda);
 	}
 
+	public Color getColor() {
+		return color;
+	}
+
 }

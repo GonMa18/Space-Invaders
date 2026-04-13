@@ -1,6 +1,7 @@
 package model;
+import java.awt.Color;
 
-public class Azul extends Nave {
+public class Azul extends Jugador {
 	
 	private BalaPixel pixel = new BalaPixel();
 	private BalaRombo rombo = new BalaRombo();
@@ -10,58 +11,136 @@ public class Azul extends Nave {
 
 	public Azul(int x, int y) {
 		super(x, y);
-		inicializarNave();
-		
-
-	}
-	
-
-	@Override
-	public void pintarCuerpo() {
-		int bx = x;
-		int by = y;
-		anadirComponente(new Pixel(bx, by));
-		anadirComponente(new Pixel(bx + 2, by));
-		anadirComponente(new Pixel(bx, by + 1));
-		anadirComponente(new Pixel(bx + 1, by + 1));
-		anadirComponente(new Pixel(bx + 2, by + 1));
-		anadirComponente(new Pixel(bx, by + 2));
-		anadirComponente(new Pixel(bx + 1, by + 2));
-		anadirComponente(new Pixel(bx + 2, by + 2));
+		this.flechas = 30; 
+		this.rombos = 20;
 	}
 
 	@Override
-	protected int disparoX() {
-		return x + 1;
-	}
+	protected void iniciarCuerpo(int x, int y) {
+		this.cuerpo.addPixel(new Coordenada(x, y - 8, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 7, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 6, Color.WHITE));
 
-	@Override
-	protected int disparoY() {
-		return y - 3;
-	}
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 5, Color.WHITE));
 
-	@Override
-	public int[][] celdasOcupadas() {
-		return new int[][] {
-			{ x, y },
-			{ x + 2, y },
-			{ x, y + 1 },
-			{ x + 1, y + 1 },
-			{ x + 2, y + 1 },
-			{ x, y + 2 },
-			{ x + 1, y + 2 },
-			{ x + 2, y + 2 }
-		};
-	}
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 4, Color.WHITE));
 
-	@Override
-	public ArrayList<StrategyDisparo> getEstrategiasPermitidas() {
-		ArrayList<StrategyDisparo> estrategias = new ArrayList<StrategyDisparo>();
-		estrategias.add(estrategiaPixel);
-		estrategias.add(estrategiaRombo);
-		return estrategias;
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 3, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 4, y - 2, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y - 2, Color.CYAN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 4, y - 1, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y - 1, Color.CYAN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y, Color.BLUE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y, Color.BLUE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y, Color.CYAN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 1, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 1, Color.BLUE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x, y + 1, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 1, Color.BLUE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 1, Color.CYAN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 2, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x, y + 2, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 2, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 2, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 3, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 6, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 4, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 4, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 6, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 4, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 6, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 5, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 5, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 5, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 5, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 6, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 5, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 6, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 6, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 6, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 6, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 6, Color.CYAN));
+		this.cuerpo.addPixel(new Coordenada(x + 6, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 6, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 7, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 7, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 7, Color.WHITE));
 	}
-}
 
 	
 

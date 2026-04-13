@@ -8,24 +8,14 @@ public abstract class Nave {
 
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private boolean sigueJugando;
-	private Composite cuerpo;
-	
-	protected int x;
-	protected int y;
-	
-	protected ArrayList<Disparo> disparos;
-	private int estrategias = 0;	//TODO revisar
+	protected Composite cuerpo;
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public Nave(int x, int y) {
 		this.sigueJugando = true;
 		this.cuerpo = new Composite(x, y);
-		cuerpo.addPixel(new Coordenada(x , y, Color.WHITE));
-		cuerpo.addPixel(new Coordenada(x, y + 1, Color.WHITE));
-		cuerpo.addPixel(new Coordenada(x - 1, y + 1, Color.WHITE));
-		cuerpo.addPixel(new Coordenada(x + 1, y + 1, Color.WHITE));
-
+		this.iniciarCuerpo(x, y);
 	} 
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -76,26 +66,15 @@ public abstract class Nave {
 	public int getY() {
 		return cuerpo.getY();
 	}
-	
-	public abstract void pintarCuerpo();	//TODO revisar
 
-	public abstract ArrayList<StrategyBala> getEstrategiasPermitidas();	//TODO revisar
-
-	public abstract int[][] celdasOcupadas();
-
-	protected int disparoX() {
-		return x;
+	public Color getColor(int x, int y) {
+		return cuerpo.getColor(x, y);
 	}
 
-	protected int disparoY() {
-		return y - 3;
-	}
-		
-	protected void inicializarNave() {		
-		this.cuerpo = new Composite();	//TODO revisar
-		construir();
-		this.x = cuerpo.getX();	//TODO esto es del composite
-		this.y = cuerpo.getY();	//TODO esto es del composite
-		this.disparos = new ArrayList<>();
+	protected void iniciarCuerpo(int x, int y) {
+		this.cuerpo.addPixel(new Coordenada(x , y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, Color.WHITE));
 	}
 }

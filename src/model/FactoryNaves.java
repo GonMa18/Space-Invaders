@@ -17,14 +17,8 @@ public class FactoryNaves {
 	
 	
 	//Crea un jugador según el tipo de nave que queramos
-	public Jugador crearJugador(String tipo) { 
-		
-		int x= 50;
-		int y=55;
-//		if (tipo==null) {
-//			return new Rojo(x,y); //Si no se especifica el tipo, por defecto es rojo
-//		}
-		
+	public Jugador crearJugador(int x, int y, String tipo) { 
+
 		switch (tipo) {
 			
 			case "azul":

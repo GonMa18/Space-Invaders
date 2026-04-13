@@ -26,7 +26,7 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void disparar() {
-		disparos.addAll(strategyBala.disparar(this.getX(), this.getY() - 2));		// Crea un nuevo disparo en la posicion actual del jugador
+		disparos.addAll(strategyBala.disparar(this.getX(), this.getY() - 10));		// Crea un nuevo disparo en la posicion actual del jugador
 																				// Agrega el nuevo disparo a la lista de disparos activos	
 	}
 	

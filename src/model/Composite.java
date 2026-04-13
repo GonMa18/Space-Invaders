@@ -1,4 +1,5 @@
 package model;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class Composite implements Component {
@@ -42,5 +43,14 @@ public class Composite implements Component {
     }
     public ArrayList<Coordenada> getPixeles() {
         return pixeles;
+    }
+
+    public Color getColor(int x, int y) {
+        for (Coordenada c : this.pixeles) {
+            if (c.getX() == x && c.getY() == y) {
+                return c.getColor();
+            }
+        }
+        return null; // Si no se encuentra el pixel, devuelve null
     }
 }

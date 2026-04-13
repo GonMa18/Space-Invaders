@@ -24,11 +24,11 @@ public class MainFrame extends JFrame implements Observer {
 	private JPanel contentPane;
 
 	// Tamaño de la matriz logica (100 columnas x 60 filas)
-	private static final int COLUMNAS = 160;
-	private static final int FILAS = 120;
+	private static final int COLUMNAS = Espacio.getInstance().getAnchura();
+	private static final int FILAS = Espacio.getInstance().getAltura();
 
 	// Tamaño en pixeles de cada celda de la matriz
-	private static final int TAM_CELDA = 5; // 100*5=500px ancho, 60*5=300px alto
+	private static final int TAM_CELDA = 6; // 100*5=500px ancho, 60*5=300px alto
 
 	// Matriz logica del juego que se pintará en el MainFrame
 	private int[][] matrizActual;
@@ -243,6 +243,31 @@ public class MainFrame extends JFrame implements Observer {
 			case 3 -> {
 				// Disparo
 				g.setColor(Color.YELLOW);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			case 4 -> {
+				// Disparo especial
+				g.setColor(Color.CYAN);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			case 5 -> {
+				// Disparo super especial
+				g.setColor(Color.MAGENTA);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			case 6 -> {
+				// Bomba
+				g.setColor(Color.ORANGE);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			case 7 -> {
+				// Escudo
+				g.setColor(Color.GREEN);
+				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+			}
+			case 8 -> {
+				// Enemigo azul
+				g.setColor(Color.BLUE);
 				g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
 			}
 //			default -> {
