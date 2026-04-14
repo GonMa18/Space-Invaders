@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Espacio;
+import model.Jugador;
 
 @SuppressWarnings("deprecation")
 public class MainFrame extends JFrame implements Observer {
@@ -35,6 +36,8 @@ public class MainFrame extends JFrame implements Observer {
 
 	// Imagen de fondo
 	private Image fondo;
+
+	private Jugador	jugador = Espacio.getInstance().getJugador(); // Obtener el jugador del modelo para acceder a su posición y estado
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -308,21 +311,24 @@ public class MainFrame extends JFrame implements Observer {
 		public void keyPressed(KeyEvent e) {
 			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
 			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
+			Jugador jugadorActual = Jugador.getInstance();
+			if (jugadorActual == null) {
+				return;
+			}
 
 			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
 				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
-				//Espacio.getInstance().disparar();
-				Espacio.getInstance().cambiarTipoBala(0);
-				Espacio.getInstance().disparar();
+				jugadorActual.changestrategyBala(new model.BalaPixel());
+				jugadorActual.disparar();
 				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
 			}
 			if(teclasPulsadas.contains(KeyEvent.VK_C)) {
-				Espacio.getInstance().cambiarTipoBala(1);
-				Espacio.getInstance().disparar();
+				jugadorActual.changestrategyBala(new model.BalaFlecha());
+				jugadorActual.disparar();
 			}
 			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
-				Espacio.getInstance().cambiarTipoBala(2);
-				Espacio.getInstance().disparar();
+				jugadorActual.changestrategyBala(new model.BalaRombo());
+				jugadorActual.disparar();
 			}
 
 			int dx = 0;
@@ -337,7 +343,8 @@ public class MainFrame extends JFrame implements Observer {
 				dy++;
 
 			if (dx != 0 || dy != 0) {
-				Espacio.getInstance().moverJugador(dx, dy);
+				jugadorActual.mover(dx, dy);
+				
 			}
 		}
 

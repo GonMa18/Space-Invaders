@@ -53,7 +53,7 @@ public abstract class Nave {
 	}
 	
 	public void mover(int dx, int dy) {
-		cuerpo.mover(dx, dy);
+		cuerpo.moverNave(dx, dy);
 	}
 
 	public boolean containPixel(int x, int y) {

@@ -15,13 +15,22 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	protected int flechas;
 	protected int rombos;
 	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
+	private static Jugador miJugador;
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public Jugador(int x, int y) {
 		super(x, y);
 		this.disparos = new ArrayList<>();
+		miJugador = this;
 	}
+
+	public static Jugador getInstance() { // Singleton del jugador activo
+	    if (miJugador == null) {
+	        miJugador = Espacio.getInstance().getJugador();
+	    }
+	    return miJugador;
+    }
 
 	
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------

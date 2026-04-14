@@ -217,13 +217,15 @@ public class Espacio extends Observable {
         notifyObservers(arg);
     }
 
+    public void notificarActualizacion() {
+        notificarVista(new Object[] { "actualizar", generarMatriz() });
+    }
+
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public void moverJugador(int x, int y) {
         if (jugador != null && jugador.sigueVivo()) { // Si el colega sigue vivo
             jugador.mover(x, y); // Me muevo a la nueva posicion
-
-            notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
         }
     }
 
@@ -233,7 +235,7 @@ public class Espacio extends Observable {
         if (jugador != null && jugador.sigueVivo()) {
             jugador.disparar();
             //System.out.println("disparar espacio");
-            notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
+            //notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
         }
     }
     

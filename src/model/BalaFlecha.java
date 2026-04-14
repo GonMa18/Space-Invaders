@@ -11,7 +11,10 @@ public class BalaFlecha implements StrategyBala {
 		forma.add(new Coordenada(0, 0, Color.YELLOW));
 		forma.add(new Coordenada(-1, 1, Color.YELLOW));
 		forma.add(new Coordenada(1, 1, Color.YELLOW));
-		Disparo d = new Disparo(x, y, forma);			//Una flecha amarilla
+		Disparo d = new Disparo(x, y);			//Una flecha amarilla
+		for (Coordenada c : forma) {
+			d.cuerpo.addPixel(new Coordenada(x + c.getX(), y + c.getY(), Color.YELLOW));
+		}
 		d.setShoot(true);
 		ArrayList<Disparo> disparos = new ArrayList<>();
 		disparos.add(d);

@@ -1,8 +1,9 @@
 package model;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Observable;
 
-public class Composite implements Component {
+public class Composite extends Observable implements Component  {
     private int x;
     private int y;
     private ArrayList<Coordenada> pixeles;
@@ -15,7 +16,7 @@ public class Composite implements Component {
     public void addPixel(Coordenada c) {
 	pixeles.add(c);
     }
-    public void mover(int dx, int dy) {
+    public void moverNave(int dx, int dy) {
         for (Coordenada c : this.pixeles) {
             if (c.getX() + dx < 0 || c.getY() + dy < 0 || c.getX() + dx >= 160 || c.getY() + dy >= 120) {
                 return; // No mover si alguno de los pixeles se saldría del espacio
@@ -26,6 +27,14 @@ public class Composite implements Component {
         for (Coordenada c : this.pixeles) {
             c.mover(dx, dy);
         }
+        Espacio.getInstance().notificarActualizacion();
+    }
+
+    public void mover(int dx, int dy) {
+        for (Coordenada c : this.pixeles) {
+            c.mover(dx, dy);
+        }
+        Espacio.getInstance().notificarActualizacion();
     }
     public boolean containPixel(int x, int y) {
         for (Coordenada c : this.pixeles) {
