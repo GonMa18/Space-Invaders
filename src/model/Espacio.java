@@ -22,12 +22,14 @@ public class Espacio extends Observable {
     //// TIMER////
     private Timer timer; // Timer para actualizar el juego
     private int ticks; // Contador de frames para controlar la frecuencia de actualización
+    private boolean loteActualizacionActivo;
 
     private Espacio() {
         this.ancho = 160;
         this.alto = 120;
         this.enemigos = new ArrayList<>();
         this.colorJugadorSeleccionado = "rojo";
+        this.loteActualizacionActivo = false;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -144,8 +146,10 @@ public class Espacio extends Observable {
 
         if (jugador != null && jugador.sigueVivo()) {
             for (Coordenada c : jugador.getCoordenadas()) {
-                if (jugador.containPixel(c.getX(), c.getY())) {
-                    matriz[c.getY()][c.getX()] = colorToInt(jugador.getColor(c.getX(), c.getY())); // Jugador
+                int x = c.getX();
+                int y = c.getY();
+                if (x >= 0 && x < ancho && y >= 0 && y < alto) {
+                    matriz[y][x] = colorToInt(c.getColor()); // Jugador
                 }
             }
         }
@@ -153,8 +157,10 @@ public class Espacio extends Observable {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()){
                 for (Coordenada c : e.getCoordenadas()) {
-                    if (e.containPixel(c.getX(), c.getY())) {
-                        matriz[c.getY()][c.getX()] = colorToInt(e.getColor(c.getX(), c.getY())); // Enemigo
+                    int x = c.getX();
+                    int y = c.getY();
+                    if (x >= 0 && x < ancho && y >= 0 && y < alto) {
+                        matriz[y][x] = colorToInt(c.getColor()); // Enemigo
                     }
                 }
             }
@@ -217,8 +223,23 @@ public class Espacio extends Observable {
         notifyObservers(arg);
     }
 
-    public void notificarActualizacion() {
+    public void solicitarActualizacion() {
+        if (!loteActualizacionActivo) {
+            notificarVista(new Object[] { "actualizar", generarMatriz() });
+        }
+    }
+
+    public void iniciarLoteActualizacion() {
+        loteActualizacionActivo = true;
+    }
+
+    public void finalizarLoteActualizacion() {
+        loteActualizacionActivo = false;
         notificarVista(new Object[] { "actualizar", generarMatriz() });
+    }
+
+    public void notificarActualizacion() {
+        solicitarActualizacion();
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -275,8 +296,7 @@ public class Espacio extends Observable {
             }
         }
         jugador.limpiarDisparos(); // Elimina los disparos que ya no están activos
-
-        notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
+        solicitarActualizacion();
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -297,7 +317,7 @@ public class Espacio extends Observable {
                 }
             }
         }
-        notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
+        solicitarActualizacion();
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -384,24 +404,25 @@ public class Espacio extends Observable {
 
     private void iniciarTimer() {
         ticks = 0; // Reiniciamos el contador de frames
-        timer = new Timer(10, new ActionListener() { // TICK cada 50ms --> DISPAROS
+        timer = new Timer(10, new ActionListener() { // TICK base aproximado de 60 FPS
             @Override
             public void actionPerformed(ActionEvent e) {
-                ticks++;
-                if (ticks % 1 == 0) { // Cada 10ms (1*10ms)
-                actualizarDisparo(); // Actualizamos el disparo cada 50ms
-                }
-                // TICK cada 200ms = 4 TICKS de 50ms --> ENEMIGOS
+                iniciarLoteActualizacion();
+                try {
+                    ticks++;
+                    actualizarDisparo();
 
-                if (ticks % 20 == 0) { // Cada 200ms (20*10ms)
-                    actualizarEnemigos(); // Actualizamos los enemigos cada 200ms
-                }
+                    // Aproximadamente cada 192ms (12 * 16ms)
+                    if (ticks % 20 == 0) {
+                        actualizarEnemigos();
+                    }
 
-                // Comprobar GameOver
-                if (isGameOver() || isVictory()) {
-                    detenerTimer(); // Detenemos el timer si el juego ha terminado
-
-                    // notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
+                    // Comprobar GameOver
+                    if (isGameOver() || isVictory()) {
+                        detenerTimer(); // Detenemos el timer si el juego ha terminado
+                    }
+                } finally {
+                    finalizarLoteActualizacion();
                 }
             }
 

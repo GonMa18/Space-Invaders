@@ -27,14 +27,14 @@ public class Composite extends Observable implements Component  {
         for (Coordenada c : this.pixeles) {
             c.mover(dx, dy);
         }
-        Espacio.getInstance().notificarActualizacion();
+        Espacio.getInstance().solicitarActualizacion();
     }
 
     public void mover(int dx, int dy) {
         for (Coordenada c : this.pixeles) {
             c.mover(dx, dy);
         }
-        Espacio.getInstance().notificarActualizacion();
+        Espacio.getInstance().solicitarActualizacion();
     }
     public boolean containPixel(int x, int y) {
         for (Coordenada c : this.pixeles) {
