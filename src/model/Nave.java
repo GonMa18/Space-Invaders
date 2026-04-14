@@ -1,68 +1,80 @@
 package model;
- 
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.ArrayList;
+
 public abstract class Nave {
-	
+
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
-	private int velocidad;
 	private boolean sigueJugando;
-	protected int x;					//Protected para que las que heredan puedan accedder
-	protected int y;
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public Nave(int x, int y, int velocidad) {
-		this.x = x;
-		this.y = y;
-		this.velocidad = velocidad;
+	protected Composite cuerpo;
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public Nave(int x, int y) {
 		this.sigueJugando = true;
+		this.cuerpo = new Composite(x, y);
+		this.iniciarCuerpo(x, y, Color.WHITE, Color.WHITE);	// Por defecto, el cuerpo se inicia con rojo y azul
+	} 
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public ArrayList<Coordenada> getCoordenadas() {
+		return cuerpo.getPixeles();
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public int getX() {
-		return x;
-	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public int getY() {
-		return y;
-	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
 	public boolean continuesPlaying() {
 		return sigueJugando;
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
 	public boolean sigueVivo() {
 		return sigueJugando;
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
 	public void setSigueJugando(boolean b) {
 		this.sigueJugando = b;
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public abstract void mover(int x, int y); 	// Metodo que todas las naves que hereden "Nave" tienen que implementar
-												// No pongo codigo porque enemigos y jugador se mueven distinto
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public void pintarCuerpo(Graphics g, int tamCelda) {	//TODO revisar
+		for (Coordenada c : cuerpo.getPixeles()) {	
+			c.pintar(g, tamCelda);
+		}
+	}
+	
+	public void mover(int dx, int dy) {
+		cuerpo.moverNave(dx, dy);
+	}
+
+	public boolean containPixel(int x, int y) {
+		return cuerpo.containPixel(x, y);
+	}
+
+	public int getX() {
+		return cuerpo.getX();
+	}
+	public int getY() {
+		return cuerpo.getY();
+	}
+
+	public Color getColor(int x, int y) {
+		return cuerpo.getColor(x, y);
+	}
+
+	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
+		this.cuerpo.addPixel(new Coordenada(x , y, primario));
+		this.cuerpo.addPixel(new Coordenada(x, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, primario));
+	}
 }
