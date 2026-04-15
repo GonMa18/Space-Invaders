@@ -1,76 +1,218 @@
 package model;
 
+import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Jugador extends Nave { 	//Hereda de NAVE
-	
+public abstract class Jugador extends Nave { // Hereda de NAVE
+
 	// El jugador necesita una lista de disparos activos
 	// Las coordenadas (x, y), la velocidad y el estado (sigueJugando)
 	// ya los hereda de Nave.
-	
-	private ArrayList<Disparo> disparos;
-	
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public Jugador() {
-		super(50, 55, 1); 						//Posicion inicial (y=50, x=55, velocidad=1)
-		this.disparos = new ArrayList<>(); 
+
+	// Hereda de Nave las coordenadas y el estado de sigueJugando
+
+	protected ArrayList<Disparo> disparos;
+	protected int flechas;
+	protected int rombos;
+	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
+	private static Jugador miJugador;
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public Jugador(int x, int y) {
+		super(x, y);
+		this.disparos = new ArrayList<>();
+		miJugador = this;
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	@Override
-	// Se llama desde Espacio.moverJugador() cuando el usuario pulsa una tecla
-	public void mover(int x, int y) {
-		this.x += x;
-		this.y += y;
-		
-	    //// LIMITES ////
-	    if (this.x < 0) { this.x = 0; }
-	    if (this.x > 99) { this.x = 99; }
-	    if (this.y < 0) { this.y = 0; }
-	    if (this.y > 59) { this.y = 59; }
-	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+	public static Jugador getInstance() { // Singleton del jugador activo
+	    if (miJugador == null) {
+	        miJugador = Espacio.getInstance().getJugador();
+	    }
+	    return miJugador;
+    }
+
+	
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+	
 	public void disparar() {
-		Disparo nuevoDisparo = new Disparo(x, y-1); 	//Crea un nuevo disparo en la posicion actual del jugador
-		nuevoDisparo.setShoot(true); 					// Activa el disparo
-		disparos.add(nuevoDisparo); 					// Agrega el nuevo disparo a la lista de disparos activos
+		if (strategyBala instanceof BalaFlecha && flechas > 0) {
+			flechas--; // Decrementa el contador de flechas
+		}
+		else if (strategyBala instanceof BalaRombo && rombos > 0) {
+			rombos--; // Decrementa el contador de rombos
+		}
+		else if (strategyBala instanceof BalaPixel) {
+			// No hay necesidad de decrementar nada para BalaPixel
+		} else {
+			return; // No hay munición disponible para el tipo de bala actual, no se dispara
+		}
+		disparos.addAll(strategyBala.disparar(this.getX(), this.getY() - 10));		// Crea un nuevo disparo en la posicion actual del jugador
+																				// Agrega el nuevo disparo a la lista de disparos activos
+		
+
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public ArrayList<Disparo> getDisparos() {
+	
+	public void changestrategyBala(StrategyBala sb) {
+		this.strategyBala = sb;
+	}
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public ArrayList<Disparo> getDisparos() { // TODO
 		return disparos;
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-    // Elimina los disparos que ya no están activos
-    public void limpiarDisparos() {
-    	 for (int i = disparos.size() - 1; i >= 0; i--) {
-    	        if (!disparos.get(i).isShooting()) {
-    	            disparos.remove(i);
-    	        }
-    	  }    
-    }
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+	public int getFlechas() {
+		return flechas;
+	}
+
+	public int getRombos() {
+		return rombos;
+	}
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// Elimina los disparos que ya no están activos
+	public void limpiarDisparos() { // TODO
+		if (disparos == null) {
+			return; // Si la lista de disparos es null, no hay nada que limpiar
+		}
+		for (int i = disparos.size() - 1; i >= 0; i--) {
+			if (!disparos.get(i).isShooting()) {
+				disparos.remove(i);
+			}
+		}
+	}
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@Override
+	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
+		this.cuerpo.addPixel(new Coordenada(x, y - 8, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 7, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 6, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 5, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 4, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 3, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 4, y - 2, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y - 2, primario));
+
+		this.cuerpo.addPixel(new Coordenada(x - 4, y - 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y - 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y - 1, primario));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y, secundario));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y, secundario));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y, primario));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 1, secundario));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 1, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 1, secundario));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 1, primario));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 2, primario));
+		this.cuerpo.addPixel(new Coordenada(x, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 2, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 2, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 2, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 3, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 3, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 6, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 4, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 4, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 6, y + 4, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 4, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 6, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 5, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 5, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 5, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 5, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 6, y + 5, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 5, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 6, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 6, primario));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 6, primario));
+		this.cuerpo.addPixel(new Coordenada(x, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 6, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 6, primario));
+		this.cuerpo.addPixel(new Coordenada(x + 6, y + 6, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 6, Color.WHITE));
+
+		this.cuerpo.addPixel(new Coordenada(x - 7, y + 7, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x, y + 7, Color.WHITE));
+		this.cuerpo.addPixel(new Coordenada(x + 7, y + 7, Color.WHITE));
+	}
+
+	
 }

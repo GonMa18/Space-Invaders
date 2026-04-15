@@ -1,19 +1,25 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Disparo {
 	
 	private int x;
 	private int y;
 	private boolean shoot;
+	protected Composite cuerpo;
+	//private ArrayList<Coordenada> forma;
     
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-	public Disparo(int x, int y) {
+	public Disparo(int x, int y/*, ArrayList<Coordenada> forma*/) {
 		this.x = x;
 		this.y = y;
 		this.shoot = false;
+		//this.forma = forma;
+		this.cuerpo = new Composite(x, y);
 	}
     
     
@@ -54,8 +60,8 @@ public class Disparo {
     
 	public void subir() { 	
 		if (shoot) {	
-			y--;				//Cuando se dispare 
-								//Arriba y=0, abajo y=99
+			cuerpo.mover(0, -1);				//Cuando se dispare
+			this.y--;
 			
 			if (y<0) {			//Cuando desaparezca del frame
 				shoot = false;
@@ -66,6 +72,11 @@ public class Disparo {
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
+	public ArrayList<Component> getPixeles(){
+		return cuerpo.getPixeles();
+	}
+	
+   //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
 }
 	

@@ -1,32 +1,68 @@
 package model;
+import java.awt.Color;
 public class Enemigo extends Nave {
-	
+
 	public Enemigo(int x, int y) {
-		super(x, y, 1);				//Velocidad = 1
-									// Llama a la constructora de Nave (aita) para inicializar x, y y velocidad
+		super(x, y);
+		// Llama a la constructora de Nave (aita) para inicializar x, y y velocidad
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
+
+
 	@Override
-	public void mover(int y, int x) {
-		this.y += y;
-		this.x += x;
+	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
+		this.cuerpo.addPixel(new Coordenada(x - 3, y - 3, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y - 3, Color.GREEN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 2, y - 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y - 2, Color.GREEN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 3, y - 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y - 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y - 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x, y - 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y - 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y - 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y - 1, Color.GREEN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 4, y, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x, y, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y, Color.GREEN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 4, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 4, y + 1, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 1, Color.GREEN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 2, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 2, Color.GREEN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 5, y + 3, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 3, y + 3, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 3, y + 3, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 5, y + 3, Color.GREEN));
+
+		this.cuerpo.addPixel(new Coordenada(x - 2, y + 4, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x - 1, y + 4, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 1, y + 4, Color.GREEN));
+		this.cuerpo.addPixel(new Coordenada(x + 2, y + 4, Color.GREEN));
 	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-	public void bajar() {
-		y++; 						//Va bajando un pixel cada 200ms 
-	}
-    
-    
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
 
 }
