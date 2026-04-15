@@ -56,6 +56,7 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
+				g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
 				if (matrizActual != null) { // Si la matriz ya ha sido inicializada, la pintamos
 					pintarMatriz(g, matrizActual); // Pintamos la matriz actual del juego en el fondo
 				}
@@ -140,71 +141,8 @@ public class MainFrame extends JFrame implements Observer {
 //	    matrizActual = m;	// Actualizamos la matriz actual con la nueva matriz después de repintar
 //	}
 	private void repintar(int[][] m) {
-		
-/* 		String VERDE = "\u001B[32m";
-		String ROJO  = "\u001B[31m";
-		String RESET = "\u001B[0m";
-
-		String estado = ROJO + "Error" + RESET;
-		for (int[] i : m) {
-			for (int j : i) {
-				if (j != 0) {
-					estado = VERDE + "Correcto" + RESET;
-				}
-			}
-		}
-		System.out.println(estado); */
-
-	    Graphics g = contentPane.getGraphics();
-	    if (g == null) return;
-
-	    // 1 — Pinta el fondo entero de una sola vez
-	    //g.drawImage(fondo, 0, 0, COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA, contentPane);
-
-	    // 2 — Encima pinta solo los elementos (jugador, enemigos, disparos)
-	    for (int i = 0; i < FILAS; i++) {
-	        for (int j = 0; j < COLUMNAS; j++) {
-	            int valor = m[i][j];
-	            if (valor != 0) { // solo pinta si no es fondo
-	                int x = j * TAM_CELDA;
-	                int y = i * TAM_CELDA;
-	                pintarCelda(g, valor, x, y);
-	            }
-				else {
-					int x = j * TAM_CELDA;
-	                int y = i * TAM_CELDA;
-					int anchoTablero = COLUMNAS * TAM_CELDA;
-					int altoTablero = FILAS * TAM_CELDA;
-					int fondoW = fondo.getWidth(contentPane);
-					int fondoH = fondo.getHeight(contentPane);
-
-					if (fondoW > 0 && fondoH > 0) {
-						int sx1 = x * fondoW / anchoTablero;
-						int sy1 = y * fondoH / altoTablero;
-						int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
-						int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
-						g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
-					}
-				}
-	        }
-	    }
-
-	    g.dispose();
-	    matrizActual = m;
-
-/* 		int contador = 0;
-		if (contador % 1 == 0) {
-			for (int[] i : matrizActual) {
-				for (int j : i) {
-					if (j != 0) {
-					System.out.print(j);
-					}
-				}
-        	}
-			System.out.println();
-			System.out.println("-");
-		}
-		contador++; */
+		matrizActual = m;
+		repaint();
            
 	}
 
@@ -212,30 +150,7 @@ public class MainFrame extends JFrame implements Observer {
 
 	//// REPINTAR 2 (FONDO NEGRO) ////
 	public void repintar2(int[][] m) {
-		
-	    Graphics g = contentPane.getGraphics();
-	    if (g == null) return;
-
-	    // Recorre la matriz y pinta con los colores correspondientes
-	    // Si encuentra 0s (fondo), los pinta de negro en lugar de la imagen
-	    for (int i = 0; i < FILAS; i++) {
-	        for (int j = 0; j < COLUMNAS; j++) {
-	            int valor = m[i][j];
-	            int x = j * TAM_CELDA;
-	            int y = i * TAM_CELDA;
-	            
-	            if (valor != 0) { // Elemento (jugador, enemigos, disparos, etc.)
-	                pintarCelda(g, valor, x, y);
-	            }
-	            else { // Fondo (0s) - pintar de negro
-	                g.setColor(Color.BLACK);
-	                g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
-	            }
-	        }
-	    }
-
-	    g.dispose();
-	    matrizActual = m;
+		repintar(m);
 	}
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -244,6 +159,9 @@ public class MainFrame extends JFrame implements Observer {
 
 		for (int i = 0; i < FILAS; i++) {
 			for (int j = 0; j < COLUMNAS; j++) {
+				if (matriz[i][j] == 0) {
+					continue;
+				}
 
 				int x = j * TAM_CELDA;
 				int y = i * TAM_CELDA;
@@ -337,23 +255,22 @@ public class MainFrame extends JFrame implements Observer {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
-			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
+			int keyCode = e.getKeyCode();
+			teclasPulsadas.add(keyCode); // Disparar mientras me muevo
 			Jugador jugadorActual = Jugador.getInstance();
 			if (jugadorActual == null) {
 				return;
 			}
 
-			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
-				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
+			if (keyCode == KeyEvent.VK_SPACE) {
 				jugadorActual.changestrategyBala(new model.BalaPixel());
 				jugadorActual.disparar();
-				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
 			}
-			if(teclasPulsadas.contains(KeyEvent.VK_C)) {
+			if (keyCode == KeyEvent.VK_C) {
 				jugadorActual.changestrategyBala(new model.BalaFlecha());
 				jugadorActual.disparar();
 			}
-			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
+			if (keyCode == KeyEvent.VK_V) {
 				jugadorActual.changestrategyBala(new model.BalaRombo());
 				jugadorActual.disparar();
 			}
@@ -386,13 +303,8 @@ public class MainFrame extends JFrame implements Observer {
 
 		@Override
 		public void windowOpened(WindowEvent e) {
-			//Graphics g = contentPane.getGraphics();
-			//g.setColor(Color.GREEN);
-			//g.fillRect(40, 30, 5, 5);
-			//g.dispose();
-			// Pinto la matriz una primera vez (cuando MainFrame se abre)
-			pintarMatriz(contentPane.getGraphics(), Espacio.getInstance().generarMatriz());
-			// Desde el controller y SOLO desde el controller puedo llamar a espacio
+			matrizActual = Espacio.getInstance().generarMatriz();
+			repaint();
 		}
 
 		@Override
