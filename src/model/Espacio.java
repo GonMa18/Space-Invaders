@@ -102,7 +102,7 @@ public class Espacio extends Observable {
 
                 boolean solapa = false;
                 for (Enemigo existente : enemigos) {
-                    for (Coordenada c : candidato.getCoordenadas()) {
+                    for (Component c : candidato.getCoordenadas()) {
                         for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
                             for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
                                 if (existente.containPixel(c.getX() + dx, c.getY() + dy)) {
@@ -138,7 +138,7 @@ public class Espacio extends Observable {
         matriz = new int[alto][ancho];
 
         if (jugador != null && jugador.sigueVivo()) {
-            for (Coordenada c : jugador.getCoordenadas()) {
+            for (Component c : jugador.getCoordenadas()) {
                 int x = c.getX();
                 int y = c.getY();
                 if (x >= 0 && x < ancho && y >= 0 && y < alto) {
@@ -149,7 +149,7 @@ public class Espacio extends Observable {
 
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()){
-                for (Coordenada c : e.getCoordenadas()) {
+                for (Component c : e.getCoordenadas()) {
                     int x = c.getX();
                     int y = c.getY();
                     if (x >= 0 && x < ancho && y >= 0 && y < alto) {
@@ -163,7 +163,7 @@ public class Espacio extends Observable {
             if (jugador.getDisparos() != null) {
             	for (Disparo d : jugador.getDisparos()) {
                     if (d.isShooting()) {
-                        for (Coordenada c : d.getPixeles()) {
+                        for (Component c : d.getPixeles()) {
                             int dx = c.getX();
                             int dy = c.getY();
                             if (dx >= 0 && dx < ancho && dy >= 0 && dy < alto) {
@@ -298,11 +298,11 @@ public class Espacio extends Observable {
                 }
 
                 boolean impacto = false;
-                for (Coordenada pixelBala : disparo.getPixeles()) {
+                for (Component pixelBala : disparo.getPixeles()) {
                     if (impacto) {
                         break;
                     }
-                    for (Coordenada pixelEnemigo : enemigo.getCoordenadas()) {
+                    for (Component pixelEnemigo : enemigo.getCoordenadas()) {
                         if (pixelEnemigo.getX() == pixelBala.getX() && pixelEnemigo.getY() == pixelBala.getY()) {
                             enemigo.setSigueJugando(false); // El enemigo muere
                             disparo.setShoot(false);
@@ -333,7 +333,7 @@ public class Espacio extends Observable {
     private boolean enemigosHanLlegadoAlFinal() {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
-                for (Coordenada c : e.getCoordenadas()) {
+                for (Component c : e.getCoordenadas()) {
                     if (c.getY() >= alto - 1) {
                         return true; // Un enemigo ha llegado al final del tablero
                     }
@@ -346,8 +346,8 @@ public class Espacio extends Observable {
     private boolean enemigoChocaConJugador() {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
-                for (Coordenada ec : e.getCoordenadas()) {
-                    for (Coordenada j : jugador.getCoordenadas()) {
+                for (Component ec : e.getCoordenadas()) {
+                    for (Component j : jugador.getCoordenadas()) {
                         if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
                             return true; // Un enemigo ha chocado con el jugador
                         }

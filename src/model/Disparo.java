@@ -72,7 +72,7 @@ public class Disparo {
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
-	public ArrayList<Coordenada> getPixeles(){
+	public ArrayList<Component> getPixeles(){
 		return cuerpo.getPixeles();
 	}
 	

@@ -1,7 +1,7 @@
 package model;
 import java.awt.Color;
 
-public class Coordenada {
+public class Coordenada implements Component {
 	
 	private int x;
 	private int y;

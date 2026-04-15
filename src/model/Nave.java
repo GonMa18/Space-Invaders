@@ -21,7 +21,7 @@ public abstract class Nave {
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public ArrayList<Coordenada> getCoordenadas() {
+	public ArrayList<Component> getCoordenadas() {
 		return cuerpo.getPixeles();
 	}
 
