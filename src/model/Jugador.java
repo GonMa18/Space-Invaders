@@ -16,15 +16,12 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	protected int rombos;
 	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
 	private static Jugador miJugador;
-	private static final int COOLDOWN_DISPARO_TICKS = 2;
-	private int ticksHastaSiguienteDisparo;
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public Jugador(int x, int y) {
 		super(x, y);
 		this.disparos = new ArrayList<>();
-		this.ticksHastaSiguienteDisparo = 0;
 		miJugador = this;
 	}
 
@@ -39,10 +36,6 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void disparar() {
-		if (ticksHastaSiguienteDisparo > 0) {
-			return;
-		}
-
 		if (strategyBala instanceof BalaFlecha && flechas > 0) {
 			flechas--; // Decrementa el contador de flechas
 		}
@@ -56,15 +49,8 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 		}
 		disparos.addAll(strategyBala.disparar(this.getX(), this.getY() - 10));		// Crea un nuevo disparo en la posicion actual del jugador
 																				// Agrega el nuevo disparo a la lista de disparos activos
-		ticksHastaSiguienteDisparo = COOLDOWN_DISPARO_TICKS;
 		
 
-	}
-
-	public void actualizarCooldownDisparo() {
-		if (ticksHastaSiguienteDisparo > 0) {
-			ticksHastaSiguienteDisparo--;
-		}
 	}
 	
 	public void changestrategyBala(StrategyBala sb) {

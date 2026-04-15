@@ -21,7 +21,6 @@ public class Espacio extends Observable {
     private Timer timer; // Timer para actualizar el juego
     private int ticks; // Contador de frames para controlar la frecuencia de actualización
     private boolean loteActualizacionActivo;
-    private boolean actualizacionPendiente;
 
     private Espacio() {
         this.ancho = 160;
@@ -29,7 +28,6 @@ public class Espacio extends Observable {
         this.enemigos = new ArrayList<>();
         this.colorJugadorSeleccionado = "rojo";
         this.loteActualizacionActivo = false;
-        this.actualizacionPendiente = false;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -219,9 +217,8 @@ public class Espacio extends Observable {
     }
 
     public void solicitarActualizacion() {
-        actualizacionPendiente = true;
         if (!loteActualizacionActivo) {
-            publicarActualizacion();
+            notificarVista(new Object[] { "actualizar", generarMatriz() });
         }
     }
 
@@ -231,13 +228,6 @@ public class Espacio extends Observable {
 
     public void finalizarLoteActualizacion() {
         loteActualizacionActivo = false;
-        if (actualizacionPendiente) {
-            publicarActualizacion();
-        }
-    }
-
-    private void publicarActualizacion() {
-        actualizacionPendiente = false;
         notificarVista(new Object[] { "actualizar", generarMatriz() });
     }
 
@@ -245,8 +235,6 @@ public class Espacio extends Observable {
     public void actualizarDisparo() {
         if (jugador == null)
             return;
-
-        jugador.actualizarCooldownDisparo();
 
         ArrayList<Disparo> disparos = jugador.getDisparos();
         if (disparos == null) {
@@ -273,6 +261,7 @@ public class Espacio extends Observable {
                 //System.out.println("enemigo bajando");
             }
         }
+        comprobarMuertes();
         solicitarActualizacion();
     }
 
