@@ -93,6 +93,7 @@ public class Espacio extends Observable {
         // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
         Random rn = new Random();
         int numEnemigos = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8
+        //int numEnemigos = 1;
         int yObjetivo = alto / 10;
         int maxIntentos = 100;
         int margenSeparacion = 1;
@@ -292,9 +293,9 @@ public class Espacio extends Observable {
         for (Disparo disparo : disparos) {
             if (disparo.isShooting()) {
                 disparo.subir();
-                comprobarMuertes(disparo);
             }
         }
+        comprobarMuertes();
         jugador.limpiarDisparos(); // Elimina los disparos que ya no están activos
         solicitarActualizacion();
     }
@@ -303,39 +304,62 @@ public class Espacio extends Observable {
 
     // Metodo para movel los enemigos un pixel abajo --> TIMER 200ms
     public void actualizarEnemigos() {
-        ArrayList<Disparo> disparos = jugador.getDisparos();
         for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
                 e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
                 //System.out.println("enemigo bajando");
-                if (disparos != null) {
-                    for (Disparo disparo : disparos) {
-                        if (disparo.isShooting() && disparo != null) {
-                            comprobarMuertes(disparo); // Comprueba si el disparo ha dado a algun enemigo
-                        }
-                    }
-                }
             }
         }
+        comprobarMuertes();
         solicitarActualizacion();
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void comprobarMuertes(Disparo d) {
-        for (Enemigo e : enemigos) {
-            if (e.sigueVivo()) {
-            	for(Coordenada pixelBala : d.getPixeles()) {
-                    for (Coordenada c : e.getCoordenadas()) {
-                        int ex = c.getX();
-                        int ey = c.getY();
-                        if (ex == pixelBala.getX() && Math.abs(ey - pixelBala.getY()) <= 1) {
-                            e.setSigueJugando(false); // El enemigo muere
-                            d.setShoot(false);
+    private void comprobarMuertes() {
+        if (jugador == null || !jugador.sigueVivo()) {
+            return;
+        }
+
+        ArrayList<Disparo> disparos = jugador.getDisparos();
+        if (disparos == null || disparos.isEmpty()) {
+            return;
+        }
+
+        for (Enemigo enemigo : enemigos) {
+            if (!enemigo.sigueVivo()) {
+                continue;
+            }
+
+            int enemigoX = enemigo.getX();
+            int enemigoY = enemigo.getY();
+
+            for (Disparo disparo : disparos) {
+                if (disparo == null || !disparo.isShooting()) {
+                    continue;
+                }
+
+                int disparoX = disparo.getX();
+                int disparoY = disparo.getY();
+
+                if (Math.abs(enemigoX - disparoX) >= 10 || Math.abs(enemigoY - disparoY) >= 10) {
+                    continue;
+                }
+
+                boolean impacto = false;
+                for (Coordenada pixelBala : disparo.getPixeles()) {
+                    if (impacto) {
+                        break;
+                    }
+                    for (Coordenada pixelEnemigo : enemigo.getCoordenadas()) {
+                        if (pixelEnemigo.getX() == pixelBala.getX() && pixelEnemigo.getY() == pixelBala.getY()) {
+                            enemigo.setSigueJugando(false); // El enemigo muere
+                            disparo.setShoot(false);
+                            impacto = true;
+                            break;
                         }
                     }
-            	}
-                // notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
+                }
             }
         }
     }
@@ -403,7 +427,7 @@ public class Espacio extends Observable {
     // =====================================================================
 
     private void iniciarTimer() {
-        ticks = 0; // Reiniciamos el contador de frames
+        ticks =10; // Reiniciamos el contador de frames
         timer = new Timer(10, new ActionListener() { // TICK base aproximado de 60 FPS
             @Override
             public void actionPerformed(ActionEvent e) {
