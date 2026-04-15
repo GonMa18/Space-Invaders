@@ -1,4 +1,5 @@
 package model;
+import java.awt.Color;
 public class Enemigo extends Nave {
 
 	public Enemigo(int x, int y) {
@@ -7,7 +8,7 @@ public class Enemigo extends Nave {
 	}
 
 
-/* 	@Override
+	@Override
 	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
 		this.cuerpo.addPixel(new Coordenada(x - 3, y - 3, Color.GREEN));
 		this.cuerpo.addPixel(new Coordenada(x + 3, y - 3, Color.GREEN));
@@ -63,5 +64,5 @@ public class Enemigo extends Nave {
 		this.cuerpo.addPixel(new Coordenada(x + 1, y + 4, Color.GREEN));
 		this.cuerpo.addPixel(new Coordenada(x + 2, y + 4, Color.GREEN));
 	}
- */
+
 }

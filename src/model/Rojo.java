@@ -1,4 +1,5 @@
 package model;
+import java.awt.Color;
 
 public class Rojo extends Jugador {
 
@@ -10,10 +11,10 @@ public class Rojo extends Jugador {
 		this.rombos = 20;
 	}
 
-	/* @Override
+	@Override
 	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
 		super.iniciarCuerpo(x, y, Color.RED, Color.BLUE);
-	} */
+	}
 
 	
 
