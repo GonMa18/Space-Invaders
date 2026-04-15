@@ -37,8 +37,6 @@ public class MainFrame extends JFrame implements Observer {
 	// Imagen de fondo
 	private Image fondo;
 
-	private Jugador	jugador = Espacio.getInstance().getJugador(); // Obtener el jugador del modelo para acceder a su posición y estado
-
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public MainFrame() {
@@ -210,6 +208,35 @@ public class MainFrame extends JFrame implements Observer {
            
 	}
 
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	//// REPINTAR 2 (FONDO NEGRO) ////
+	public void repintar2(int[][] m) {
+		
+	    Graphics g = contentPane.getGraphics();
+	    if (g == null) return;
+
+	    // Recorre la matriz y pinta con los colores correspondientes
+	    // Si encuentra 0s (fondo), los pinta de negro en lugar de la imagen
+	    for (int i = 0; i < FILAS; i++) {
+	        for (int j = 0; j < COLUMNAS; j++) {
+	            int valor = m[i][j];
+	            int x = j * TAM_CELDA;
+	            int y = i * TAM_CELDA;
+	            
+	            if (valor != 0) { // Elemento (jugador, enemigos, disparos, etc.)
+	                pintarCelda(g, valor, x, y);
+	            }
+	            else { // Fondo (0s) - pintar de negro
+	                g.setColor(Color.BLACK);
+	                g.fillRect(x, y, TAM_CELDA, TAM_CELDA);
+	            }
+	        }
+	    }
+
+	    g.dispose();
+	    matrizActual = m;
+	}
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	//// PINTAR LA MATRIZ ////

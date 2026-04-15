@@ -17,8 +17,6 @@ public class Espacio extends Observable {
     private static int ancho;
     private static int alto;
 
-    private Rojo prueba;
-
     //// TIMER////
     private Timer timer; // Timer para actualizar el juego
     private int ticks; // Contador de frames para controlar la frecuencia de actualización
@@ -61,12 +59,6 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    public ArrayList<Enemigo> getEnemigos() {
-        return enemigos;
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
     public void setColorJugador(String color) {
         if ("azul".equals(color) || "verde".equals(color) || "rojo".equals(color)) {
             this.colorJugadorSeleccionado = color;
@@ -87,12 +79,13 @@ public class Espacio extends Observable {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void inicializar() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
-        this.jugador = FactoryNaves.getFactory().crearJugador(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
+        this.jugador = (Jugador) FactoryNaves.getFactory().crearNave(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
         // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
         Random rn = new Random();
         int numEnemigos = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8
+        //int numEnemigos = 1;
         int yObjetivo = alto / 10;
         int maxIntentos = 100;
         int margenSeparacion = 1;
@@ -104,12 +97,12 @@ public class Espacio extends Observable {
                 int x = rn.nextInt(ancho - 10) + 5;
                 int yTemporal = rn.nextInt(alto);
 
-                Enemigo candidato = new Enemigo(x, yTemporal);
+                Enemigo candidato = (Enemigo) FactoryNaves.getFactory().crearNave(x, yTemporal, "enemigo");
                 candidato.mover(0, yObjetivo - yTemporal);
 
                 boolean solapa = false;
                 for (Enemigo existente : enemigos) {
-                    for (Coordenada c : candidato.getCoordenadas()) {
+                    for (Component c : candidato.getCoordenadas()) {
                         for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
                             for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
                                 if (existente.containPixel(c.getX() + dx, c.getY() + dy)) {
@@ -145,7 +138,7 @@ public class Espacio extends Observable {
         matriz = new int[alto][ancho];
 
         if (jugador != null && jugador.sigueVivo()) {
-            for (Coordenada c : jugador.getCoordenadas()) {
+            for (Component c : jugador.getCoordenadas()) {
                 int x = c.getX();
                 int y = c.getY();
                 if (x >= 0 && x < ancho && y >= 0 && y < alto) {
@@ -156,7 +149,7 @@ public class Espacio extends Observable {
 
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()){
-                for (Coordenada c : e.getCoordenadas()) {
+                for (Component c : e.getCoordenadas()) {
                     int x = c.getX();
                     int y = c.getY();
                     if (x >= 0 && x < ancho && y >= 0 && y < alto) {
@@ -170,7 +163,7 @@ public class Espacio extends Observable {
             if (jugador.getDisparos() != null) {
             	for (Disparo d : jugador.getDisparos()) {
                     if (d.isShooting()) {
-                        for (Coordenada c : d.getPixeles()) {
+                        for (Component c : d.getPixeles()) {
                             int dx = c.getX();
                             int dy = c.getY();
                             if (dx >= 0 && dx < ancho && dy >= 0 && dy < alto) {
@@ -238,47 +231,6 @@ public class Espacio extends Observable {
         notificarVista(new Object[] { "actualizar", generarMatriz() });
     }
 
-    public void notificarActualizacion() {
-        solicitarActualizacion();
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public void moverJugador(int x, int y) {
-        if (jugador != null && jugador.sigueVivo()) { // Si el colega sigue vivo
-            jugador.mover(x, y); // Me muevo a la nueva posicion
-        }
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public void disparar() {
-        if (jugador != null && jugador.sigueVivo()) {
-            jugador.disparar();
-            //System.out.println("disparar espacio");
-            //notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
-        }
-    }
-    
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public void cambiarTipoBala(int tipo) {
-		if (jugador != null && jugador.sigueVivo()) {
-			if (tipo == 0) {
-				jugador.changestrategyBala(new BalaPixel());
-			}else if (tipo == 1) {
-				jugador.changestrategyBala(new BalaFlecha());
-			}else if (tipo == 2) {
-				jugador.changestrategyBala(new BalaRombo());
-			}else {
-                System.out.println("Tipo de bala no válido");
-            }
-		}
-	}
-
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
     // Metodo para mover todos los disparos un pixel arriba --> TIMER 50ms
     public void actualizarDisparo() {
         if (jugador == null)
@@ -292,9 +244,9 @@ public class Espacio extends Observable {
         for (Disparo disparo : disparos) {
             if (disparo.isShooting()) {
                 disparo.subir();
-                comprobarMuertes(disparo);
             }
         }
+        comprobarMuertes();
         jugador.limpiarDisparos(); // Elimina los disparos que ya no están activos
         solicitarActualizacion();
     }
@@ -303,39 +255,62 @@ public class Espacio extends Observable {
 
     // Metodo para movel los enemigos un pixel abajo --> TIMER 200ms
     public void actualizarEnemigos() {
-        ArrayList<Disparo> disparos = jugador.getDisparos();
         for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
                 e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
                 //System.out.println("enemigo bajando");
-                if (disparos != null) {
-                    for (Disparo disparo : disparos) {
-                        if (disparo.isShooting() && disparo != null) {
-                            comprobarMuertes(disparo); // Comprueba si el disparo ha dado a algun enemigo
-                        }
-                    }
-                }
             }
         }
+        comprobarMuertes();
         solicitarActualizacion();
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void comprobarMuertes(Disparo d) {
-        for (Enemigo e : enemigos) {
-            if (e.sigueVivo()) {
-            	for(Coordenada pixelBala : d.getPixeles()) {
-                    for (Coordenada c : e.getCoordenadas()) {
-                        int ex = c.getX();
-                        int ey = c.getY();
-                        if (ex == pixelBala.getX() && Math.abs(ey - pixelBala.getY()) <= 1) {
-                            e.setSigueJugando(false); // El enemigo muere
-                            d.setShoot(false);
+    private void comprobarMuertes() {
+        if (jugador == null || !jugador.sigueVivo()) {
+            return;
+        }
+
+        ArrayList<Disparo> disparos = jugador.getDisparos();
+        if (disparos == null || disparos.isEmpty()) {
+            return;
+        }
+
+        for (Enemigo enemigo : enemigos) {
+            if (!enemigo.sigueVivo()) {
+                continue;
+            }
+
+            int enemigoX = enemigo.getX();
+            int enemigoY = enemigo.getY();
+
+            for (Disparo disparo : disparos) {
+                if (disparo == null || !disparo.isShooting()) {
+                    continue;
+                }
+
+                int disparoX = disparo.getX();
+                int disparoY = disparo.getY();
+
+                if (Math.abs(enemigoX - disparoX) >= 10 || Math.abs(enemigoY - disparoY) >= 10) {
+                    continue;
+                }
+
+                boolean impacto = false;
+                for (Component pixelBala : disparo.getPixeles()) {
+                    if (impacto) {
+                        break;
+                    }
+                    for (Component pixelEnemigo : enemigo.getCoordenadas()) {
+                        if (pixelEnemigo.getX() == pixelBala.getX() && pixelEnemigo.getY() == pixelBala.getY()) {
+                            enemigo.setSigueJugando(false); // El enemigo muere
+                            disparo.setShoot(false);
+                            impacto = true;
+                            break;
                         }
                     }
-            	}
-                // notificarVista(generarMatriz()); //Aqui hay que pasarle la matriz
+                }
             }
         }
     }
@@ -358,7 +333,7 @@ public class Espacio extends Observable {
     private boolean enemigosHanLlegadoAlFinal() {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
-                for (Coordenada c : e.getCoordenadas()) {
+                for (Component c : e.getCoordenadas()) {
                     if (c.getY() >= alto - 1) {
                         return true; // Un enemigo ha llegado al final del tablero
                     }
@@ -371,8 +346,8 @@ public class Espacio extends Observable {
     private boolean enemigoChocaConJugador() {
         for (Enemigo e : enemigos) {
             if (e.sigueVivo()) {
-                for (Coordenada ec : e.getCoordenadas()) {
-                    for (Coordenada j : jugador.getCoordenadas()) {
+                for (Component ec : e.getCoordenadas()) {
+                    for (Component j : jugador.getCoordenadas()) {
                         if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
                             return true; // Un enemigo ha chocado con el jugador
                         }
@@ -403,7 +378,7 @@ public class Espacio extends Observable {
     // =====================================================================
 
     private void iniciarTimer() {
-        ticks = 0; // Reiniciamos el contador de frames
+        ticks =10; // Reiniciamos el contador de frames
         timer = new Timer(10, new ActionListener() { // TICK base aproximado de 60 FPS
             @Override
             public void actionPerformed(ActionEvent e) {

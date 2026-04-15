@@ -16,8 +16,8 @@ public class FactoryNaves {
 	}
 	
 	
-	//Crea un jugador según el tipo de nave que queramos
-	public Jugador crearJugador(int x, int y, String tipo) { 
+	//Crea una nave según el tipo de nave que queramos
+	public Nave crearNave(int x, int y, String tipo) { 
 
 		switch (tipo) {
 			
@@ -27,9 +27,10 @@ public class FactoryNaves {
 				return new Verde(x,y);	//TODO clase nave verde
 			case "rojo":
 				return new Rojo(x,y);
-			
+			case "enemigo":
+				return new Enemigo(x,y);
 			default:
-				return new Rojo(x,y); 
+				return null; 
 		}
 	}
 
