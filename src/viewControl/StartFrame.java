@@ -32,7 +32,6 @@ import model.Espacio;
 public class StartFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
     private JRadioButton rbRojo;
     private JRadioButton rbAzul;
     private JRadioButton rbVerde;

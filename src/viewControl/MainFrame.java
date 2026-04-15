@@ -37,8 +37,6 @@ public class MainFrame extends JFrame implements Observer {
 	// Imagen de fondo
 	private Image fondo;
 
-	private Jugador	jugador = Espacio.getInstance().getJugador(); // Obtener el jugador del modelo para acceder a su posición y estado
-
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public MainFrame() {

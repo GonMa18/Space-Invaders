@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 
 public abstract class Nave {
@@ -28,12 +27,6 @@ public abstract class Nave {
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public boolean continuesPlaying() {
-		return sigueJugando;
-	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------------------------------
-
 	public boolean sigueVivo() {
 		return sigueJugando;
 	}
@@ -46,12 +39,6 @@ public abstract class Nave {
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public void pintarCuerpo(Graphics g, int tamCelda) {	//TODO revisar
-		for (Coordenada c : cuerpo.getPixeles()) {	
-			c.pintar(g, tamCelda);
-		}
-	}
-	
 	public void mover(int dx, int dy) {
 		cuerpo.moverNave(dx, dy);
 	}

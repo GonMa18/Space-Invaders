@@ -17,8 +17,6 @@ public class Espacio extends Observable {
     private static int ancho;
     private static int alto;
 
-    private Rojo prueba;
-
     //// TIMER////
     private Timer timer; // Timer para actualizar el juego
     private int ticks; // Contador de frames para controlar la frecuencia de actualización
@@ -57,12 +55,6 @@ public class Espacio extends Observable {
 
     public Jugador getJugador() {
         return jugador;
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public ArrayList<Enemigo> getEnemigos() {
-        return enemigos;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -238,47 +230,6 @@ public class Espacio extends Observable {
         loteActualizacionActivo = false;
         notificarVista(new Object[] { "actualizar", generarMatriz() });
     }
-
-    public void notificarActualizacion() {
-        solicitarActualizacion();
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public void moverJugador(int x, int y) {
-        if (jugador != null && jugador.sigueVivo()) { // Si el colega sigue vivo
-            jugador.mover(x, y); // Me muevo a la nueva posicion
-        }
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public void disparar() {
-        if (jugador != null && jugador.sigueVivo()) {
-            jugador.disparar();
-            //System.out.println("disparar espacio");
-            //notificarVista(new Object[] { "actualizar", generarMatriz() }); // Aqui hay que pasarle la matriz
-        }
-    }
-    
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public void cambiarTipoBala(int tipo) {
-		if (jugador != null && jugador.sigueVivo()) {
-			if (tipo == 0) {
-				jugador.changestrategyBala(new BalaPixel());
-			}else if (tipo == 1) {
-				jugador.changestrategyBala(new BalaFlecha());
-			}else if (tipo == 2) {
-				jugador.changestrategyBala(new BalaRombo());
-			}else {
-                System.out.println("Tipo de bala no válido");
-            }
-		}
-	}
-
-
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     // Metodo para mover todos los disparos un pixel arriba --> TIMER 50ms
     public void actualizarDisparo() {
