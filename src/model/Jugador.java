@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 public abstract class Jugador extends Nave { // Hereda de NAVE
@@ -87,7 +86,7 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		@Override
+/* 	@Override
 	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
 		this.cuerpo.addPixel(new Coordenada(x, y - 8, Color.WHITE));
 		this.cuerpo.addPixel(new Coordenada(x, y - 7, Color.WHITE));
@@ -212,7 +211,7 @@ public abstract class Jugador extends Nave { // Hereda de NAVE
 		this.cuerpo.addPixel(new Coordenada(x - 7, y + 7, Color.WHITE));
 		this.cuerpo.addPixel(new Coordenada(x, y + 7, Color.WHITE));
 		this.cuerpo.addPixel(new Coordenada(x + 7, y + 7, Color.WHITE));
-	}
+	} */
 
 	
 }
