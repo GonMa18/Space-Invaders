@@ -11,8 +11,8 @@ import javax.swing.Timer;
 @SuppressWarnings("deprecation")
 public class Espacio extends Observable {
     private static Espacio miEspacio; // Singleton
-    private ArrayList<Enemigo> enemigos; // Lista de enemigos
-    private Jugador jugador; // El jugador
+    private ArrayList<Nave> enemigos; // Lista de enemigos
+    private Nave jugador; // El jugador
     private String colorJugadorSeleccionado;
     private static int ancho;
     private static int alto;
@@ -53,7 +53,7 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    public Jugador getJugador() {
+    public Nave getJugador() {
         return jugador;
     }
 
@@ -79,7 +79,7 @@ public class Espacio extends Observable {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void inicializar() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
-        this.jugador = (Jugador) FactoryNaves.getFactory().crearNave(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
+        this.jugador = FactoryNaves.getFactory().crearNave(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
         // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
@@ -101,7 +101,7 @@ public class Espacio extends Observable {
                 candidato.mover(0, yObjetivo - yTemporal);
 
                 boolean solapa = false;
-                for (Enemigo existente : enemigos) {
+                for (Nave existente : enemigos) {
                     for (Component c : candidato.getCoordenadas()) {
                         for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
                             for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
@@ -147,7 +147,7 @@ public class Espacio extends Observable {
             }
         }
 
-        for (Enemigo e : enemigos) {
+        for (Nave e : enemigos) {
             if (e.sigueVivo()){
                 for (Component c : e.getCoordenadas()) {
                     int x = c.getX();
@@ -255,7 +255,7 @@ public class Espacio extends Observable {
 
     // Metodo para movel los enemigos un pixel abajo --> TIMER 200ms
     public void actualizarEnemigos() {
-        for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
+        for (Nave e : enemigos) { // Muevo todos los enem que siguen vivos
             if (e.sigueVivo()) {
                 e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
                 //System.out.println("enemigo bajando");
@@ -277,7 +277,7 @@ public class Espacio extends Observable {
             return;
         }
 
-        for (Enemigo enemigo : enemigos) {
+        for (Nave enemigo : enemigos) {
             if (!enemigo.sigueVivo()) {
                 continue;
             }
@@ -331,7 +331,7 @@ public class Espacio extends Observable {
     }
 
     private boolean enemigosHanLlegadoAlFinal() {
-        for (Enemigo e : enemigos) {
+        for (Nave e : enemigos) {
             if (e.sigueVivo()) {
                 for (Component c : e.getCoordenadas()) {
                     if (c.getY() >= alto - 1) {
@@ -344,7 +344,7 @@ public class Espacio extends Observable {
     }
 
     private boolean enemigoChocaConJugador() {
-        for (Enemigo e : enemigos) {
+        for (Nave e : enemigos) {
             if (e.sigueVivo()) {
                 for (Component ec : e.getCoordenadas()) {
                     for (Component j : jugador.getCoordenadas()) {
@@ -361,7 +361,7 @@ public class Espacio extends Observable {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public boolean isVictory() {
-        for (Enemigo e : enemigos) { // Reviso que no quede ningun enemigo vivo
+        for (Nave e : enemigos) { // Reviso que no quede ningun enemigo vivo
             if (e.sigueVivo()) {
                 return false; // Todavia queda algun enemigo vivo
             }

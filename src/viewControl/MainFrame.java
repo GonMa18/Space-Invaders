@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Espacio;
-import model.Jugador;
+import model.Nave;
 
 @SuppressWarnings("deprecation")
 public class MainFrame extends JFrame implements Observer {
@@ -338,7 +338,7 @@ public class MainFrame extends JFrame implements Observer {
 		public void keyPressed(KeyEvent e) {
 			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
 			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
-			Jugador jugadorActual = Jugador.getInstance();
+			Nave jugadorActual = Espacio.getInstance().getJugador();
 			if (jugadorActual == null) {
 				return;
 			}

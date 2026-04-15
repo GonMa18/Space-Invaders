@@ -9,7 +9,7 @@ public class Enemigo extends Nave {
 
 
 	@Override
-	protected void iniciarCuerpo(int x, int y, Color primario, Color secundario) {
+	protected void iniciarCuerpo(int x, int y) {
 		this.cuerpo.addPixel(new Coordenada(x - 3, y - 3, Color.GREEN));
 		this.cuerpo.addPixel(new Coordenada(x + 3, y - 3, Color.GREEN));
 
