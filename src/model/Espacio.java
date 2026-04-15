@@ -79,7 +79,7 @@ public class Espacio extends Observable {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void inicializar() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
-        this.jugador = FactoryNaves.getFactory().crearJugador(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
+        this.jugador = (Jugador) FactoryNaves.getFactory().crearNave(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
         // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
@@ -97,7 +97,7 @@ public class Espacio extends Observable {
                 int x = rn.nextInt(ancho - 10) + 5;
                 int yTemporal = rn.nextInt(alto);
 
-                Enemigo candidato = new Enemigo(x, yTemporal);
+                Enemigo candidato = (Enemigo) FactoryNaves.getFactory().crearNave(x, yTemporal, "enemigo");
                 candidato.mover(0, yObjetivo - yTemporal);
 
                 boolean solapa = false;
