@@ -8,7 +8,7 @@ public class Rojo extends Jugador {
 	public Rojo(int x, int y) {
 		super(x, y);
 		this.flechas = 30; 
-		this.rombos = 20;
+		this.rombos = 2000;
 	}
 
 	@Override
