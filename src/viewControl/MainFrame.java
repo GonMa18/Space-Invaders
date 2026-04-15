@@ -139,7 +139,7 @@ public class MainFrame extends JFrame implements Observer {
 //	    g.dispose();		// Cerramps los recursos gráficos después de pintar
 //	    matrizActual = m;	// Actualizamos la matriz actual con la nueva matriz después de repintar
 //	}
-	private void repintar2(int[][] m) {
+	private void repintar(int[][] m) {
 		
 /* 		String VERDE = "\u001B[32m";
 		String ROJO  = "\u001B[31m";
@@ -211,7 +211,7 @@ public class MainFrame extends JFrame implements Observer {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	//// REPINTAR 2 (FONDO NEGRO) ////
-	public void repintar(int[][] m) {
+	public void repintar2(int[][] m) {
 		
 	    Graphics g = contentPane.getGraphics();
 	    if (g == null) return;
@@ -237,36 +237,6 @@ public class MainFrame extends JFrame implements Observer {
 	    g.dispose();
 	    matrizActual = m;
 	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	//// REPINTAR 3 (IMAGEN DE FONDO + SIN DIBUJAR SOBRE 0s) ////
-	public void repintar3(int[][] m) {
-		
-	    Graphics g = contentPane.getGraphics();
-	    if (g == null) return;
-
-	    // 1 — Pinta la imagen de fondo completa al principio
-	    g.drawImage(fondo, 0, 0, COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA, contentPane);
-
-	    // 2 — Encima pinta solo los elementos (jugador, enemigos, disparos)
-	    // No dibuja sobre los píxeles con 0, los deja sin color (la imagen de fondo será visible)
-	    for (int i = 0; i < FILAS; i++) {
-	        for (int j = 0; j < COLUMNAS; j++) {
-	            int valor = m[i][j];
-	            if (valor != 0) { // Solo pinta si no es fondo (0)
-	                int x = j * TAM_CELDA;
-	                int y = i * TAM_CELDA;
-	                pintarCelda(g, valor, x, y);
-	            }
-	            // Si es 0, no dibuja nada, dejando visible la imagen de fondo
-	        }
-	    }
-
-	    g.dispose();
-	    matrizActual = m;
-	}
-
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	//// PINTAR LA MATRIZ ////
