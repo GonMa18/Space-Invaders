@@ -7,7 +7,7 @@ public class Disparo {
 	private int x;
 	private int y;
 	private boolean shoot;
-	protected Composite cuerpo;
+	private Composite cuerpo;
 	//private ArrayList<Coordenada> forma;
     
     
@@ -74,6 +74,10 @@ public class Disparo {
     
 	public ArrayList<Component> getPixeles(){
 		return cuerpo.getPixeles();
+	}
+
+	public void addPixel(Coordenada coordenada) {
+		this.cuerpo.addPixel(coordenada);
 	}
 	
    //--------------------------------------------------------------------------------------------------------------------------------------------------------

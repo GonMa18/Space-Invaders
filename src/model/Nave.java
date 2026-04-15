@@ -7,10 +7,10 @@ public abstract class Nave {
 
 	// Atributos de cada pixel en el juego (naves enemigas y jugador)
 	private boolean sigueJugando;
-	protected Composite cuerpo;
-	protected ArrayList<Disparo> disparos;
-	protected int flechas;
-	protected int rombos;
+	private  Composite cuerpo;
+	private ArrayList<Disparo> disparos;
+	private int flechas;
+	private int rombos;
 	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -66,10 +66,22 @@ public abstract class Nave {
 	}
 
 	protected void iniciarCuerpo(int x, int y) {
-		this.cuerpo.addPixel(new Coordenada(x , y, Color.WHITE));
-		this.cuerpo.addPixel(new Coordenada(x, y + 1, Color.WHITE));
-		this.cuerpo.addPixel(new Coordenada(x - 1, y + 1, Color.WHITE));
-		this.cuerpo.addPixel(new Coordenada(x + 1, y + 1, Color.WHITE));
+		this.addPixel(new Coordenada(x , y, Color.WHITE));
+		this.addPixel(new Coordenada(x, y + 1, Color.WHITE));
+		this.addPixel(new Coordenada(x - 1, y + 1, Color.WHITE));
+		this.addPixel(new Coordenada(x + 1, y + 1, Color.WHITE));
+	}
+
+	protected void addPixel(Coordenada coordenada) {
+		this.cuerpo.addPixel(coordenada);
+	}
+
+	protected void setFlechas(int flechas) {
+		this.flechas = flechas;
+	}
+
+	protected void setRombos(int rombos) {
+		this.rombos = rombos;
 	}
 
 	public void disparar() {

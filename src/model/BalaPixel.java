@@ -10,10 +10,11 @@ public class BalaPixel implements StrategyBala{
 		//ArrayList<Coordenada> forma = new ArrayList<>();
 		//forma.add(new Coordenada(0, 0, Color.YELLOW));
 		Disparo d = new Disparo(x, y);			//Un unico pixel amarillo
-		d.cuerpo.addPixel(new Coordenada(x, y, Color.YELLOW));
+		d.addPixel(new Coordenada(x, y, Color.YELLOW));
 		d.setShoot(true);
 		ArrayList<Disparo> disparos = new ArrayList<>();
 		disparos.add(d);
 		return disparos;
 	}
 }
+
