@@ -56,6 +56,7 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
+				g.drawImage(fondo, 0, 0, COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA, this);
 				if (matrizActual != null) { // Si la matriz ya ha sido inicializada, la pintamos
 					pintarMatriz(g, matrizActual); // Pintamos la matriz actual del juego en el fondo
 				}
@@ -236,6 +237,11 @@ public class MainFrame extends JFrame implements Observer {
 
 	    g.dispose();
 	    matrizActual = m;
+	}
+
+	public void repintar3(int[][] m) {
+		matrizActual = m;
+		repaint();
 	}
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
