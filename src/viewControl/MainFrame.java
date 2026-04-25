@@ -16,7 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Espacio;
-import model.Nave;
 
 @SuppressWarnings("deprecation")
 public class MainFrame extends JFrame implements Observer {
@@ -339,29 +338,23 @@ public class MainFrame extends JFrame implements Observer {
 	private class Controller implements KeyListener, WindowListener { // Clase interna para manejar eventos de teclado
 
 		private final Set<Integer> teclasPulsadas = new HashSet<>(); // Disoarar mientras me muevo
+		private final Espacio espacio = Espacio.getInstance();
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
 			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
-			Nave jugadorActual = Espacio.getInstance().getJugador();
-			if (jugadorActual == null) {
-				return;
-			}
 
 			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
 				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
-				jugadorActual.changestrategyBala(new model.BalaPixel());
-				jugadorActual.disparar();
+				espacio.dispararJugador("pixel");
 				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
 			}
 			if(teclasPulsadas.contains(KeyEvent.VK_C)) {
-				jugadorActual.changestrategyBala(new model.BalaFlecha());
-				jugadorActual.disparar();
+				espacio.dispararJugador("flecha");
 			}
 			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
-				jugadorActual.changestrategyBala(new model.BalaRombo());
-				jugadorActual.disparar();
+				espacio.dispararJugador("rombo");
 			}
 
 			int dx = 0;
@@ -376,7 +369,7 @@ public class MainFrame extends JFrame implements Observer {
 				dy++;
 
 			if (dx != 0 || dy != 0) {
-				jugadorActual.mover(dx, dy);
+				espacio.moverJugador(dx, dy);
 				
 			}
 		}
