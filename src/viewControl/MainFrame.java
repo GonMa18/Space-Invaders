@@ -103,7 +103,7 @@ public class MainFrame extends JFrame implements Observer {
 			// Esto si es legal
 
 		} else if (resul.equals("actualizar") && matriz != null) {
-			repintar(matriz); // Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
+			repintar3(matriz); // Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
 			//matrizActual = matriz; // Actualizamos la matriz actual para que se pinte en el fondo
 		}
 

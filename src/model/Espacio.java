@@ -241,11 +241,12 @@ public class Espacio extends Observable {
             //System.out.println("ff2"); // Si no hay disparos, no hay muertes que comprobar
             return;
         }
-        for (Disparo disparo : disparos) {
-            if (disparo.isShooting()) {
-                disparo.subir();
-            }
-        }
+//        for (Disparo disparo : disparos) {
+//            if (disparo.isShooting()) {
+//                disparo.subir();
+//            }
+//        }
+        disparos.stream().filter(d -> d.isShooting()).forEach(d -> d.subir());
         comprobarMuertes();
         jugador.limpiarDisparos(); // Elimina los disparos que ya no están activos
         solicitarActualizacion();
@@ -255,12 +256,13 @@ public class Espacio extends Observable {
 
     // Metodo para movel los enemigos un pixel abajo --> TIMER 200ms
     public void actualizarEnemigos() {
-        for (Nave e : enemigos) { // Muevo todos los enem que siguen vivos
-            if (e.sigueVivo()) {
-                e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
-                //System.out.println("enemigo bajando");
-            }
-        }
+//        for (Nave e : enemigos) { // Muevo todos los enem que siguen vivos
+//            if (e.sigueVivo()) {
+//                e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
+//                //System.out.println("enemigo bajando");
+//            }
+//        }
+    	enemigos.stream().filter(e -> e.sigueVivo()).forEach(e -> e.mover(0, 1));
         comprobarMuertes();
         solicitarActualizacion();
     }
@@ -330,42 +332,56 @@ public class Espacio extends Observable {
         return false;
     }
 
+//    private boolean enemigosHanLlegadoAlFinal() {
+//        for (Nave e : enemigos) {
+//            if (e.sigueVivo()) {
+//                for (Component c : e.getCoordenadas()) {
+//                    if (c.getY() >= alto - 1) {
+//                        return true; // Un enemigo ha llegado al final del tablero
+//                    }
+//                }
+//            }
+//        }
+//        return false; // Ningún enemigo ha llegado al final del tablero
+//    }
     private boolean enemigosHanLlegadoAlFinal() {
-        for (Nave e : enemigos) {
-            if (e.sigueVivo()) {
-                for (Component c : e.getCoordenadas()) {
-                    if (c.getY() >= alto - 1) {
-                        return true; // Un enemigo ha llegado al final del tablero
-                    }
-                }
-            }
-        }
-        return false; // Ningún enemigo ha llegado al final del tablero
+        return enemigos.stream()
+            .filter(e -> e.sigueVivo())
+            .flatMap(e -> e.getCoordenadas().stream())
+            .anyMatch(c -> c.getY() >= alto - 1);
     }
 
+//    private boolean enemigoChocaConJugador() {
+//        for (Nave e : enemigos) {
+//            if (e.sigueVivo()) {
+//                for (Component ec : e.getCoordenadas()) {
+//                    for (Component j : jugador.getCoordenadas()) {
+//                        if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
+//                            return true; // Un enemigo ha chocado con el jugador
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return false; // Ningún enemigo ha chocado con el jugador
+//    }
     private boolean enemigoChocaConJugador() {
-        for (Nave e : enemigos) {
-            if (e.sigueVivo()) {
-                for (Component ec : e.getCoordenadas()) {
-                    for (Component j : jugador.getCoordenadas()) {
-                        if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
-                            return true; // Un enemigo ha chocado con el jugador
-                        }
-                    }
-                }
-            }
-        }
-        return false; // Ningún enemigo ha chocado con el jugador
+        return enemigos.stream()
+            .filter(e -> e.sigueVivo())
+            .flatMap(e -> e.getCoordenadas().stream())
+            .anyMatch(ec -> jugador.getCoordenadas().stream()
+                .anyMatch(j -> ec.getX() == j.getX() && ec.getY() == j.getY()));
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public boolean isVictory() {
-        for (Nave e : enemigos) { // Reviso que no quede ningun enemigo vivo
-            if (e.sigueVivo()) {
-                return false; // Todavia queda algun enemigo vivo
-            }
-        }
+//        for (Nave e : enemigos) { // Reviso que no quede ningun enemigo vivo
+//            if (e.sigueVivo()) {
+//                return false; // Todavia queda algun enemigo vivo
+//            }
+//        }
+    	if (enemigos.stream().anyMatch(e -> e.sigueVivo())) return false;
         notificarVista(new Object[] { "ganar", null }); // Notifico a la vista que el jugador ha ganado
         return true; // Todos los enemigos han muerto --> victoria
 

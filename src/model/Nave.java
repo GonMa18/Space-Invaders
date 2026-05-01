@@ -114,13 +114,14 @@ public abstract class Nave {
 		return rombos;
 	}
 	public void limpiarDisparos() { // TODO
-		if (disparos == null) {
-			return; // Si la lista de disparos es null, no hay nada que limpiar
-		}
-		for (int i = disparos.size() - 1; i >= 0; i--) {
-			if (!disparos.get(i).isShooting()) {
-				disparos.remove(i);
-			}
-		}
+//		if (disparos == null) {
+//			return; // Si la lista de disparos es null, no hay nada que limpiar
+//		}
+//		for (int i = disparos.size() - 1; i >= 0; i--) {
+//			if (!disparos.get(i).isShooting()) {
+//				disparos.remove(i);
+//			}
+//		}
+		disparos.removeIf(d -> !d.isShooting());
 	}
 }
