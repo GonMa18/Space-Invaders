@@ -222,6 +222,31 @@ public class Espacio extends Observable {
         }
     }
 
+    public void moverJugador(int dx, int dy) {
+        if (jugador == null || !jugador.sigueVivo()) {
+            return;
+        }
+        jugador.mover(dx, dy);
+        solicitarActualizacion();
+    }
+
+    public void dispararJugador(String tipoBala) {
+        if (jugador == null || !jugador.sigueVivo()) {
+            return;
+        }
+
+        if ("flecha".equals(tipoBala)) {
+            jugador.changestrategyBala(new BalaFlecha());
+        } else if ("rombo".equals(tipoBala)) {
+            jugador.changestrategyBala(new BalaRombo());
+        } else {
+            jugador.changestrategyBala(new BalaPixel());
+        }
+
+        jugador.disparar();
+        solicitarActualizacion();
+    }
+
     public void iniciarLoteActualizacion() {
         loteActualizacionActivo = true;
     }

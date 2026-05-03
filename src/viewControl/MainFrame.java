@@ -16,7 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Espacio;
-import model.Nave;
 
 @SuppressWarnings("deprecation")
 public class MainFrame extends JFrame implements Observer {
@@ -166,25 +165,28 @@ public class MainFrame extends JFrame implements Observer {
 	    for (int i = 0; i < FILAS; i++) {
 	        for (int j = 0; j < COLUMNAS; j++) {
 	            int valor = m[i][j];
-	            if (valor != 0) { // solo pinta si no es fondo
-	                int x = j * TAM_CELDA;
-	                int y = i * TAM_CELDA;
-	                pintarCelda(g, valor, x, y);
-	            }
-				else {
-					int x = j * TAM_CELDA;
-	                int y = i * TAM_CELDA;
-					int anchoTablero = COLUMNAS * TAM_CELDA;
-					int altoTablero = FILAS * TAM_CELDA;
-					int fondoW = fondo.getWidth(contentPane);
-					int fondoH = fondo.getHeight(contentPane);
+				int valorAnterior =  (matrizActual != null) ? matrizActual[i][j] : -1; // Si es el primer repintado, valorAnterior es -1 para que se pinten todas las celdas
+				if (valor != valorAnterior) { // Solo repintamos si el valor ha cambiado respecto a la matriz actual
+					if (valor != 0) { // solo pinta si no es fondo
+						int x = j * TAM_CELDA;
+						int y = i * TAM_CELDA;
+						pintarCelda(g, valor, x, y);
+					}
+					else {
+						int x = j * TAM_CELDA;
+						int y = i * TAM_CELDA;
+						int anchoTablero = COLUMNAS * TAM_CELDA;
+						int altoTablero = FILAS * TAM_CELDA;
+						int fondoW = fondo.getWidth(contentPane);
+						int fondoH = fondo.getHeight(contentPane);
 
-					if (fondoW > 0 && fondoH > 0) {
-						int sx1 = x * fondoW / anchoTablero;
-						int sy1 = y * fondoH / altoTablero;
-						int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
-						int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
-						g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
+						if (fondoW > 0 && fondoH > 0) {
+							int sx1 = x * fondoW / anchoTablero;
+							int sy1 = y * fondoH / altoTablero;
+							int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
+							int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
+							g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
+						}
 					}
 				}
 	        }
@@ -339,29 +341,23 @@ public class MainFrame extends JFrame implements Observer {
 	private class Controller implements KeyListener, WindowListener { // Clase interna para manejar eventos de teclado
 
 		private final Set<Integer> teclasPulsadas = new HashSet<>(); // Disoarar mientras me muevo
+		private final Espacio espacio = Espacio.getInstance();
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
 			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
-			Nave jugadorActual = Espacio.getInstance().getJugador();
-			if (jugadorActual == null) {
-				return;
-			}
 
 			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
 				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
-				jugadorActual.changestrategyBala(new model.BalaPixel());
-				jugadorActual.disparar();
+				espacio.dispararJugador("pixel");
 				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
 			}
 			if(teclasPulsadas.contains(KeyEvent.VK_C)) {
-				jugadorActual.changestrategyBala(new model.BalaFlecha());
-				jugadorActual.disparar();
+				espacio.dispararJugador("flecha");
 			}
 			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
-				jugadorActual.changestrategyBala(new model.BalaRombo());
-				jugadorActual.disparar();
+				espacio.dispararJugador("rombo");
 			}
 
 			int dx = 0;
@@ -376,7 +372,7 @@ public class MainFrame extends JFrame implements Observer {
 				dy++;
 
 			if (dx != 0 || dy != 0) {
-				jugadorActual.mover(dx, dy);
+				espacio.moverJugador(dx, dy);
 				
 			}
 		}
