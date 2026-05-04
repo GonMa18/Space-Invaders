@@ -11,6 +11,7 @@ public abstract class Nave {
 	private ArrayList<Disparo> disparos;
 	private int flechas;
 	private int rombos;
+	private int vida;
 	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -21,6 +22,7 @@ public abstract class Nave {
 		this.disparos = new ArrayList<>();
 		this.flechas = 0;
 		this.rombos = 0;
+		this.vida = 100;
 		this.iniciarCuerpo(x, y);	// Por defecto, el cuerpo se inicia con rojo y azul
 	} 
 
@@ -35,13 +37,28 @@ public abstract class Nave {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public boolean sigueVivo() {
-		return sigueJugando;
+		return sigueJugando && vida > 0;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void setSigueJugando(boolean b) {
 		this.sigueJugando = b;
+	}
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public int getVida() {
+		return vida;
+	}
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	public void recibirDaño(int daño) {
+		this.vida -= daño;
+		if (this.vida < 0) {
+			this.vida = 0;
+		}
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------

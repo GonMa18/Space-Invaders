@@ -30,11 +30,16 @@ public class BalaRombo implements StrategyBala {
 		for (Coordenada c : forma) {
 			d.addPixel(new Coordenada(x + c.getX(), y + c.getY(), Color.YELLOW));
 		}
+		d.setStrategyBala(this);
 		d.setShoot(true);
 		ArrayList<Disparo> disparos = new ArrayList<>();
 		disparos.add(d);
 		return disparos;
 	}
 
+	@Override
+	public int getDaño() {
+		return 50;
+	}
 }
 

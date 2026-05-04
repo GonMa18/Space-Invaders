@@ -8,6 +8,7 @@ public class Disparo {
 	private int y;
 	private boolean shoot;
 	private Composite cuerpo;
+	private StrategyBala strategyBala;
 	//private ArrayList<Coordenada> forma;
     
     
@@ -18,6 +19,7 @@ public class Disparo {
 		this.x = x;
 		this.y = y;
 		this.shoot = false;
+		this.strategyBala = null;
 		//this.forma = forma;
 		this.cuerpo = new Composite(x, y);
 	}
@@ -52,6 +54,25 @@ public class Disparo {
     
 	public void setShoot(boolean b) {
 		this.shoot = b;
+	}
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+	public void setStrategyBala(StrategyBala strategy) {
+		this.strategyBala = strategy;
+	}
+    
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+	public int getDaño() {
+		if (strategyBala != null) {
+			return strategyBala.getDaño();
+		}
+		return 10; // Daño por defecto (BalaPixel)
 	}
     
     

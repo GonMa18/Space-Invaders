@@ -331,7 +331,7 @@ public class Espacio extends Observable {
                     }
                     for (Component pixelEnemigo : enemigo.getCoordenadas()) {
                         if (pixelEnemigo.getX() == pixelBala.getX() && pixelEnemigo.getY() == pixelBala.getY()) {
-                            enemigo.setSigueJugando(false); // El enemigo muere
+                            enemigo.recibirDaño(disparo.getDaño()); // El enemigo recibe daño
                             disparo.setShoot(false);
                             impacto = true;
                             break;
