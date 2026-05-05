@@ -1,11 +1,11 @@
 package viewControl;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -26,9 +26,10 @@ public class MainFrame extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel panelInfo;
-	private JLabel labelVidas;
+	private JPanel heartPanel;
 	private JLabel labelFlechas;
 	private JLabel labelRombos;
+	private int vidaActual = 3;
 
 	// Tamaño de la matriz logica (100 columnas x 60 filas)
 	private static final int COLUMNAS = Espacio.getInstance().getAnchura();
@@ -78,9 +79,8 @@ public class MainFrame extends JFrame implements Observer {
 		panelInfo.setBackground(Color.BLACK);
 		panelInfo.setPreferredSize(new Dimension(COLUMNAS * TAM_CELDA, 40));
 
-		labelVidas = new JLabel("Vidas: 100");
-		labelVidas.setForeground(Color.WHITE);
-		labelVidas.setFont(labelVidas.getFont().deriveFont(14f));
+		heartPanel = new HeartPanel();
+		heartPanel.setPreferredSize(new Dimension(100, 30));
 
 		labelFlechas = new JLabel("Flechas: 0");
 		labelFlechas.setForeground(Color.CYAN);
@@ -90,7 +90,7 @@ public class MainFrame extends JFrame implements Observer {
 		labelRombos.setForeground(Color.MAGENTA);
 		labelRombos.setFont(labelRombos.getFont().deriveFont(14f));
 
-		panelInfo.add(labelVidas);
+		panelInfo.add(heartPanel);
 		panelInfo.add(labelFlechas);
 		panelInfo.add(labelRombos);
 
@@ -147,7 +147,8 @@ public class MainFrame extends JFrame implements Observer {
 
 	private void updateGameInfo() {
 		if (Espacio.getInstance().getJugador() != null) {
-			labelVidas.setText("Vidas: " + Espacio.getInstance().getJugador().getVida());
+			vidaActual = Espacio.getInstance().getJugador().getVida();
+			heartPanel.repaint();
 			labelFlechas.setText("Flechas: " + Espacio.getInstance().getJugador().getFlechas());
 			labelRombos.setText("Rombos: " + Espacio.getInstance().getJugador().getRombos());
 		}
@@ -375,6 +376,72 @@ public class MainFrame extends JFrame implements Observer {
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// =====================================================================
+	// HEART PANEL - Dibuja corazones basados en la vida actual
+	// =====================================================================
+
+	private class HeartPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			setBackground(Color.BLACK);
+
+			// Dibujar 3 corazones
+			int heartSize = 20;
+			int spacing = 10;
+			int startX = 5;
+			int startY = getHeight() / 2 - heartSize / 2;
+
+			// El jugador tiene exactamente 3 vidas
+			// Cada corazón representa 1 vida
+			for (int i = 0; i < 3; i++) {
+				int heartX = startX + i * (heartSize + spacing);
+				boolean isFilled = vidaActual > i;
+				drawHeart(g, heartX, startY, heartSize, isFilled);
+			}
+
+			// Dibujar el número de vida debajo
+			g.setColor(Color.WHITE);
+			g.setFont(g.getFont().deriveFont(12f));
+			g.drawString("HP: " + vidaActual, startX, startY + heartSize + 20);
+		}
+
+		private void drawHeart(Graphics g, int x, int y, int size, boolean filled) {
+			if (filled) {
+				g.setColor(Color.RED);
+			} else {
+				g.setColor(new Color(100, 100, 100)); // Gris oscuro para corazones vacíos
+			}
+
+			// Definir el patrón del corazón con pixeles
+			// 1 = pixel del corazón, 0 = vacío
+			int[][] heartPattern = {
+				{0, 1, 1, 0, 0, 1, 1, 0},
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{0, 1, 1, 1, 1, 1, 1, 0},
+				{0, 0, 1, 1, 1, 1, 0, 0},
+				{0, 0, 0, 1, 1, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0}
+			};
+
+			int pixelSize = size / 8; // Cada pixel del corazón
+			
+			for (int row = 0; row < heartPattern.length; row++) {
+				for (int col = 0; col < heartPattern[row].length; col++) {
+					if (heartPattern[row][col] == 1) {
+						int px = x + col * pixelSize;
+						int py = y + row * pixelSize;
+						g.fillRect(px, py, pixelSize, pixelSize);
+					}
+				}
+			}
+		}
+	}
 
 	// =====================================================================
 	// CONTROLLER
