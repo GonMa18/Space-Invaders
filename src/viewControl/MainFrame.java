@@ -29,7 +29,9 @@ public class MainFrame extends JFrame implements Observer {
 	private JPanel heartPanel;
 	private JLabel labelFlechas;
 	private JLabel labelRombos;
-	private int vidaActual = 3;
+	private JLabel labelPuntos;
+	private int vidaActual;
+	private int vidaMaxima;
 
 	// Tamaño de la matriz logica (100 columnas x 60 filas)
 	private static final int COLUMNAS = Espacio.getInstance().getAnchura();
@@ -80,7 +82,7 @@ public class MainFrame extends JFrame implements Observer {
 		panelInfo.setPreferredSize(new Dimension(COLUMNAS * TAM_CELDA, 40));
 
 		heartPanel = new HeartPanel();
-		heartPanel.setPreferredSize(new Dimension(100, 30));
+		// El tamaño se ajustará dinámicamente cuando se conozca la vida máxima
 
 		labelFlechas = new JLabel("Flechas: 0");
 		labelFlechas.setForeground(Color.CYAN);
@@ -90,9 +92,14 @@ public class MainFrame extends JFrame implements Observer {
 		labelRombos.setForeground(Color.MAGENTA);
 		labelRombos.setFont(labelRombos.getFont().deriveFont(14f));
 
+		labelPuntos = new JLabel("Puntos: 0");
+		labelPuntos.setForeground(Color.YELLOW);
+		labelPuntos.setFont(labelPuntos.getFont().deriveFont(14f));
+
 		panelInfo.add(heartPanel);
 		panelInfo.add(labelFlechas);
 		panelInfo.add(labelRombos);
+		panelInfo.add(labelPuntos);
 
 		//// LAYOUT PRINCIPAL ////
 		JPanel mainPanel = new JPanel(new BorderLayout());
@@ -148,9 +155,19 @@ public class MainFrame extends JFrame implements Observer {
 	private void updateGameInfo() {
 		if (Espacio.getInstance().getJugador() != null) {
 			vidaActual = Espacio.getInstance().getJugador().getVida();
+			// Establecer vida máxima solo la primera vez
+			if (vidaMaxima == 0) {
+				vidaMaxima = vidaActual;
+				int heartSize = 20;
+				int spacing = 10;
+				int heartPanelWidth = (heartSize + spacing) * vidaMaxima + 50;
+				heartPanel.setPreferredSize(new Dimension(heartPanelWidth, 30));
+				panelInfo.revalidate();
+			}
 			heartPanel.repaint();
 			labelFlechas.setText("Flechas: " + Espacio.getInstance().getJugador().getFlechas());
 			labelRombos.setText("Rombos: " + Espacio.getInstance().getJugador().getRombos());
+			labelPuntos.setText("Puntos: " + Espacio.getInstance().getJugador().getPuntos());
 		}
 	}
 
@@ -389,18 +406,18 @@ public class MainFrame extends JFrame implements Observer {
 			super.paintComponent(g);
 			setBackground(Color.BLACK);
 
-			// Dibujar 3 corazones
 			int heartSize = 20;
 			int spacing = 10;
 			int startX = 5;
 			int startY = getHeight() / 2 - heartSize / 2;
 
-			// El jugador tiene exactamente 3 vidas
-			// Cada corazón representa 1 vida
-			for (int i = 0; i < 3; i++) {
-				int heartX = startX + i * (heartSize + spacing);
-				boolean isFilled = vidaActual > i;
-				drawHeart(g, heartX, startY, heartSize, isFilled);
+			// Dibujar corazones dinámicamente según la vida máxima
+			if (vidaMaxima > 0) {
+				for (int i = 0; i < vidaMaxima; i++) {
+					int heartX = startX + i * (heartSize + spacing);
+					boolean isFilled = vidaActual > i;
+					drawHeart(g, heartX, startY, heartSize, isFilled);
+				}
 			}
 
 			// Dibujar el número de vida debajo

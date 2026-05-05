@@ -4,10 +4,11 @@ import java.awt.Color;
 public class Rojo extends Nave {
 
 	// Hace @Override del metodo iniciarCuerpo() para definir la forma de la nave
+	// Cambia la vida aquí para tener 3, 4, 5 o más vidas
 
 	public Rojo(int x, int y) {
 		super(x, y);
-		this.setVida(3);
+		this.setVida(5); // Cambiar a 4 o 5 para más vidas
 		this.setFlechas(30); 
 		this.setRombos(20);
 	}

@@ -15,6 +15,7 @@ public abstract class Nave {
 	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
 	private long tiempoInvulnerabilidad; // Timestamp de cuando comienza la invulnerabilidad
 	private static final long DURACION_INVULNERABILIDAD = 2000; // 2 segundos
+	private int puntos;
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -25,6 +26,7 @@ public abstract class Nave {
 		this.flechas = 0;
 		this.rombos = 0;
 		this.vida = 100;
+		this.puntos = 0;
 		this.iniciarCuerpo(x, y);	// Por defecto, el cuerpo se inicia con rojo y azul
 	} 
 
@@ -140,6 +142,15 @@ public abstract class Nave {
 	public int getRombos() {
 		return rombos;
 	}
+
+	public int getPuntos() {
+		return puntos;
+	}
+
+	public void addPuntos(int cantidad) {
+		this.puntos += cantidad;
+	}
+
 	public void limpiarDisparos() { // TODO
 //		if (disparos == null) {
 //			return; // Si la lista de disparos es null, no hay nada que limpiar
