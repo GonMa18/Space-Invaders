@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -14,6 +16,7 @@ import java.util.Observer;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import model.Espacio;
 
@@ -22,6 +25,10 @@ public class MainFrame extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JPanel panelInfo;
+	private JLabel labelVidas;
+	private JLabel labelFlechas;
+	private JLabel labelRombos;
 
 	// Tamaño de la matriz logica (100 columnas x 60 filas)
 	private static final int COLUMNAS = Espacio.getInstance().getAnchura();
@@ -64,7 +71,34 @@ public class MainFrame extends JFrame implements Observer {
 
 		contentPane.setPreferredSize(new Dimension(COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA));
 		contentPane.setLayout(null);
-		setContentPane(contentPane);
+
+		//// PANEL DE INFORMACIÓN ////
+		panelInfo = new JPanel();
+		panelInfo.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
+		panelInfo.setBackground(Color.BLACK);
+		panelInfo.setPreferredSize(new Dimension(COLUMNAS * TAM_CELDA, 40));
+
+		labelVidas = new JLabel("Vidas: 100");
+		labelVidas.setForeground(Color.WHITE);
+		labelVidas.setFont(labelVidas.getFont().deriveFont(14f));
+
+		labelFlechas = new JLabel("Flechas: 0");
+		labelFlechas.setForeground(Color.CYAN);
+		labelFlechas.setFont(labelFlechas.getFont().deriveFont(14f));
+
+		labelRombos = new JLabel("Rombos: 0");
+		labelRombos.setForeground(Color.MAGENTA);
+		labelRombos.setFont(labelRombos.getFont().deriveFont(14f));
+
+		panelInfo.add(labelVidas);
+		panelInfo.add(labelFlechas);
+		panelInfo.add(labelRombos);
+
+		//// LAYOUT PRINCIPAL ////
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.add(panelInfo, BorderLayout.NORTH);
+		mainPanel.add(contentPane, BorderLayout.CENTER);
+		setContentPane(mainPanel);
 
 		pack();
 		setLocationRelativeTo(null); // Centrar en pantalla
@@ -93,7 +127,8 @@ public class MainFrame extends JFrame implements Observer {
 
 		//// CASTING A MATRIZ ////
 		int[][] matriz = (int[][]) res[1]; // Suponiendo que el segundo elemento del array es la matriz actualizada
-
+		// Actualizar información del jugador
+		updateGameInfo();
 		if (resul.equals("ganar") || resul.equals("perder")) {
 			Espacio.getInstance().deleteObserver(this); // Eliminamos el MainFrame como observador para evitar futuras
 														// actualizaciones
@@ -110,8 +145,15 @@ public class MainFrame extends JFrame implements Observer {
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	// Repinta solo las celdas que han cambiado entre la matriz anterior y la nueva,
-	// Metodo equivalente a repaint(), pero sin chatGPT -_-
+	private void updateGameInfo() {
+		if (Espacio.getInstance().getJugador() != null) {
+			labelVidas.setText("Vidas: " + Espacio.getInstance().getJugador().getVida());
+			labelFlechas.setText("Flechas: " + Espacio.getInstance().getJugador().getFlechas());
+			labelRombos.setText("Rombos: " + Espacio.getInstance().getJugador().getRombos());
+		}
+	}
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //	private void repintar(int[][] m) {
 //		
