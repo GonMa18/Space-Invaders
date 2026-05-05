@@ -13,6 +13,8 @@ public abstract class Nave {
 	private int rombos;
 	private int vida;
 	private StrategyBala strategyBala = new BalaPixel();	//Por defecto
+	private long tiempoInvulnerabilidad; // Timestamp de cuando comienza la invulnerabilidad
+	private static final long DURACION_INVULNERABILIDAD = 2000; // 2 segundos
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -55,6 +57,10 @@ public abstract class Nave {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void recibirDaño(int daño) {
+		// No recibe daño si está en período de invulnerabilidad
+		if (estaEnInvulnerabilidad()) {
+			return;
+		}
 		this.vida -= daño;
 		if (this.vida < 0) {
 			this.vida = 0;
@@ -101,6 +107,10 @@ public abstract class Nave {
 		this.rombos = rombos;
 	}
 
+	protected void setVida(int vida) {
+		this.vida = vida;
+	}
+
 	public void disparar() {
 		if (strategyBala instanceof BalaFlecha && flechas > 0) {
 			flechas--; // Decrementa el contador de flechas
@@ -140,5 +150,31 @@ public abstract class Nave {
 //			}
 //		}
 		disparos.removeIf(d -> !d.isShooting());
+	}
+
+	// Métodos para invulnerabilidad y parpadeo
+	public void activarInvulnerabilidad() {
+		this.tiempoInvulnerabilidad = System.currentTimeMillis();
+	}
+
+	public boolean estaEnInvulnerabilidad() {
+		if (tiempoInvulnerabilidad == 0) {
+			return false;
+		}
+		long tiempoTranscurrido = System.currentTimeMillis() - tiempoInvulnerabilidad;
+		if (tiempoTranscurrido >= DURACION_INVULNERABILIDAD) {
+			tiempoInvulnerabilidad = 0; // Finalizar invulnerabilidad
+			return false;
+		}
+		return true;
+	}
+
+	public boolean debeParpadear() {
+		if (!estaEnInvulnerabilidad()) {
+			return false;
+		}
+		long tiempoTranscurrido = System.currentTimeMillis() - tiempoInvulnerabilidad;
+		// Parpadeo cada 200ms (100ms visible, 100ms invisible)
+		return (tiempoTranscurrido / 100) % 2 == 0;
 	}
 }

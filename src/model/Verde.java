@@ -7,6 +7,7 @@ public class Verde extends Nave {
 
 	public Verde(int x, int y) {
 		super(x, y);
+		this.setVida(3);
 		this.setFlechas(30); 
 		this.setRombos(0);
 	}

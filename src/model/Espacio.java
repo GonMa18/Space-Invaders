@@ -137,7 +137,8 @@ public class Espacio extends Observable {
         // Recorremos la matriz
         matriz = new int[alto][ancho];
 
-        if (jugador != null && jugador.sigueVivo()) {
+        // Mostrar el jugador si vive y (no está en invulnerabilidad o debe parpadear visible)
+        if (jugador != null && jugador.sigueVivo() && (!jugador.estaEnInvulnerabilidad() || jugador.debeParpadear())) {
             for (Component c : jugador.getCoordenadas()) {
                 int x = c.getX();
                 int y = c.getY();
@@ -351,8 +352,16 @@ public class Espacio extends Observable {
                          // Si sigue vivo:
                          // Paso a revisar donde estan los enemigos
 
-        if (enemigosHanLlegadoAlFinal() || enemigoChocaConJugador()) {
+        if (enemigosHanLlegadoAlFinal()) {
             notificarVista(new Object[] { "perder", null }); // Notifico a la vista que el jugador ha perdido
+            return true;
+        }
+
+        if (enemigoChocaConJugador()) {
+            if (!jugador.sigueVivo()) {
+                notificarVista(new Object[] { "perder", null });
+                return true;
+            }
         }
         return false;
     }
@@ -391,11 +400,29 @@ public class Espacio extends Observable {
 //        return false; // Ningún enemigo ha chocado con el jugador
 //    }
     private boolean enemigoChocaConJugador() {
-        return enemigos.stream()
+        // 1. Comprobar si es invulnerable
+        if (jugador.estaEnInvulnerabilidad()) {
+            return false; // No contar el choque si está invulnerable
+        }
+
+        // 2. Detectar si hay impacto físico
+        boolean hayImpacto = enemigos.stream()
             .filter(e -> e.sigueVivo())
             .flatMap(e -> e.getCoordenadas().stream())
             .anyMatch(ec -> jugador.getCoordenadas().stream()
                 .anyMatch(j -> ec.getX() == j.getX() && ec.getY() == j.getY()));
+
+        if (hayImpacto) {
+            // 3. Restar vida
+            jugador.recibirDaño(1);
+            
+            // 4. Si sigue vivo, activar invulnerabilidad y parpadeo
+            if (jugador.sigueVivo()) {
+                jugador.activarInvulnerabilidad(); // Activar invulnerabilidad y parpadeo por 2 segundos
+            }
+        }
+
+        return hayImpacto;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -9,6 +9,7 @@ public class Azul extends Nave {
 
 	public Azul(int x, int y) {
 		super(x, y);
+		this.setVida(3);
 		this.setFlechas(0); 
 		this.setRombos(20);
 	}
