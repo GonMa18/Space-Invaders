@@ -220,6 +220,8 @@ public class Espacio extends Observable {
     public void solicitarActualizacion() {
         if (!loteActualizacionActivo) {
             notificarVista(new Object[] { "actualizar", generarMatriz() });
+            // Notificar también la información del jugador (vida, munición, puntos)
+            notificarVista(new Object[] { "informacion", null });
         }
     }
 
@@ -255,6 +257,7 @@ public class Espacio extends Observable {
     public void finalizarLoteActualizacion() {
         loteActualizacionActivo = false;
         notificarVista(new Object[] { "actualizar", generarMatriz() });
+        notificarVista(new Object[] { "informacion", null });
     }
 
     // Metodo para mover todos los disparos un pixel arriba --> TIMER 50ms

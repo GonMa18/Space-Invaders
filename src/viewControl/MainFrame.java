@@ -127,25 +127,27 @@ public class MainFrame extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-
-		//// CASTING A STRING ////
+		// Res viene como Object[] { "codigo", payload }
 		Object[] res = (Object[]) arg;
-		String resul = (String) (res[0]);
+		String resul = (String) res[0];
 
-		//// CASTING A MATRIZ ////
-		int[][] matriz = (int[][]) res[1]; // Suponiendo que el segundo elemento del array es la matriz actualizada
-		// Actualizar información del jugador
-		updateGameInfo();
+		if ("informacion".equals(resul)) {
+			// Actualizar sólo la información del jugador (vida, munición, puntos)
+			updateGameInfo();
+			return;
+		}
+
 		if (resul.equals("ganar") || resul.equals("perder")) {
 			Espacio.getInstance().deleteObserver(this); // Eliminamos el MainFrame como observador para evitar futuras
 														// actualizaciones
 			this.dispose(); // Cerramos el MainFrame
 			new FinishFrame(resul);
-			// Esto si es legal
+			return;
+		}
 
-		} else if (resul.equals("actualizar") && matriz != null) {
-			repintar3(matriz); // Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
-			//matrizActual = matriz; // Actualizamos la matriz actual para que se pinte en el fondo
+		if (resul.equals("actualizar") && res[1] instanceof int[][]) {
+			int[][] matriz = (int[][]) res[1]; // payload con la matriz actualizada
+			repintar3(matriz); // Pintar la matriz
 		}
 
 	}
