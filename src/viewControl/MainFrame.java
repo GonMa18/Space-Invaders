@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -18,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import model.Espacio;
 
 @SuppressWarnings("deprecation")
@@ -147,7 +150,7 @@ public class MainFrame extends JFrame implements Observer {
 
 		if (resul.equals("actualizar") && res[1] instanceof int[][]) {
 			int[][] matriz = (int[][]) res[1]; // payload con la matriz actualizada
-			repintar3(matriz); // Pintar la matriz
+			repintar(matriz); // Pintar la matriz
 		}
 
 	}
@@ -470,26 +473,24 @@ public class MainFrame extends JFrame implements Observer {
 
 		private final Set<Integer> teclasPulsadas = new HashSet<>(); // Disoarar mientras me muevo
 		private final Espacio espacio = Espacio.getInstance();
+		private Timer gameLoopTimer;
 
-		@Override
-		public void keyPressed(KeyEvent e) {
-			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
-			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
+		public Controller() {
+			// Iniciar el game loop con 32ms (~30 FPS) para movimiento fluido
+			gameLoopTimer = new Timer(32, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					updateMovimiento();
+				}
+			});
+			gameLoopTimer.start();
+		}
 
-			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
-				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
-				espacio.dispararJugador("pixel");
-				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
-			}
-			if(teclasPulsadas.contains(KeyEvent.VK_C)) {
-				espacio.dispararJugador("flecha");
-			}
-			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
-				espacio.dispararJugador("rombo");
-			}
-
+		private void updateMovimiento() {
+			// Calcular el movimiento basado en las teclas actualmente pulsadas
 			int dx = 0;
 			int dy = 0;
+			
 			if (teclasPulsadas.contains(KeyEvent.VK_LEFT))
 				dx--;
 			if (teclasPulsadas.contains(KeyEvent.VK_RIGHT))
@@ -499,14 +500,32 @@ public class MainFrame extends JFrame implements Observer {
 			if (teclasPulsadas.contains(KeyEvent.VK_DOWN))
 				dy++;
 
+			// Aplicar movimiento si hay dirección
 			if (dx != 0 || dy != 0) {
 				espacio.moverJugador(dx, dy);
-				
 			}
 		}
 
 		@Override
-		public void keyReleased(KeyEvent e) { // Disparar mientras me muevo
+		public void keyPressed(KeyEvent e) {
+			// Agregar la tecla al conjunto de teclas pulsadas
+			teclasPulsadas.add(e.getKeyCode());
+
+			// Disparos: solo se procesan en keyPressed para evitar disparos continuos
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				espacio.dispararJugador("pixel");
+			}
+			if (e.getKeyCode() == KeyEvent.VK_C) {
+				espacio.dispararJugador("flecha");
+			}
+			if (e.getKeyCode() == KeyEvent.VK_V) {
+				espacio.dispararJugador("rombo");
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// Remover la tecla del conjunto cuando se suelta
 			teclasPulsadas.remove(e.getKeyCode());
 		}
 
@@ -527,6 +546,8 @@ public class MainFrame extends JFrame implements Observer {
 
 		@Override
 		public void windowClosing(WindowEvent e) {
+			// Detener el game loop cuando se cierra la ventana
+			gameLoopTimer.stop();
 		}
 
 		@Override
