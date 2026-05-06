@@ -97,9 +97,9 @@ public class Espacio extends Observable {
         // Crear 4 filas de enemigos: primera en y=10 y las siguientes fuera de pantalla.
         Random rn = new Random();
         int filas = 4;
-        int enemigosPorFila = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8 por fila
+        int enemigosPorFila = 2   + rn.nextInt(4); // 4, 5, 6, 7 u 8 por fila
         int yPrimeraFila = 10;
-        int separacionFilas = 20;
+        int separacionFilas = 30;
         int maxIntentos = 120;
         int margenSeparacion = 1;
 
@@ -147,7 +147,7 @@ public class Espacio extends Observable {
         FinalBoss boss = (FinalBoss) FactoryNaves.getFactory().crearNave(xBoss, yBoss, "finalboss");
         if (boss != null) {
               // Asegurar vida alta del boss (coherente con la clase FinalBoss)
-            boss.setVida(10000);
+            boss.setVida(3000);
             // Opcional: darle más puntos cuando muera
             boss.addPuntos(1000);
             enemigos.add(boss);
