@@ -29,6 +29,9 @@ public class FactoryNaves {
 				return new Rojo(x,y);
 			case "enemigo":
 				return new Enemigo(x,y);
+				case "final boss":
+				case "finalboss":
+					return new FinalBoss(x,y);
 			default:
 				return null; 
 		}

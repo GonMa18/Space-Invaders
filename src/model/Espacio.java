@@ -94,49 +94,63 @@ public class Espacio extends Observable {
     private void inicializarEnemigos() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
-        // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
+        // Crear 4 filas de enemigos: primera en y=10 y las siguientes fuera de pantalla.
         Random rn = new Random();
-        int numEnemigos = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8
-        //int numEnemigos = 1;
-        int yObjetivo = alto / 10;
-        int maxIntentos = 100;
+        int filas = 4;
+        int enemigosPorFila = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8 por fila
+        int yPrimeraFila = 10;
+        int separacionFilas = 20;
+        int maxIntentos = 120;
         int margenSeparacion = 1;
 
-        for (int i = 0; i < numEnemigos; i++) {
-            boolean colocado = false;
+        for (int fila = 0; fila < filas; fila++) {
+            int yFila = yPrimeraFila - (fila * separacionFilas); // 10, 0, -10, -20
 
-            for (int intento = 0; intento < maxIntentos && !colocado; intento++) {
-                int x = rn.nextInt(ancho - 10) + 5;
-                int yTemporal = rn.nextInt(alto);
+            for (int i = 0; i < enemigosPorFila; i++) {
+                boolean colocado = false;
 
-                Enemigo candidato = (Enemigo) FactoryNaves.getFactory().crearNave(x, yTemporal, "enemigo");
-                candidato.mover(0, yObjetivo - yTemporal);
+                for (int intento = 0; intento < maxIntentos && !colocado; intento++) {
+                    int x = rn.nextInt(ancho - 10) + 5;
+                    Enemigo candidato = (Enemigo) FactoryNaves.getFactory().crearNave(x, yFila, "enemigo");
 
-                boolean solapa = false;
-                for (Nave existente : enemigos) {
-                    for (Component c : candidato.getCoordenadas()) {
-                        for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
-                            for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
-                                if (existente.containPixel(c.getX() + dx, c.getY() + dy)) {
-                                    solapa = true;
-                                    break;
+                    boolean solapa = false;
+                    for (Nave existente : enemigos) {
+                        for (Component c : candidato.getCoordenadas()) {
+                            for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
+                                for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
+                                    if (existente.containPixel(c.getX() + dx, c.getY() + dy)) {
+                                        solapa = true;
+                                        break;
+                                    }
                                 }
+                            }
+                            if (solapa) {
+                                break;
                             }
                         }
                         if (solapa) {
                             break;
                         }
                     }
-                    if (solapa) {
-                        break;
+
+                    if (!solapa) {
+                        enemigos.add(candidato);
+                        colocado = true;
                     }
                 }
-
-                if (!solapa) {
-                    enemigos.add(candidato);
-                    colocado = true;
-                }
             }
+        }
+
+        // Crear un Final Boss por encima de las 4 filas (fuera de pantalla inicialmente)
+        int yBoss = yPrimeraFila - (filas * separacionFilas); // por ejemplo: -30
+        int xBoss = ancho / 2;
+        FinalBoss boss = (FinalBoss) FactoryNaves.getFactory().crearNave(xBoss, yBoss, "finalboss");
+        if (boss != null) {
+              // Asegurar vida alta del boss (coherente con la clase FinalBoss)
+            boss.setVida(10000);
+            // Opcional: darle más puntos cuando muera
+            boss.addPuntos(1000);
+            enemigos.add(boss);
         }
 
     }
