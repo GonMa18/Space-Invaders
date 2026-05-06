@@ -291,7 +291,7 @@ public class Espacio extends Observable {
 //                //System.out.println("enemigo bajando");
 //            }
 //        }
-    	enemigos.stream().filter(e -> e.sigueVivo()).forEach(e -> e.mover(0, 1));
+    	enemigos.stream().filter(e -> e.sigueVivo()).forEach(e -> e.moverEnemigo(0, 1));
         comprobarMuertes();
         solicitarActualizacion();
     }

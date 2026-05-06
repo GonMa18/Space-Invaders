@@ -40,6 +40,14 @@ public class Composite extends Observable implements Component  {
         Espacio.getInstance().solicitarActualizacion();
     }
 
+    public void moverEnemigo(int dx, int dy) {
+        // Sin validación de límites - los enemigos se mueven libremente
+        this.x += dx;
+        this.y += dy;
+        pixeles.forEach(c -> c.mover(dx, dy));
+        // NO llamar a solicitarActualizacion() aquí - lo hace el llamador
+    }
+
     public void mover(int dx, int dy) {
         for (Component c : this.pixeles) {
             c.mover(dx, dy);
