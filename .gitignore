@@ -1,1 +1,7 @@
 /bin/
+/.vscode/
+/.metadata/
+/.settings/
+/.classpath
+/.project
+/build.ps1

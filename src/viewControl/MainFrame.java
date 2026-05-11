@@ -1,9 +1,13 @@
 package viewControl;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -14,15 +18,23 @@ import java.util.Observer;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import model.Espacio;
-import model.Jugador;
 
 @SuppressWarnings("deprecation")
 public class MainFrame extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JPanel panelInfo;
+	private JPanel heartPanel;
+	private JLabel labelFlechas;
+	private JLabel labelRombos;
+	private JLabel labelPuntos;
+	private int vidaActual;
+	private int vidaMaxima;
 
 	// Tamaño de la matriz logica (100 columnas x 60 filas)
 	private static final int COLUMNAS = Espacio.getInstance().getAnchura();
@@ -56,6 +68,7 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
+				g.drawImage(fondo, 0, 0, COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA, this);
 				if (matrizActual != null) { // Si la matriz ya ha sido inicializada, la pintamos
 					pintarMatriz(g, matrizActual); // Pintamos la matriz actual del juego en el fondo
 				}
@@ -64,7 +77,38 @@ public class MainFrame extends JFrame implements Observer {
 
 		contentPane.setPreferredSize(new Dimension(COLUMNAS * TAM_CELDA, FILAS * TAM_CELDA));
 		contentPane.setLayout(null);
-		setContentPane(contentPane);
+
+		//// PANEL DE INFORMACIÓN ////
+		panelInfo = new JPanel();
+		panelInfo.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
+		panelInfo.setBackground(Color.BLACK);
+		panelInfo.setPreferredSize(new Dimension(COLUMNAS * TAM_CELDA, 40));
+
+		heartPanel = new HeartPanel();
+		// El tamaño se ajustará dinámicamente cuando se conozca la vida máxima
+
+		labelFlechas = new JLabel("Flechas: 0");
+		labelFlechas.setForeground(Color.CYAN);
+		labelFlechas.setFont(labelFlechas.getFont().deriveFont(14f));
+
+		labelRombos = new JLabel("Rombos: 0");
+		labelRombos.setForeground(Color.MAGENTA);
+		labelRombos.setFont(labelRombos.getFont().deriveFont(14f));
+
+		labelPuntos = new JLabel("Puntos: 0");
+		labelPuntos.setForeground(Color.YELLOW);
+		labelPuntos.setFont(labelPuntos.getFont().deriveFont(14f));
+
+		panelInfo.add(heartPanel);
+		panelInfo.add(labelFlechas);
+		panelInfo.add(labelRombos);
+		panelInfo.add(labelPuntos);
+
+		//// LAYOUT PRINCIPAL ////
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.add(panelInfo, BorderLayout.NORTH);
+		mainPanel.add(contentPane, BorderLayout.CENTER);
+		setContentPane(mainPanel);
 
 		pack();
 		setLocationRelativeTo(null); // Centrar en pantalla
@@ -86,32 +130,53 @@ public class MainFrame extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-
-		//// CASTING A STRING ////
+		// Res viene como Object[] { "codigo", payload }
 		Object[] res = (Object[]) arg;
-		String resul = (String) (res[0]);
+		String resul = (String) res[0];
 
-		//// CASTING A MATRIZ ////
-		int[][] matriz = (int[][]) res[1]; // Suponiendo que el segundo elemento del array es la matriz actualizada
+		if ("informacion".equals(resul)) {
+			// Actualizar sólo la información del jugador (vida, munición, puntos)
+			updateGameInfo();
+			return;
+		}
 
 		if (resul.equals("ganar") || resul.equals("perder")) {
 			Espacio.getInstance().deleteObserver(this); // Eliminamos el MainFrame como observador para evitar futuras
 														// actualizaciones
 			this.dispose(); // Cerramos el MainFrame
 			new FinishFrame(resul);
-			// Esto si es legal
+			return;
+		}
 
-		} else if (resul.equals("actualizar") && matriz != null) {
-			repintar(matriz); // Llamamos a repintar para que se vuelva a pintar el fondo con la nueva matriz
-			//matrizActual = matriz; // Actualizamos la matriz actual para que se pinte en el fondo
+		if (resul.equals("actualizar") && res[1] instanceof int[][]) {
+			int[][] matriz = (int[][]) res[1]; // payload con la matriz actualizada
+			repintar(matriz); // Pintar la matriz
 		}
 
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	// Repinta solo las celdas que han cambiado entre la matriz anterior y la nueva,
-	// Metodo equivalente a repaint(), pero sin chatGPT -_-
+	private void updateGameInfo() {
+		if (Espacio.getInstance().getJugador() != null) {
+			vidaActual = Espacio.getInstance().getJugador().getVida();
+			// Establecer vida máxima solo la primera vez
+			if (vidaMaxima == 0) {
+				vidaMaxima = vidaActual;
+				int heartSize = 20;
+				int spacing = 10;
+				int heartPanelWidth = (heartSize + spacing) * vidaMaxima + 50;
+				heartPanel.setPreferredSize(new Dimension(heartPanelWidth, 30));
+				panelInfo.revalidate();
+			}
+			heartPanel.repaint();
+			labelFlechas.setText("Flechas: " + Espacio.getInstance().getJugador().getFlechas());
+			labelRombos.setText("Rombos: " + Espacio.getInstance().getJugador().getRombos());
+			labelPuntos.setText("Puntos: " + Espacio.getInstance().getJugador().getPuntos());
+		}
+	}
+
+	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //	private void repintar(int[][] m) {
 //		
@@ -165,25 +230,28 @@ public class MainFrame extends JFrame implements Observer {
 	    for (int i = 0; i < FILAS; i++) {
 	        for (int j = 0; j < COLUMNAS; j++) {
 	            int valor = m[i][j];
-	            if (valor != 0) { // solo pinta si no es fondo
-	                int x = j * TAM_CELDA;
-	                int y = i * TAM_CELDA;
-	                pintarCelda(g, valor, x, y);
-	            }
-				else {
-					int x = j * TAM_CELDA;
-	                int y = i * TAM_CELDA;
-					int anchoTablero = COLUMNAS * TAM_CELDA;
-					int altoTablero = FILAS * TAM_CELDA;
-					int fondoW = fondo.getWidth(contentPane);
-					int fondoH = fondo.getHeight(contentPane);
+				int valorAnterior =  (matrizActual != null) ? matrizActual[i][j] : -1; // Si es el primer repintado, valorAnterior es -1 para que se pinten todas las celdas
+				if (valor != valorAnterior) { // Solo repintamos si el valor ha cambiado respecto a la matriz actual
+					if (valor != 0) { // solo pinta si no es fondo
+						int x = j * TAM_CELDA;
+						int y = i * TAM_CELDA;
+						pintarCelda(g, valor, x, y);
+					}
+					else {
+						int x = j * TAM_CELDA;
+						int y = i * TAM_CELDA;
+						int anchoTablero = COLUMNAS * TAM_CELDA;
+						int altoTablero = FILAS * TAM_CELDA;
+						int fondoW = fondo.getWidth(contentPane);
+						int fondoH = fondo.getHeight(contentPane);
 
-					if (fondoW > 0 && fondoH > 0) {
-						int sx1 = x * fondoW / anchoTablero;
-						int sy1 = y * fondoH / altoTablero;
-						int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
-						int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
-						g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
+						if (fondoW > 0 && fondoH > 0) {
+							int sx1 = x * fondoW / anchoTablero;
+							int sy1 = y * fondoH / altoTablero;
+							int sx2 = (x + TAM_CELDA) * fondoW / anchoTablero;
+							int sy2 = (y + TAM_CELDA) * fondoH / altoTablero;
+							g.drawImage(fondo, x, y, x + TAM_CELDA, y + TAM_CELDA, sx1, sy1, sx2, sy2, contentPane);
+						}
 					}
 				}
 	        }
@@ -236,6 +304,11 @@ public class MainFrame extends JFrame implements Observer {
 
 	    g.dispose();
 	    matrizActual = m;
+	}
+
+	public void repintar3(int[][] m) {
+		matrizActual = m;
+		repaint();
 	}
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -327,39 +400,97 @@ public class MainFrame extends JFrame implements Observer {
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	// =====================================================================
+	// HEART PANEL - Dibuja corazones basados en la vida actual
+	// =====================================================================
+
+	private class HeartPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			setBackground(Color.BLACK);
+
+			int heartSize = 20;
+			int spacing = 10;
+			int startX = 5;
+			int startY = getHeight() / 2 - heartSize / 2;
+
+			// Dibujar corazones dinámicamente según la vida máxima
+			if (vidaMaxima > 0) {
+				for (int i = 0; i < vidaMaxima; i++) {
+					int heartX = startX + i * (heartSize + spacing);
+					boolean isFilled = vidaActual > i;
+					drawHeart(g, heartX, startY, heartSize, isFilled);
+				}
+			}
+
+			// Dibujar el número de vida debajo
+			g.setColor(Color.WHITE);
+			g.setFont(g.getFont().deriveFont(12f));
+			g.drawString("HP: " + vidaActual, startX, startY + heartSize + 20);
+		}
+
+		private void drawHeart(Graphics g, int x, int y, int size, boolean filled) {
+			if (filled) {
+				g.setColor(Color.RED);
+			} else {
+				g.setColor(new Color(100, 100, 100)); // Gris oscuro para corazones vacíos
+			}
+
+			// Definir el patrón del corazón con pixeles
+			// 1 = pixel del corazón, 0 = vacío
+			int[][] heartPattern = {
+				{0, 1, 1, 0, 0, 1, 1, 0},
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{0, 1, 1, 1, 1, 1, 1, 0},
+				{0, 0, 1, 1, 1, 1, 0, 0},
+				{0, 0, 0, 1, 1, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0}
+			};
+
+			int pixelSize = size / 8; // Cada pixel del corazón
+			
+			for (int row = 0; row < heartPattern.length; row++) {
+				for (int col = 0; col < heartPattern[row].length; col++) {
+					if (heartPattern[row][col] == 1) {
+						int px = x + col * pixelSize;
+						int py = y + row * pixelSize;
+						g.fillRect(px, py, pixelSize, pixelSize);
+					}
+				}
+			}
+		}
+	}
+
+	// =====================================================================
 	// CONTROLLER
 	// =====================================================================
 
 	private class Controller implements KeyListener, WindowListener { // Clase interna para manejar eventos de teclado
 
 		private final Set<Integer> teclasPulsadas = new HashSet<>(); // Disoarar mientras me muevo
+		private final Espacio espacio = Espacio.getInstance();
+		private Timer gameLoopTimer;
 
-		@Override
-		public void keyPressed(KeyEvent e) {
-			// if (espacio.isGameOver() || espacio.isVictory()) return; //modelo
-			teclasPulsadas.add(e.getKeyCode()); // Disparar mientras me muevo
-			Jugador jugadorActual = Jugador.getInstance();
-			if (jugadorActual == null) {
-				return;
-			}
+		public Controller() {
+			// Iniciar el game loop con 32ms (~30 FPS) para movimiento fluido
+			gameLoopTimer = new Timer(32, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					updateMovimiento();
+				}
+			});
+			gameLoopTimer.start();
+		}
 
-			if (teclasPulsadas.contains(KeyEvent.VK_SPACE)) {
-				//System.out.println("Espacio pulsado"); // Para verificar que se detecta la pulsación de espacio
-				jugadorActual.changestrategyBala(new model.BalaPixel());
-				jugadorActual.disparar();
-				//System.out.println("Disparo realizado"); // Para verificar que se dispara al pulsar espacio
-			}
-			if(teclasPulsadas.contains(KeyEvent.VK_C)) {
-				jugadorActual.changestrategyBala(new model.BalaFlecha());
-				jugadorActual.disparar();
-			}
-			if(teclasPulsadas.contains(KeyEvent.VK_V)) {
-				jugadorActual.changestrategyBala(new model.BalaRombo());
-				jugadorActual.disparar();
-			}
-
+		private void updateMovimiento() {
+			// Calcular el movimiento basado en las teclas actualmente pulsadas
 			int dx = 0;
 			int dy = 0;
+			
 			if (teclasPulsadas.contains(KeyEvent.VK_LEFT))
 				dx--;
 			if (teclasPulsadas.contains(KeyEvent.VK_RIGHT))
@@ -369,14 +500,32 @@ public class MainFrame extends JFrame implements Observer {
 			if (teclasPulsadas.contains(KeyEvent.VK_DOWN))
 				dy++;
 
+			// Aplicar movimiento si hay dirección
 			if (dx != 0 || dy != 0) {
-				jugadorActual.mover(dx, dy);
-				
+				espacio.moverJugador(dx, dy);
 			}
 		}
 
 		@Override
-		public void keyReleased(KeyEvent e) { // Disparar mientras me muevo
+		public void keyPressed(KeyEvent e) {
+			// Agregar la tecla al conjunto de teclas pulsadas
+			teclasPulsadas.add(e.getKeyCode());
+
+			// Disparos: solo se procesan en keyPressed para evitar disparos continuos
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				espacio.dispararJugador("pixel");
+			}
+			if (e.getKeyCode() == KeyEvent.VK_C) {
+				espacio.dispararJugador("flecha");
+			}
+			if (e.getKeyCode() == KeyEvent.VK_V) {
+				espacio.dispararJugador("rombo");
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// Remover la tecla del conjunto cuando se suelta
 			teclasPulsadas.remove(e.getKeyCode());
 		}
 
@@ -397,6 +546,8 @@ public class MainFrame extends JFrame implements Observer {
 
 		@Override
 		public void windowClosing(WindowEvent e) {
+			// Detener el game loop cuando se cierra la ventana
+			gameLoopTimer.stop();
 		}
 
 		@Override

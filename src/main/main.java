@@ -14,7 +14,7 @@ public class main {	//extends JFrame implements Observer{
 		
 		
 		//VISTA//
-		@SuppressWarnings("unused")
+	    	@SuppressWarnings("unused")
 		StartFrame startFrame = new StartFrame();
 		startFrame.setVisible(true);
 		

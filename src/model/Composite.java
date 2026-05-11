@@ -16,34 +16,52 @@ public class Composite extends Observable implements Component  {
     public void addPixel(Component c) {
 	pixeles.add(c);
     }
+//    public void moverNave(int dx, int dy) {
+//        for (Component c : this.pixeles) {
+//            if (c.getX() + dx < 0 || c.getY() + dy < 0 || c.getX() + dx >= 160 || c.getY() + dy >= 120) {
+//                return; // No mover si alguno de los pixeles se saldría del espacio
+//            }
+//        }
+//        this.x += dx;
+//        this.y += dy;
+//        for (Component c : this.pixeles) {
+//            c.mover(dx, dy);
+//        }
+//        Espacio.getInstance().solicitarActualizacion();
+//    }
+    
     public void moverNave(int dx, int dy) {
-        for (Component c : this.pixeles) {
-            if (c.getX() + dx < 0 || c.getY() + dy < 0 || c.getX() + dx >= 160 || c.getY() + dy >= 120) {
-                return; // No mover si alguno de los pixeles se saldría del espacio
-            }
-        }
+        boolean fueraDeLimites = pixeles.stream().anyMatch(c -> c.getX() + dx < 0 || c.getY() + dy < 0 || c.getX() + dx >= 160 || c.getY() + dy >= 120);
+        if (fueraDeLimites) return;
+
         this.x += dx;
         this.y += dy;
-        for (Component c : this.pixeles) {
-            c.mover(dx, dy);
-        }
+        pixeles.forEach(c -> c.mover(dx, dy));
         Espacio.getInstance().solicitarActualizacion();
+    }
+
+    public void moverEnemigo(int dx, int dy) {
+        // Sin validación de límites - los enemigos se mueven libremente
+        this.x += dx;
+        this.y += dy;
+        pixeles.forEach(c -> c.mover(dx, dy));
+        // NO llamar a solicitarActualizacion() aquí - lo hace el llamador
     }
 
     public void mover(int dx, int dy) {
         for (Component c : this.pixeles) {
             c.mover(dx, dy);
         }
-        Espacio.getInstance().solicitarActualizacion();
     }
     public boolean containPixel(int x, int y) {
-        for (Component c : this.pixeles) {
-            if (c.getX() == x && c.getY() == y) {
-                return true;
-            }
-        }
-        return false;
-    }
+//        for (Component c : this.pixeles) {
+//            if (c.getX() == x && c.getY() == y) {
+//                return true;
+//            }
+//        }
+//        return false;
+    	return pixeles.stream().anyMatch(c -> c.getX() == x && c.getY() ==y);
+    	}
     public int getX() {
         return x;
     }
@@ -59,14 +77,16 @@ public class Composite extends Observable implements Component  {
             return null;
         }
         return pixeles.get(0).getColor();
+    	
     }
 
     public Color getColor(int x, int y) {
-        for (Component c : this.pixeles) {
-            if (c.getX() == x && c.getY() == y) {
-                return c.getColor();
-            }
-        }
-        return null; // Si no se encuentra el pixel, devuelve null
+//        for (Component c : this.pixeles) {
+//            if (c.getX() == x && c.getY() == y) {
+//                return c.getColor();
+//            }
+//        }
+//        return null; // Si no se encuentra el pixel, devuelve null
+    	return pixeles.stream().filter(c -> c.getX() == x && c.getY() == y).map(c -> c.getColor()).findFirst().orElse(null)        ;
     }
 }

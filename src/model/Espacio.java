@@ -11,8 +11,8 @@ import javax.swing.Timer;
 @SuppressWarnings("deprecation")
 public class Espacio extends Observable {
     private static Espacio miEspacio; // Singleton
-    private ArrayList<Enemigo> enemigos; // Lista de enemigos
-    private Jugador jugador; // El jugador
+    private ArrayList<Nave> enemigos; // Lista de enemigos
+    private Nave jugador; // El jugador
     private String colorJugadorSeleccionado;
     private static int ancho;
     private static int alto;
@@ -53,7 +53,7 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    public Jugador getJugador() {
+    public Nave getJugador() {
         return jugador;
     }
 
@@ -78,53 +78,79 @@ public class Espacio extends Observable {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void inicializar() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
-        this.jugador = (Jugador) FactoryNaves.getFactory().crearNave(ancho/2, alto-(alto/8), colorJugadorSeleccionado); // Creo el jugador en la parte inferior central del espacio
+    private void inicializar() {
+        inicializarJugador();
+        inicializarEnemigos();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    private void inicializarJugador() {
+        this.jugador = FactoryNaves.getFactory().crearNave(ancho/2, alto-(alto/8), colorJugadorSeleccionado);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    private void inicializarEnemigos() { // TODO --> enemigos no se generen ni  fuera ni uno encima del otro
         enemigos.clear(); // Limpiamos enemigos por si ya habia una partida anterior
 
-        // Crear entre 4 y 8 enemigos evitando solape real de pixeles entre naves
+        // Crear 4 filas de enemigos: primera en y=10 y las siguientes fuera de pantalla.
         Random rn = new Random();
-        int numEnemigos = 4 + rn.nextInt(5); // 4, 5, 6, 7 u 8
-        //int numEnemigos = 1;
-        int yObjetivo = alto / 10;
-        int maxIntentos = 100;
+        int filas = 4;
+        int enemigosPorFila = 2   + rn.nextInt(4); // 4, 5, 6, 7 u 8 por fila
+        int yPrimeraFila = 10;
+        int separacionFilas = 30;
+        int maxIntentos = 120;
         int margenSeparacion = 1;
 
-        for (int i = 0; i < numEnemigos; i++) {
-            boolean colocado = false;
+        for (int fila = 0; fila < filas; fila++) {
+            int yFila = yPrimeraFila - (fila * separacionFilas); // 10, 0, -10, -20
 
-            for (int intento = 0; intento < maxIntentos && !colocado; intento++) {
-                int x = rn.nextInt(ancho - 10) + 5;
-                int yTemporal = rn.nextInt(alto);
+            for (int i = 0; i < enemigosPorFila; i++) {
+                boolean colocado = false;
 
-                Enemigo candidato = (Enemigo) FactoryNaves.getFactory().crearNave(x, yTemporal, "enemigo");
-                candidato.mover(0, yObjetivo - yTemporal);
+                for (int intento = 0; intento < maxIntentos && !colocado; intento++) {
+                    int x = rn.nextInt(ancho - 10) + 5;
+                    Enemigo candidato = (Enemigo) FactoryNaves.getFactory().crearNave(x, yFila, "enemigo");
 
-                boolean solapa = false;
-                for (Enemigo existente : enemigos) {
-                    for (Component c : candidato.getCoordenadas()) {
-                        for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
-                            for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
-                                if (existente.containPixel(c.getX() + dx, c.getY() + dy)) {
-                                    solapa = true;
-                                    break;
+                    boolean solapa = false;
+                    for (Nave existente : enemigos) {
+                        for (Component c : candidato.getCoordenadas()) {
+                            for (int dx = -margenSeparacion; dx <= margenSeparacion && !solapa; dx++) {
+                                for (int dy = -margenSeparacion; dy <= margenSeparacion; dy++) {
+                                    if (existente.containPixel(c.getX() + dx, c.getY() + dy)) {
+                                        solapa = true;
+                                        break;
+                                    }
                                 }
+                            }
+                            if (solapa) {
+                                break;
                             }
                         }
                         if (solapa) {
                             break;
                         }
                     }
-                    if (solapa) {
-                        break;
+
+                    if (!solapa) {
+                        enemigos.add(candidato);
+                        colocado = true;
                     }
                 }
-
-                if (!solapa) {
-                    enemigos.add(candidato);
-                    colocado = true;
-                }
             }
+        }
+
+        // Crear un Final Boss por encima de las 4 filas (fuera de pantalla inicialmente)
+        int yBoss = yPrimeraFila - (filas * separacionFilas); // por ejemplo: -30
+        int xBoss = ancho / 2;
+        FinalBoss boss = (FinalBoss) FactoryNaves.getFactory().crearNave(xBoss, yBoss, "finalboss");
+        if (boss != null) {
+              // Asegurar vida alta del boss (coherente con la clase FinalBoss)
+            boss.setVida(3000);
+            // Opcional: darle más puntos cuando muera
+            boss.addPuntos(1000);
+            enemigos.add(boss);
         }
 
     }
@@ -137,7 +163,8 @@ public class Espacio extends Observable {
         // Recorremos la matriz
         matriz = new int[alto][ancho];
 
-        if (jugador != null && jugador.sigueVivo()) {
+        // Mostrar el jugador si vive y (no está en invulnerabilidad o debe parpadear visible)
+        if (jugador != null && jugador.sigueVivo() && (!jugador.estaEnInvulnerabilidad() || jugador.debeParpadear())) {
             for (Component c : jugador.getCoordenadas()) {
                 int x = c.getX();
                 int y = c.getY();
@@ -147,7 +174,7 @@ public class Espacio extends Observable {
             }
         }
 
-        for (Enemigo e : enemigos) {
+        for (Nave e : enemigos) {
             if (e.sigueVivo()){
                 for (Component c : e.getCoordenadas()) {
                     int x = c.getX();
@@ -219,7 +246,34 @@ public class Espacio extends Observable {
     public void solicitarActualizacion() {
         if (!loteActualizacionActivo) {
             notificarVista(new Object[] { "actualizar", generarMatriz() });
+            // Notificar también la información del jugador (vida, munición, puntos)
+            notificarVista(new Object[] { "informacion", null });
         }
+    }
+
+    public void moverJugador(int dx, int dy) {
+        if (jugador == null || !jugador.sigueVivo()) {
+            return;
+        }
+        jugador.mover(dx, dy);
+        solicitarActualizacion();
+    }
+
+    public void dispararJugador(String tipoBala) {
+        if (jugador == null || !jugador.sigueVivo()) {
+            return;
+        }
+
+        if ("flecha".equals(tipoBala)) {
+            jugador.changestrategyBala(new BalaFlecha());
+        } else if ("rombo".equals(tipoBala)) {
+            jugador.changestrategyBala(new BalaRombo());
+        } else {
+            jugador.changestrategyBala(new BalaPixel());
+        }
+
+        jugador.disparar();
+        solicitarActualizacion();
     }
 
     public void iniciarLoteActualizacion() {
@@ -229,6 +283,7 @@ public class Espacio extends Observable {
     public void finalizarLoteActualizacion() {
         loteActualizacionActivo = false;
         notificarVista(new Object[] { "actualizar", generarMatriz() });
+        notificarVista(new Object[] { "informacion", null });
     }
 
     // Metodo para mover todos los disparos un pixel arriba --> TIMER 50ms
@@ -241,11 +296,12 @@ public class Espacio extends Observable {
             //System.out.println("ff2"); // Si no hay disparos, no hay muertes que comprobar
             return;
         }
-        for (Disparo disparo : disparos) {
-            if (disparo.isShooting()) {
-                disparo.subir();
-            }
-        }
+//        for (Disparo disparo : disparos) {
+//            if (disparo.isShooting()) {
+//                disparo.subir();
+//            }
+//        }
+        disparos.stream().filter(d -> d.isShooting()).forEach(d -> d.subir());
         comprobarMuertes();
         jugador.limpiarDisparos(); // Elimina los disparos que ya no están activos
         solicitarActualizacion();
@@ -255,12 +311,13 @@ public class Espacio extends Observable {
 
     // Metodo para movel los enemigos un pixel abajo --> TIMER 200ms
     public void actualizarEnemigos() {
-        for (Enemigo e : enemigos) { // Muevo todos los enem que siguen vivos
-            if (e.sigueVivo()) {
-                e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
-                //System.out.println("enemigo bajando");
-            }
-        }
+//        for (Nave e : enemigos) { // Muevo todos los enem que siguen vivos
+//            if (e.sigueVivo()) {
+//                e.mover(0, 1); // Mueve un pixel hacia abajo (y+1)
+//                //System.out.println("enemigo bajando");
+//            }
+//        }
+    	enemigos.stream().filter(e -> e.sigueVivo()).forEach(e -> e.moverEnemigo(0, 1));
         comprobarMuertes();
         solicitarActualizacion();
     }
@@ -277,7 +334,7 @@ public class Espacio extends Observable {
             return;
         }
 
-        for (Enemigo enemigo : enemigos) {
+        for (Nave enemigo : enemigos) {
             if (!enemigo.sigueVivo()) {
                 continue;
             }
@@ -304,7 +361,12 @@ public class Espacio extends Observable {
                     }
                     for (Component pixelEnemigo : enemigo.getCoordenadas()) {
                         if (pixelEnemigo.getX() == pixelBala.getX() && pixelEnemigo.getY() == pixelBala.getY()) {
-                            enemigo.setSigueJugando(false); // El enemigo muere
+                            boolean enemigViviaAntes = enemigo.sigueVivo();
+                            enemigo.recibirDaño(disparo.getDaño()); // El enemigo recibe daño
+                            if (enemigViviaAntes && !enemigo.sigueVivo()) {
+                                // El enemigo acaba de morir, incrementar puntos
+                                jugador.addPuntos(100);
+                            }
                             disparo.setShoot(false);
                             impacto = true;
                             break;
@@ -324,48 +386,88 @@ public class Espacio extends Observable {
                          // Si sigue vivo:
                          // Paso a revisar donde estan los enemigos
 
-        if (enemigosHanLlegadoAlFinal() || enemigoChocaConJugador()) {
+        if (enemigosHanLlegadoAlFinal()) {
             notificarVista(new Object[] { "perder", null }); // Notifico a la vista que el jugador ha perdido
+            return true;
+        }
+
+        if (enemigoChocaConJugador()) {
+            if (!jugador.sigueVivo()) {
+                notificarVista(new Object[] { "perder", null });
+                return true;
+            }
         }
         return false;
     }
 
+//    private boolean enemigosHanLlegadoAlFinal() {
+//        for (Nave e : enemigos) {
+//            if (e.sigueVivo()) {
+//                for (Component c : e.getCoordenadas()) {
+//                    if (c.getY() >= alto - 1) {
+//                        return true; // Un enemigo ha llegado al final del tablero
+//                    }
+//                }
+//            }
+//        }
+//        return false; // Ningún enemigo ha llegado al final del tablero
+//    }
     private boolean enemigosHanLlegadoAlFinal() {
-        for (Enemigo e : enemigos) {
-            if (e.sigueVivo()) {
-                for (Component c : e.getCoordenadas()) {
-                    if (c.getY() >= alto - 1) {
-                        return true; // Un enemigo ha llegado al final del tablero
-                    }
-                }
-            }
-        }
-        return false; // Ningún enemigo ha llegado al final del tablero
+        return enemigos.stream()
+            .filter(e -> e.sigueVivo())
+            .flatMap(e -> e.getCoordenadas().stream())
+            .anyMatch(c -> c.getY() >= alto - 1);
     }
 
+//    private boolean enemigoChocaConJugador() {
+//        for (Nave e : enemigos) {
+//            if (e.sigueVivo()) {
+//                for (Component ec : e.getCoordenadas()) {
+//                    for (Component j : jugador.getCoordenadas()) {
+//                        if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
+//                            return true; // Un enemigo ha chocado con el jugador
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return false; // Ningún enemigo ha chocado con el jugador
+//    }
     private boolean enemigoChocaConJugador() {
-        for (Enemigo e : enemigos) {
-            if (e.sigueVivo()) {
-                for (Component ec : e.getCoordenadas()) {
-                    for (Component j : jugador.getCoordenadas()) {
-                        if (ec.getX() == j.getX() && ec.getY() == j.getY()) {
-                            return true; // Un enemigo ha chocado con el jugador
-                        }
-                    }
-                }
+        // 1. Comprobar si es invulnerable
+        if (jugador.estaEnInvulnerabilidad()) {
+            return false; // No contar el choque si está invulnerable
+        }
+
+        // 2. Detectar si hay impacto físico
+        boolean hayImpacto = enemigos.stream()
+            .filter(e -> e.sigueVivo())
+            .flatMap(e -> e.getCoordenadas().stream())
+            .anyMatch(ec -> jugador.getCoordenadas().stream()
+                .anyMatch(j -> ec.getX() == j.getX() && ec.getY() == j.getY()));
+
+        if (hayImpacto) {
+            // 3. Restar vida
+            jugador.recibirDaño(1);
+            
+            // 4. Si sigue vivo, activar invulnerabilidad y parpadeo
+            if (jugador.sigueVivo()) {
+                jugador.activarInvulnerabilidad(); // Activar invulnerabilidad y parpadeo por 2 segundos
             }
         }
-        return false; // Ningún enemigo ha chocado con el jugador
+
+        return hayImpacto;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public boolean isVictory() {
-        for (Enemigo e : enemigos) { // Reviso que no quede ningun enemigo vivo
-            if (e.sigueVivo()) {
-                return false; // Todavia queda algun enemigo vivo
-            }
-        }
+//        for (Nave e : enemigos) { // Reviso que no quede ningun enemigo vivo
+//            if (e.sigueVivo()) {
+//                return false; // Todavia queda algun enemigo vivo
+//            }
+//        }
+    	if (enemigos.stream().anyMatch(e -> e.sigueVivo())) return false;
         notificarVista(new Object[] { "ganar", null }); // Notifico a la vista que el jugador ha ganado
         return true; // Todos los enemigos han muerto --> victoria
 

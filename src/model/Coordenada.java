@@ -16,12 +16,6 @@ public class Coordenada implements Component {
 	public void mover(int dx, int dy) {
 		this.x += dx;
 		this.y += dy;
-		if (this.x < 0) {
-			this.x = 0;
-		}
-		if (this.y < 0) {
-			this.y = 0;
-		}
 	}
 
 	public int getX() {
